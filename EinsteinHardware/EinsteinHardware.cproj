@@ -126,6 +126,10 @@
       <SubType>compile</SubType>
       <Link>buffer.c</Link>
     </Compile>
+    <Compile Include="..\global.h">
+      <SubType>compile</SubType>
+      <Link>global.h</Link>
+    </Compile>
     <Compile Include="..\twi.c">
       <SubType>compile</SubType>
       <Link>twi.c</Link>
@@ -133,6 +137,15 @@
     <Compile Include="..\uart2.c">
       <SubType>compile</SubType>
       <Link>uart2.c</Link>
+    </Compile>
+    <Compile Include="core.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hwglobal.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hwglobal.h">
+      <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
