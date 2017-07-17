@@ -5,6 +5,8 @@
 #include "../uart2.h"
 
 #include "core.h"
+#include "utils.h"
+//#include "servo8t.h"
 
 int main(void)
 {
@@ -12,6 +14,9 @@ int main(void)
 	rprintf("s");
 	uartInit();
 	say("Hello");
+	debugLEDoff();
+	//initServo8t();
+
 	
     /* Replace with your application code */
     while (1) 

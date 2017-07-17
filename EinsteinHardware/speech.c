@@ -1,5 +1,5 @@
 
-#include "global.h"
+#include "hwglobal.h"
 
 
 #ifndef _AVR_
