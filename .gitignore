@@ -1,0 +1,15 @@
+*.d
+*.eep
+*.elf
+*.hex
+*.lss
+*.map
+*.o
+*.srec
+*.mk
+*.S
+Makefile
+TcfTransactionLog.csv
+*.atsuo
+
+godi
