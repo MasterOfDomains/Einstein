@@ -9,8 +9,14 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "EinsteinMotors", "EinsteinM
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D3BB27B2-508D-4FFE-B453-AFF653C72A0F}"
 	ProjectSection(SolutionItems) = preProject
+		buffer.c = buffer.c
+		buffer.h = buffer.h
+		rprintf.c = rprintf.c
+		rprintf.h = rprintf.h
 		twi.c = twi.c
 		twi.h = twi.h
+		uart2.c = uart2.c
+		uart2.h = uart2.h
 	EndProjectSection
 EndProject
 Global

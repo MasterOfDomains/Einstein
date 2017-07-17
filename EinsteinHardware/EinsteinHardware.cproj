@@ -122,11 +122,22 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\buffer.c">
+      <SubType>compile</SubType>
+      <Link>buffer.c</Link>
+    </Compile>
     <Compile Include="..\twi.c">
       <SubType>compile</SubType>
       <Link>twi.c</Link>
     </Compile>
+    <Compile Include="..\uart2.c">
+      <SubType>compile</SubType>
+      <Link>uart2.c</Link>
+    </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="rprintf.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
