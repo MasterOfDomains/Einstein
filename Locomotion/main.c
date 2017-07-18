@@ -1,13 +1,11 @@
 /*
- * EinsteinMotors.c
+ * Locomotion.c
  *
- * Created: 7/16/2017 7:48:10 PM
+ * Created: 7/17/2017 8:43:51 PM
  * Author : Joe
  */ 
 
 #include <avr/io.h>
-
-//#include "adder.h"
 
 
 int main(void)

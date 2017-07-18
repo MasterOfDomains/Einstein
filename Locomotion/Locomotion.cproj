@@ -12,9 +12,9 @@
     <OutputFileName>$(MSBuildProjectName)</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>EinsteinMotors</AssemblyName>
-    <Name>EinsteinMotors</Name>
-    <RootNamespace>EinsteinMotors</RootNamespace>
+    <AssemblyName>Locomotion</AssemblyName>
+    <Name>Locomotion</Name>
+    <RootNamespace>Locomotion</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
