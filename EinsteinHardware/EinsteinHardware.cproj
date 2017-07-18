@@ -138,6 +138,12 @@
       <SubType>compile</SubType>
       <Link>uart2.c</Link>
     </Compile>
+    <Compile Include="arm.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="arm.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="channels.c">
       <SubType>compile</SubType>
     </Compile>

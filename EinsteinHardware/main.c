@@ -8,6 +8,7 @@
 #include "utils.h"
 #include "servo8t.h"
 #include "motors.h"
+#include "arm.h"
 
 int main(void)
 {
@@ -18,6 +19,7 @@ int main(void)
 	debugLEDoff();
 	initServo8t();
 	initMotors();
+	initArm();
 	
     /* Replace with your application code */
     while (1) 
