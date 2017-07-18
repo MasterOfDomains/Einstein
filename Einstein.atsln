@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "EinsteinHardware", "EinsteinHardware\EinsteinHardware.cproj", "{48D6B73C-30C0-431F-9B0D-13A4C7F0C2AD}"
 EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "EinsteinMotors", "EinsteinMotors\EinsteinMotors.cproj", "{DCE6C7E3-EE26-4D79-826B-08594B9AD897}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D3BB27B2-508D-4FFE-B453-AFF653C72A0F}"
 	ProjectSection(SolutionItems) = preProject
 		a2d.c = a2d.c
@@ -21,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		uart2.h = uart2.h
 	EndProjectSection
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "EinsteinLocomotion", "EinsteinLocomotion\EinsteinLocomotion.cproj", "{E8825B4B-EBDD-4A57-864B-72285E4E0B9A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -31,10 +31,10 @@ Global
 		{48D6B73C-30C0-431F-9B0D-13A4C7F0C2AD}.Debug|AVR.Build.0 = Debug|AVR
 		{48D6B73C-30C0-431F-9B0D-13A4C7F0C2AD}.Release|AVR.ActiveCfg = Release|AVR
 		{48D6B73C-30C0-431F-9B0D-13A4C7F0C2AD}.Release|AVR.Build.0 = Release|AVR
-		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Debug|AVR.ActiveCfg = Debug|AVR
-		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Debug|AVR.Build.0 = Debug|AVR
-		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Release|AVR.ActiveCfg = Release|AVR
-		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Release|AVR.Build.0 = Release|AVR
+		{E8825B4B-EBDD-4A57-864B-72285E4E0B9A}.Debug|AVR.ActiveCfg = Debug|AVR
+		{E8825B4B-EBDD-4A57-864B-72285E4E0B9A}.Debug|AVR.Build.0 = Debug|AVR
+		{E8825B4B-EBDD-4A57-864B-72285E4E0B9A}.Release|AVR.ActiveCfg = Release|AVR
+		{E8825B4B-EBDD-4A57-864B-72285E4E0B9A}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
