@@ -1,7 +1,7 @@
 /*
- * EinsteinLocomotion.c
+ * Locomotion.c
  *
- * Created: 7/17/2017 8:34:57 PM
+ * Created: 7/17/2017 8:37:52 PM
  * Author : Joe
  */ 
 
