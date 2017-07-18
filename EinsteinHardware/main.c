@@ -6,7 +6,7 @@
 
 #include "core.h"
 #include "utils.h"
-//#include "servo8t.h"
+#include "servo8t.h"
 
 int main(void)
 {
@@ -15,7 +15,7 @@ int main(void)
 	uartInit();
 	say("Hello");
 	debugLEDoff();
-	//initServo8t();
+	initServo8t();
 
 	
     /* Replace with your application code */

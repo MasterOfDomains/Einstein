@@ -138,6 +138,9 @@
       <SubType>compile</SubType>
       <Link>uart2.c</Link>
     </Compile>
+    <Compile Include="channels.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="core.c">
       <SubType>compile</SubType>
     </Compile>
@@ -151,6 +154,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="rprintf.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="servo8t.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="speech.c">
