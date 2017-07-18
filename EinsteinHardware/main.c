@@ -7,6 +7,7 @@
 #include "core.h"
 #include "utils.h"
 #include "servo8t.h"
+#include "motors.h"
 
 int main(void)
 {
@@ -16,7 +17,7 @@ int main(void)
 	say("Hello");
 	debugLEDoff();
 	initServo8t();
-
+	initMotors();
 	
     /* Replace with your application code */
     while (1) 

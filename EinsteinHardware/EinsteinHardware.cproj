@@ -153,6 +153,12 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="motors.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="motors.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="rprintf.c">
       <SubType>compile</SubType>
     </Compile>
