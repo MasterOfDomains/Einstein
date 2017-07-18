@@ -2,7 +2,7 @@
 
 #include <avr/io.h>
 
-#include "../uart2.h"
+#include "uart2.h"
 
 #include "utils.h"
 

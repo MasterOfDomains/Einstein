@@ -22,7 +22,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#include "buffer.h"
+#include "../buffer.h"
 #include "uart2.h"
 
 // UART global variables
@@ -354,24 +354,24 @@ void uartReceiveService(u08 nUart)
 	}
 }
 
-// service UART transmit interrupt
-UART_INTERRUPT_HANDLER(USART0_TX_vect) // SIG_USART_TRANS
+	// service UART transmit interrupt
+ISR(USART0_TX_vect) // UART_INTERRUPT_HANDLER(SIG_USART_TRANS)   
 {
 	uartTransmitService(0);
 }
 
-UART_INTERRUPT_HANDLER(USART1_TX_vect) // SIG_USART1_TRANS      
+ISR(USART1_TX_vect) // UART_INTERRUPT_HANDLER(SIG_USART1_TRANS)      
 {
 	uartTransmitService(1);
 }
 
 	// service UART receive interrupt
-UART_INTERRUPT_HANDLER(USART0_RX_vect) // SIG_USART_RECV  
+ISR(USART0_RX_vect) // UART_INTERRUPT_HANDLER(SIG_USART_RECV)      
 {
 	uartReceiveService(0);
 }
 
-UART_INTERRUPT_HANDLER(USART1_RX_vect) // SIG_USART1_RECV
+ISR(USART1_RX_vect) // UART_INTERRUPT_HANDLER(SIG_USART1_RECV)      
 {
 	uartReceiveService(1);
 }

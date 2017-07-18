@@ -2,7 +2,7 @@
 
 #include "../twi.h"
 #include "../rprintf.h"
-#include "../uart2.h"
+#include "uart2.h"
 
 #include "core.h"
 #include "utils.h"

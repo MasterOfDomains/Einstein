@@ -50,7 +50,7 @@
 	#include <avr/pgmspace.h>
 	//#include "avrlibdefs.h"
 	//#include "avrlibtypes.h"
-	#include "../uart2.h"
+	#include "uart2.h"
 	#include "../rprintf.h"
 	#include <avr/sleep.h>
 

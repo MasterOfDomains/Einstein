@@ -4,7 +4,7 @@
 #include <math.h>
 #include <util/delay.h>
 
-#include "../uart2.h"
+#include "uart2.h"
 //#include "rprintf.h"
 
 #ifdef UARTS_MULTIPLEXED
