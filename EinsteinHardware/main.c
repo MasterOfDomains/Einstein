@@ -2,6 +2,7 @@
 
 #include "../twi.h"
 #include "../rprintf.h"
+#include "../a2d.h"
 #include "uart2.h"
 
 #include <avr/io.h>
@@ -65,9 +66,8 @@ void initRobot(void)
 
 	signalStart();
 	
-	_delay_ms(10000);
+	_delay_ms(3000);
 
-/*
 	armOff();
 
 	uartInit();
@@ -85,7 +85,6 @@ void initRobot(void)
 	initServo8t();
 	initArm();
 	armOn();
-*/
 }
 
 static void dutyCycleLED(u08 dutyCycle, u08 pulseWidth, u16 *currentTime) {
