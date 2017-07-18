@@ -117,21 +117,6 @@ void signalStart() {
 	debugLEDoff();
 }
 
-void signalSomething() {
-		u16 pulseWidth = 1000;
-		u16 time = pulseWidth;
-
-		while (pulseWidth > 1) {
-			debugLEDon();
-			wait(time);
-			debugLEDoff();
-			wait(time);
-			time -= 100;
-		}
-		wait(1000);
-		debugLEDoff();
-}
-
 void initPorts(void)
 {
 	DDRA = 0b00000000;  //configure all A ports for input				0x00
