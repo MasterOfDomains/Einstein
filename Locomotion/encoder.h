@@ -95,6 +95,7 @@
 // include encoder configuration file
 #include "encoderconf.h"
 
+// JSR - For supporting single channel encoders
 BOOL leftForward;
 BOOL rightForward;
 
