@@ -32,9 +32,47 @@ volatile EncoderStateType EncoderState[NUM_ENCODERS];
 
 // Functions
 
-// encoderInit() initializes hardware and encoder position readings
-//		Run this init routine once before using any other encoder functions.
-void encoderInit(void)
+u08 getEncoderNumber(side robotSide)
+{
+	if (robotSide == LEFT) return 0;
+	else return 1;
+}
+
+
+u32 getEncoderTicks(side robotSide)
+{
+	volatile EncoderStateType ticks = EncoderState[getEncoderNumber(robotSide)];
+	return ticks.position;
+}
+
+float getDistanceTraveled()
+{
+	volatile EncoderStateType leftEncoder = EncoderState[getEncoderNumber(LEFT)];
+	volatile EncoderStateType rightEncoder = EncoderState[getEncoderNumber(RIGHT)];
+	u32 ticksTraveled = (u64) (leftEncoder.position + rightEncoder.position)/2;
+	return ((float) ticksTraveled) / TICKS_PER_UNIT;
+}
+
+float getDistanceTraveledLeft()
+{
+	volatile EncoderStateType leftEncoder = EncoderState[getEncoderNumber(LEFT)];
+	return ((float) leftEncoder.position);
+}
+
+float getDistanceTraveledRight()
+{
+	volatile EncoderStateType rightEncoder = EncoderState[getEncoderNumber(RIGHT)];
+	return ((float) rightEncoder.position);
+}
+
+void resetEncoderPositions()
+{
+	EncoderState[getEncoderNumber(LEFT)].position = 0;
+	EncoderState[getEncoderNumber(RIGHT)].position = 0;
+}
+
+// initEncoders() initializes hardware and encoder position readings
+void initEncoders()
 {
 	// Joe Rogers
 	// To adapt this code to handle single signal encoders
@@ -44,7 +82,7 @@ void encoderInit(void)
 	u08 i;
 
 	// initialize/clear encoder data
-	for(i=0; i<NUM_ENCODERS; i++)
+	for(i = 0; i < NUM_ENCODERS; i++)
 	{
 		EncoderState[i].position = 0;
 		//EncoderState[i].velocity = 0;		// NOT CURRENTLY USED

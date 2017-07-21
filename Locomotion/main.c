@@ -9,6 +9,7 @@
 #include "uart.h"
 #include "utils.h"
 #include "interface.h"
+#include "motors.h"
 
 void init(void);
 void initPorts(void);
@@ -28,6 +29,22 @@ int main (void)
 		rprintfCRLF();
 		rprintf("Speed = %d", command.speed);
 		rprintfCRLF();
+		
+		if (command.name == HARD_STOP) halt();
+		else if (command.name == SOFT_STOP) halt();
+		else if (command.name == GO)
+		{
+			if (command.commandSide == CENTER) 
+				go(command.commandDir, command.speed);
+			else 
+				setSpeed(command.commandSide, command.commandDir, command.speed);
+		}
+		else if (command.name == MOVE)
+			move(command.commandDir, command.speed, command.distance, TRUE);
+		else if (command.name == SPIN)
+			spin(command.commandSide, command.speed);
+		else if (command.name == TWIST)
+			twist(command.commandSide, command.speed, command.distance);
 	}
 	return 1;
 }

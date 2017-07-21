@@ -94,6 +94,9 @@
 
 // include encoder configuration file
 #include "encoderconf.h"
+#include "utils.h"
+
+#define TICKS_PER_UNIT 8
 
 // JSR - For supporting single channel encoders
 BOOL leftForward;
@@ -127,9 +130,8 @@ typedef struct struct_EncoderState
 
 // functions
 
-//! encoderInit() initializes hardware and encoder position readings
-//		Run this init routine once before using any other encoder function.
-void encoderInit(void);
+//! initEncoders() initializes hardware and encoder position readings
+void initEncoders();
 
 //! encoderOff() disables hardware and stops encoder position updates
 void encoderOff(void);
@@ -139,5 +141,18 @@ s32 encoderGetPosition(u08 encoderNum);
 
 //! encoderSetPosition() sets the current position of the encoder
 void encoderSetPosition(u08 encoderNum, s32 position);
+
+// Distance traveled in "ticks" of one side
+u32 getEncoderTicks(side robotSide);
+
+// Overall distance traveled in UNIT_OF_DISTANCE
+float getDistanceTraveled();
+
+float getDistanceTraveledLeft();
+
+float getDistanceTraveledRight();
+
+// Set both counts to zero
+void resetEncoderPositions();
 
 #endif

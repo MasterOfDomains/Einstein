@@ -138,6 +138,9 @@
     <Compile Include="encoder.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="encoderconf.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="interface.c">
       <SubType>compile</SubType>
     </Compile>

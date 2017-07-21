@@ -1,6 +1,7 @@
 #include "motors.h"
 
 #include <util/delay.h>
+#include <stdlib.h>
 
 #include "../rprintf.h"
 
@@ -40,6 +41,18 @@ void spin(side spinSide, u08 speed)
 	}
 }
 
+void twist(side spinSide, u08 speed, float amount)
+{
+	resetEncoderPositions();
+	s32 avgDist = 0;
+	while (avgDist < amount)
+	{
+		avgDist = (abs(getDistanceTraveledLeft()) + abs(getDistanceTraveledRight()))/2;
+	}
+	halt();
+	encoderOff();
+}
+
 void halt(void)
 {
 	// Hard Stop
@@ -57,9 +70,9 @@ void halt(void)
 	*/	
 }
 
-void setSpeed(side motorSide, direction motorDir, u08 speed)
+void setSpeed(side wheel, direction motorDir, u08 speed)
 {
-	if (motorSide == LEFT)
+	if (wheel == LEFT)
 	{
 		if (motorDir == BACKWARD)
 		{
@@ -75,7 +88,7 @@ void setSpeed(side motorSide, direction motorDir, u08 speed)
 		}
 		OCR_LEFT = speed;
 	}
-	else if (motorSide == RIGHT)
+	else if (wheel == RIGHT)
 	{
 		if (motorDir == BACKWARD)
 		{
@@ -89,8 +102,6 @@ void setSpeed(side motorSide, direction motorDir, u08 speed)
 			PORT_ON(MOTORS_PORT, RIGHT_FORWARD);
 			PORT_OFF(MOTORS_PORT, RIGHT_BACKWARD);
 		}
-
-
 		OCR_RIGHT = speed;
 	}
 }
@@ -147,6 +158,24 @@ void testMotors(void)
 		_delay_ms(1000);
 		*/
 	}
+}
+
+void move(direction dir, u08 speed, float distance, BOOL stop)
+{
+	resetEncoderPositions();
+	s32 distLeft = 0;
+	s32 distRight = 0;
+	u32 encoderTicks = distance * TICKS_PER_UNIT;
+	go(dir, speed);
+	s32 avgDist = 0;
+	while (abs(avgDist) < encoderTicks)
+	{
+		distLeft = getEncoderTicks(LEFT);
+		distRight = getEncoderTicks(RIGHT);
+		avgDist = (distLeft + distRight)/2;
+	}
+	if (stop) halt();
+	encoderOff();
 }
 
 void initMotors(void)

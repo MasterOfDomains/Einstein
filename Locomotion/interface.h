@@ -20,7 +20,7 @@ struct commandStruct
 	commandName name;
 	direction commandDir;
 	side commandSide;
-	float distance; // inches?
+	float distance;
 	u08 speed;
 };
 

@@ -63,7 +63,6 @@
 //	#define	MCUCR	EICRA
 //#endif
 
-// Set the total number of encoders you wish to support
 #define NUM_ENCODERS 2
 
 // Left
