@@ -23,7 +23,7 @@
 //#include <string-avr.h>
 //#include <stdlib.h>
 #include <stdarg.h>
-#include "global.h"
+#include "../global.h"
 #include "rprintf.h"
 
 #ifndef TRUE

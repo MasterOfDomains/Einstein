@@ -3,7 +3,7 @@
 #include <util/delay.h>
 #include <stdlib.h>
 
-#include "../rprintf.h"
+#include "rprintf.h"
 
 #include "utils.h"
 #include "encoder.h"

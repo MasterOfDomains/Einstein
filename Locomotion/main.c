@@ -4,7 +4,7 @@
 #include <util/delay.h>
 
 #include "../twi.h"
-#include "../rprintf.h"
+#include "rprintf.h"
 
 #include "uart.h"
 #include "utils.h"

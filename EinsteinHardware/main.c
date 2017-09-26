@@ -1,7 +1,7 @@
 #include "hwglobal.h"
 
 #include "../twi.h"
-#include "../rprintf.h"
+#include "rprintf.h"
 #include "../a2d.h"
 #include "uart2.h"
 
@@ -73,6 +73,9 @@ void initRobot(void)
 	uartInit();
 
 	setRemoteComm(USB);
+	
+	uartSetBaudRate(1, USB_UART_BAUDRATE); // DELETE THIS LINE!!!
+	
 	rprintfCRLF();
 	rprintfProgStrM("Starting...\n\r");
 	rprintfCRLF();
