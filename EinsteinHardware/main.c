@@ -26,7 +26,7 @@ void wait(u16 miliseconds) {
 
 int main(void)
 {
-	_delay_ms(4000);
+	_delay_ms(1000);
 	initRobot();
 	
 	demo();
@@ -65,8 +65,6 @@ void initRobot(void)
 	initPorts();
 
 	signalStart();
-	
-	_delay_ms(3000);
 
 	armOff();
 
@@ -95,9 +93,6 @@ void initRobot(void)
 	rprintf("muxChip: %d", channel.muxChip);
 	rprintfCRLF();
 	rprintf("name: %d", channel.name);
-	rprintfCRLF();
-
-	rprintf("Status: %d", getChannelStatus());
 	rprintfCRLF();
 	
 	a2dInit();

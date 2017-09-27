@@ -9,12 +9,6 @@
 uartName currentUart1Channel = VOID;
 uartName currentUart2Channel = VOID;
 
-s08 statusCode = -1;
-
-s08 getChannelStatus() {
-	return statusCode;
-}
-
 struct uartChannel getUartChannel(uartName name);
 
 struct uartChannel selectUartChannel(uartName name)
@@ -33,30 +27,22 @@ struct uartChannel selectUartChannel(uartName name)
 		switch (channel.muxChannel)
 		{
 			case (0):
-				statusCode = 1;
 				PORT_OFF(PORTD, channel.muxAddressA);
 				PORT_OFF(PORTD, channel.muxAddressB);
 				break;
 			case (1):
-				statusCode = 2;
 				PORT_ON(PORTD, channel.muxAddressA);
 				PORT_OFF(PORTD, channel.muxAddressB);
 				break;
 			case (2):
-				statusCode = 3;
 				PORT_OFF(PORTD, channel.muxAddressA);
 				PORT_ON(PORTD, channel.muxAddressB);
 				break;
 			case (3):
-				statusCode = 4;
 				PORT_ON(PORTD, channel.muxAddressA);
 				PORT_ON(PORTD, channel.muxAddressB);
 				break;
-			default:
-				statusCode = 5;
 		}
-	} else {
-		statusCode = 11;
 	}
 	return channel;
 }

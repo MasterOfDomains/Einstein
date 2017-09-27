@@ -16,6 +16,4 @@ struct uartChannel
 
 struct uartChannel selectUartChannel(uartName name);
 
-s08 getChannelStatus();
-
 #endif
