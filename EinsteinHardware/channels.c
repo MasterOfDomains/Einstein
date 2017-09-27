@@ -33,22 +33,30 @@ struct uartChannel selectUartChannel(uartName name)
 		switch (channel.muxChannel)
 		{
 			case (0):
+				statusCode = 1;
 				PORT_OFF(PORTD, channel.muxAddressA);
 				PORT_OFF(PORTD, channel.muxAddressB);
 				break;
 			case (1):
+				statusCode = 2;
 				PORT_ON(PORTD, channel.muxAddressA);
 				PORT_OFF(PORTD, channel.muxAddressB);
 				break;
 			case (2):
+				statusCode = 3;
 				PORT_OFF(PORTD, channel.muxAddressA);
 				PORT_ON(PORTD, channel.muxAddressB);
 				break;
 			case (3):
+				statusCode = 4;
 				PORT_ON(PORTD, channel.muxAddressA);
 				PORT_ON(PORTD, channel.muxAddressB);
 				break;
+			default:
+				statusCode = 5;
 		}
+	} else {
+		statusCode = 11;
 	}
 	return channel;
 }
@@ -60,7 +68,6 @@ struct uartChannel getUartChannel(uartName name)
 	switch (name)
 	{
 		case (COMPUTER):
-			statusCode = 1;
 			channel.avrUart = COMPUTER_UART;
 			channel.baudRate = COMPUTER_UART_BAUDRATE;
 			channel.muxChip = 2;
@@ -69,7 +76,6 @@ struct uartChannel getUartChannel(uartName name)
 			channel.muxAddressB = PD7;
 			break;
 		case (CAMERA):
-			statusCode = 2;
 			channel.avrUart = CAMERA_UART;
 			channel.baudRate = CAMERA_UART_BAUDRATE;
 			channel.muxChip = 2;
@@ -78,7 +84,6 @@ struct uartChannel getUartChannel(uartName name)
 			channel.muxAddressB = PD7;
 			break;
 		case (SERVOS):
-			statusCode = 3;
 			channel.avrUart = SERVOS_UART;
 			channel.baudRate = SERVOS_UART_BAUDRATE;
 			channel.muxChip = 2;
@@ -87,7 +92,6 @@ struct uartChannel getUartChannel(uartName name)
 			channel.muxAddressB = PD7;
 			break;
 		case (BLUETOOTH):
-			statusCode = 4;
 			channel.avrUart = BLUETOOTH_UART;
 			channel.baudRate = BLUETOOTH_UART_BAUDRATE;
 			channel.muxChip = 1;
@@ -96,7 +100,6 @@ struct uartChannel getUartChannel(uartName name)
 			channel.muxAddressB = PD5;
 			break;
 		default: // USB
-			statusCode = 5;
 			channel.avrUart = USB_UART;
 			channel.baudRate = USB_UART_BAUDRATE;
 			channel.muxChip = 1;

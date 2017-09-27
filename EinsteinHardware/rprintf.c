@@ -20,18 +20,15 @@
 //*****************************************************************************
 
 #include <avr/pgmspace.h>
-//#include <string-avr.h>
-//#include <stdlib.h>
 #include <stdarg.h>
+
 #include "../global.h"
+
 #include "rprintf.h"
 
-
-// Joseph Rogers added
 #ifdef UARTS_MULTIPLEXED
 #include "channels.h"
 #endif
-
 
 #ifndef TRUE
 	#define TRUE	-1
