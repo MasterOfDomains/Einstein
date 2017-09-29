@@ -8,7 +8,7 @@
 //#include "rprintf.h"
 
 #ifdef UARTS_MULTIPLEXED
-//#include "channels.h"
+#include "channels.h"
 #endif
 
 // For testTorque

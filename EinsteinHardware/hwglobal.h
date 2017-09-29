@@ -149,8 +149,6 @@ void init(void);
 
 #define RPRINTF_FLOAT
 
-#define UARTS_MULTIPLEXED
-
 typedef enum
 {
 	VOID, // No uart has been selected

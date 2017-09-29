@@ -78,23 +78,6 @@ void initRobot(void)
 	rprintfProgStrM("Starting...\n\r");
 	rprintfCRLF();
 	
-	
-	struct uartChannel channel = selectUartChannel(USB);
-	rprintf("avrUart: %d", channel.avrUart);
-	rprintfCRLF();
-	rprintf("baudRate: %d", channel.baudRate);
-	rprintfCRLF();
-	rprintf("muxAddressA: %d", channel.muxAddressA);
-	rprintfCRLF();
-	rprintf("muxAddressB: %d", channel.muxAddressB);
-	rprintfCRLF();
-	rprintf("muxChannel: %d", channel.muxChannel);
-	rprintfCRLF();
-	rprintf("muxChip: %d", channel.muxChip);
-	rprintfCRLF();
-	rprintf("name: %d", channel.name);
-	rprintfCRLF();
-	
 	a2dInit();
 	a2dSetPrescaler(ADC_PRESCALE_DIV32);
 	a2dSetReference(ADC_REFERENCE_AVCC);
