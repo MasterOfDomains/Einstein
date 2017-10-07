@@ -14,6 +14,7 @@
 #include "utils.h"
 #include "arm.h"
 #include "servo8t.h"
+#include "compass.h"
 
 void initRobot(void);
 void initPorts(void);
@@ -26,7 +27,7 @@ void wait(u16 miliseconds) {
 
 int main(void)
 {
-	_delay_ms(1000);
+	_delay_ms(3000);
 	initRobot();
 	
 	demo();
@@ -68,21 +69,34 @@ void initRobot(void)
 
 	armOff();
 
+	// UARTs and printf
 	uartInit();
-
 	setRemoteComm(USB);
-	
-	//uartSetBaudRate(1, USB_UART_BAUDRATE); // DELETE THIS LINE!!!
-	
 	rprintfCRLF();
 	rprintfProgStrM("Starting...\n\r");
 	rprintfCRLF();
-	
+
+	// ADCs
 	a2dInit();
 	a2dSetPrescaler(ADC_PRESCALE_DIV32);
 	a2dSetReference(ADC_REFERENCE_AVCC);
-
+	
+	// Two-Wire Interface Devices
+	i2cInit();
 	initMotors();
+	
+	while (1) {
+		go(FORWARD, 100);
+		_delay_ms(5000);
+		i2cSendStop();	
+	}
+	
+	/*
+	initCompass();  // Calls i2cInit
+	testCompass();
+	*/
+	
+	// Arm
 	initServo8t();
 	initArm();
 	armOn();

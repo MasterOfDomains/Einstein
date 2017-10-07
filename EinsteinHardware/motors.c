@@ -256,10 +256,7 @@ void testMotors(void)
 
 void initMotors(void)
 {
-#ifdef EXTERNAL_MOTOR_CONTROL
-	i2cInit();
-	//i2cSetLocalDeviceAddr(LOC_ADDRESS, TRUE);
-#else
+#ifndef EXTERNAL_MOTOR_CONTROL
     TCCR0A = 0;
     TCCR0B = 0;
 

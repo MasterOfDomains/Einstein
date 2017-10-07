@@ -11,7 +11,7 @@
 unsigned char localBuffer[LB_ARRAY_SIZE];
 unsigned char localBufferLength;
 
-BOOL newReceiveFlag = FALSE;
+volatile BOOL newReceiveFlag = FALSE;
 
 void i2cSlaveReceiveService(u08 receiveDataLength, u08* receiveData);
 u08 i2cSlaveTransmitService(u08 transmitDataLengthMax, u08* transmitData);
@@ -25,7 +25,6 @@ struct commandStruct waitForCommand(void)
 	rprintfCRLF();
 	while (!newReceiveFlag);
 	newReceiveFlag = FALSE;
-	rprintf("!\n\r");
 	//unsigned char workBuffer[localBufferLength];
 	//for (u08 j = 0; j < localBufferLength; j++)
 	//	workBuffer[j] = localBuffer[j];
