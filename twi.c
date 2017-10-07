@@ -20,7 +20,7 @@
 
 #include "twi.h"
 
-//#include "rprintf.h"	// include printf function library
+//#include "Locomotion/rprintf.h"	// include printf function library
 //#include "uart4.h"
 
 // Standard I2C bit rates are:
@@ -100,7 +100,7 @@ void i2cSetBitrate(u16 bitrateKHz)
 void i2cSetLocalDeviceAddr(u08 deviceAddr, u08 genCallEn)
 {
 	// set local device address (used in slave mode only)
-	outb(TWAR, ((deviceAddr&0xFE) | (genCallEn?1:0)) );
+	outb(TWAR, ((deviceAddr & 0xFE) | (genCallEn ?  1 : 0)) );
 }
 
 void i2cSetSlaveReceiveHandler(void (*i2cSlaveRx_func)(u08 receiveDataLength, u08* recieveData))
@@ -116,14 +116,14 @@ void i2cSetSlaveTransmitHandler(u08 (*i2cSlaveTx_func)(u08 transmitDataLengthMax
 inline void i2cSendStart(void)
 {
 	// send start condition
-	outb(TWCR, (inb(TWCR)&TWCR_CMD_MASK)|BV(TWINT)|BV(TWSTA));
+	outb(TWCR, (inb(TWCR)  & TWCR_CMD_MASK) | BV(TWINT) | BV(TWSTA));
 }
 
 inline void i2cSendStop(void)
 {
 	// transmit stop condition
 	// leave with TWEA on for slave receiving
-	outb(TWCR, (inb(TWCR)&TWCR_CMD_MASK)|BV(TWINT)|BV(TWEA)|BV(TWSTO));
+	outb(TWCR, (inb(TWCR)  & TWCR_CMD_MASK) | BV(TWINT) | BV(TWEA) | BV(TWSTO));
 }
 
 inline void i2cWaitForComplete(void)
@@ -137,7 +137,7 @@ inline void i2cSendByte(u08 data)
 	// save data to the TWDR
 	outb(TWDR, data);
 	// begin send
-	outb(TWCR, (inb(TWCR)&TWCR_CMD_MASK)|BV(TWINT));
+	outb(TWCR, (inb(TWCR) & TWCR_CMD_MASK) | BV(TWINT));
 }
 
 inline void i2cReceiveByte(u08 ackFlag)
@@ -146,12 +146,12 @@ inline void i2cReceiveByte(u08 ackFlag)
 	if( ackFlag )
 	{
 		// ackFlag = TRUE: ACK the recevied data
-		outb(TWCR, (inb(TWCR)&TWCR_CMD_MASK)|BV(TWINT)|BV(TWEA));
+		outb(TWCR, (inb(TWCR) & TWCR_CMD_MASK) | BV(TWINT) | BV(TWEA));
 	}
 	else
 	{
 		// ackFlag = FALSE: NACK the recevied data
-		outb(TWCR, (inb(TWCR)&TWCR_CMD_MASK)|BV(TWINT));
+		outb(TWCR, (inb(TWCR) & TWCR_CMD_MASK) | BV(TWINT));
 	}
 }
 
@@ -481,7 +481,7 @@ ISR(TWI_vect)
 		// prepare buffer
 		I2cReceiveDataIndex = 0;
 		// receive data byte and return ACK
-		outb(TWCR, (inb(TWCR)&TWCR_CMD_MASK)|BV(TWINT)|BV(TWEA));
+		outb(TWCR, (inb(TWCR) & TWCR_CMD_MASK) | BV(TWINT) | BV(TWEA));
 		break;
 	case TW_SR_DATA_ACK:				// 0x80: data byte has been received, ACK has been returned
 	case TW_SR_GCALL_DATA_ACK:			// 0x90: data byte has been received, ACK has been returned
