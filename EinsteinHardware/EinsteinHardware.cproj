@@ -151,6 +151,9 @@
     <Compile Include="channels.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="compass.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="core.c">
       <SubType>compile</SubType>
     </Compile>
