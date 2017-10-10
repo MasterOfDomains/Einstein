@@ -4,7 +4,7 @@
 
 #include "../twi.h"
 #include "../rprintf.h" // delete?
-#include "../utils.h"
+#include "lutils.h"
 
 
 #define LOC_ADDRESS 0xA0

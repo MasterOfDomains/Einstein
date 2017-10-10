@@ -11,7 +11,7 @@
 
 #include "../twi.h"
 #include "../rprintf.h"
-#include "../utils.h"
+#include "hwutils.h"
 
 static u16 homeHeading;
 

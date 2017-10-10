@@ -23,7 +23,7 @@
 #include <avr/interrupt.h>
 
 #include "../global.h"
-#include "../utils.h"
+#include "lutils.h"
 
 #include "encoder.h"
 
