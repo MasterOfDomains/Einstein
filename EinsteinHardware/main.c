@@ -3,6 +3,7 @@
 #include "../twi.h"
 #include "../rprintf.h"
 #include "../a2d.h"
+#include "../utils.h"
 
 #include "uart2.h"
 

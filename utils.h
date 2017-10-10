@@ -21,4 +21,8 @@ typedef enum
 	HORIZONTAL
 } orientation;
 
+// Flip direction or side
+direction oppositeDir(direction dir);
+side oppositeSide(side pSide);
+
 #endif

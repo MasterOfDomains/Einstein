@@ -21,10 +21,6 @@ typedef enum
 	I2C_RECEIVED = 2
 } errorCode;
 
-// Flip direction or side
-direction oppositeDir(direction dir);
-side oppositeSide(side pSide);
-
 // Unrecoverable Error has happened
 void signalFatalError(errorCode error);
 

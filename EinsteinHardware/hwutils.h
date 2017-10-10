@@ -52,10 +52,6 @@ typedef enum
 	SONAR
 } distSensorType;
 
-// Flip direction or side
-direction oppositeDir(direction dir);
-side oppositeSide(side pSide);
-
 // Retrieves a positive integer from UART terminal emulator
 u32 getNumber(u08 maxDigits);
 

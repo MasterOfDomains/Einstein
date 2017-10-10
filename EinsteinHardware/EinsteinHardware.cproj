@@ -143,6 +143,10 @@
       <SubType>compile</SubType>
       <Link>twi.c</Link>
     </Compile>
+    <Compile Include="..\utils.c">
+      <SubType>compile</SubType>
+      <Link>utils.c</Link>
+    </Compile>
     <Compile Include="arm.c">
       <SubType>compile</SubType>
     </Compile>

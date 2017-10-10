@@ -66,26 +66,6 @@ getYesOrNo:
 	return confirmed;
 }
 
-direction oppositeDir(direction dir)
-{
-	direction returnVal;
-	if (dir == FORWARD)
-		returnVal = BACKWARD;
-	else
-		returnVal = FORWARD;
-	return returnVal;
-}
-
-side oppositeSide(side pSide)
-{
-	side returnVal;
-	if (pSide == LEFT)
-		returnVal = RIGHT;
-	else
-		returnVal = LEFT;
-	return returnVal;
-}
-
 char *getString(u08 maxLength)
 {
 	char *returnStringPtr = malloc(maxLength + 1 + 4); // +1 for null terminator
