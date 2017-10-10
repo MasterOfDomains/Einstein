@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		rprintf.h = rprintf.h
 		twi.c = twi.c
 		twi.h = twi.h
+		utils.c = utils.c
+		utils.h = utils.h
 	EndProjectSection
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Locomotion", "Locomotion\Locomotion.cproj", "{DCE6C7E3-EE26-4D79-826B-08594B9AD897}"

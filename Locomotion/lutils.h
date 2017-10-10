@@ -1,9 +1,10 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef LUTILS_H
+#define LUTILS_H
 
 #include <avr/io.h>		    // I/O definitions (port names, pin names, etc)
 
 #include "../global.h"
+#include "../utils.h"
 
 #define ASCII_ESCAPE 27
 
@@ -12,26 +13,6 @@
 #define FLIP_PORT( port_letter, number )		port_letter ^= (1<<number)
 #define PORT_IS_ON( port_letter, number )		( port_letter & (1<<number) )
 #define PORT_IS_OFF( port_letter, number )		!( port_letter & (1<<number) )
-
-typedef enum
-{
-	LEFT,
-	RIGHT,
-	CENTER // i.e. neither Side
-} side;
-
-typedef enum
-{
-	FORWARD,
-	BACKWARD,
-	MIDDLE
-} direction;
-
-typedef enum
-{
-	VERTICAL,
-	HORIZONTAL
-} orientation;
 
 typedef enum
 {

@@ -185,7 +185,7 @@
     <Compile Include="uart2.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="utils.c">
+    <Compile Include="hwutils.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

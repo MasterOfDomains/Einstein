@@ -23,6 +23,8 @@
 #include <avr/interrupt.h>
 
 #include "../global.h"
+#include "../utils.h"
+
 #include "encoder.h"
 
 // Program ROM constants

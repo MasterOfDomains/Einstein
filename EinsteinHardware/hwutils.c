@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "hwutils.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -7,6 +7,8 @@
 
 #include "../twi.h"
 #include "../a2d.h"
+#include "../utils.h"
+
 //#include "rprintf.h"
 //#include "uart2.h"
 //#include "uart.h"

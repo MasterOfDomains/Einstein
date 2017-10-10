@@ -4,8 +4,9 @@
 #include <stdlib.h>
 
 #include "../rprintf.h"
+#include "../utils.h"
 
-#include "utils.h"
+#include "lutils.h"
 #include "encoder.h"
 
 // Output Compare Registers

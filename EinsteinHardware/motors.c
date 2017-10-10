@@ -4,7 +4,7 @@
 
 #include "../rprintf.h"
 
-#include "utils.h"
+#include "hwutils.h"
 
 #ifdef EXTERNAL_MOTOR_CONTROL
 #include "../twi.h"

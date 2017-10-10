@@ -1,7 +1,7 @@
 #ifndef SERVO8T_H
 #define SERVO8T_H
 
-#include "utils.h"
+#include "hwutils.h"
 
 void initServo8t(void);
 void moveServo(u08 servo, u08 pos);

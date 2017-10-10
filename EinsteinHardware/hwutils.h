@@ -1,9 +1,12 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef HWUTILS_H
+#define HWUTILS_H
 
 #include "hwglobal.h"
 
-#include <avr/io.h>		    // I/O definitions (port names, pin names, etc)
+#include <avr/io.h>		    // I/O definitions (port names, pin names, etc
+
+#include "../utils.h"
+
 
 #define ASCII_ESCAPE 27
 
@@ -18,26 +21,6 @@ struct point
 	u08 x;
 	u08 y;
 };
-
-typedef enum
-{
-	LEFT,
-	RIGHT,
-	CENTER // i.e. neither Side
-} side;
-
-typedef enum
-{
-	FORWARD,
-	BACKWARD,
-	MIDDLE
-} direction;
-
-typedef enum
-{
-	VERTICAL,
-	HORIZONTAL
-} orientation;
 
 typedef enum
 {

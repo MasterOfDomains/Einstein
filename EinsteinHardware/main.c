@@ -3,6 +3,8 @@
 #include "../twi.h"
 #include "../rprintf.h"
 #include "../a2d.h"
+#include "../utils.h"
+
 #include "uart2.h"
 
 #include <avr/io.h>
@@ -11,7 +13,7 @@
 
 #include "motors.h"
 #include "channels.h"
-#include "utils.h"
+#include "hwutils.h"
 #include "arm.h"
 #include "servo8t.h"
 #include "compass.h"

@@ -2,7 +2,7 @@
 #define ARM_H
 
 #include "hwglobal.h"
-#include "utils.h"
+#include "hwutils.h"
 #include "servo8t.h"
 
 #define MAX_SHOULDER_BEND -159 // Most extended

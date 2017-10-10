@@ -1,7 +1,7 @@
 #ifndef COMPASS_H
 #define COMPASS_H
 
-#include "utils.h"
+#include "hwutils.h"
 
 #define MAX_HEADING 359
 

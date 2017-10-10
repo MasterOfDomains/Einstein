@@ -94,7 +94,7 @@
 
 // include encoder configuration file
 #include "encoderconf.h"
-#include "utils.h"
+#include "Lutils.h"
 
 #define TICKS_PER_UNIT 8
 

@@ -3,7 +3,7 @@
 
 #include "hwglobal.h"
 
-#include "utils.h"
+#include "hwutils.h"
 
 #define LEFT_STRAIGHT_SPEED 150
 #define RIGHT_STRAIGHT_SPEED 150

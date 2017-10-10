@@ -2,8 +2,9 @@
 #define INTERFACE_H
 
 #include "../global.h"
+#include "../utils.h"
 
-#include "utils.h"
+#include "lutils.h"
 
 typedef enum
 {

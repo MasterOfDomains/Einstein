@@ -4,7 +4,7 @@
 
 #include "uart2.h"
 
-#include "utils.h"
+#include "hwutils.h"
 
 uartName currentUart1Channel = VOID;
 uartName currentUart2Channel = VOID;

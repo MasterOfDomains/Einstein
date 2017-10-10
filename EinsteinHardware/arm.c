@@ -31,6 +31,8 @@
 #include <util/delay.h>
 #include <stdlib.h>
 
+#include "../utils.h"
+
 //#include "rprintf.h"
 
 #define ARM_ON_PORT PORTC
