@@ -30,21 +30,40 @@ int main (void)
 		rprintf("Speed = %d", command.speed);
 		rprintfCRLF();
 		
-		if (command.name == HARD_STOP) halt();
-		else if (command.name == SOFT_STOP) halt();
-		else if (command.name == GO)
-		{
-			if (command.commandSide == CENTER) 
-				go(command.commandDir, command.speed);
-			else 
-				setSpeed(command.commandSide, command.commandDir, command.speed);
-		}
-		else if (command.name == MOVE)
+		if (command.name == HARD_STOP) {
+			halt();
+		} else if (command.name == SOFT_STOP) {
+			halt();
+		} else if (command.name == GO) {
+			go(command.commandDir, command.speed);
+		} else if (command.name == MOVE) {
 			move(command.commandDir, command.speed, command.distance, TRUE);
-		else if (command.name == SPIN)
+		} else if (command.name == SPIN) {
 			spin(command.commandSide, command.speed);
-		else if (command.name == TWIST)
+		} else if (command.name == TWIST) {
 			twist(command.commandSide, command.speed, command.distance);
+		}
+		
+		switch (command.name) {
+			case HARD_STOP:
+				halt();
+				break;
+			case SOFT_STOP:
+				halt();
+				break;
+			case GO:
+				go(command.commandDir, command.speed);
+				break;
+			case MOVE:
+				move(command.commandDir, command.speed, command.distance, TRUE);
+				break;
+			case SPIN:
+				spin(command.commandSide, command.speed);
+				break;
+			case TWIST:
+				twist(command.commandSide, command.speed, command.distance);
+				break;
+		}
 	}
 	return 1;
 }
