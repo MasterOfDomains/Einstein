@@ -3,7 +3,7 @@
 #include <util/delay.h>
 
 #include "uart2.h"
-#include "rprintf.h"
+#include "../rprintf.h"
 
 struct remoteCommStruct
 {

@@ -51,7 +51,7 @@
 	//#include "avrlibdefs.h"
 	//#include "avrlibtypes.h"
 	#include "uart2.h"
-	#include "rprintf.h"
+	#include "../rprintf.h"
 	#include <avr/sleep.h>
 
 	// Specify the output port pin to use for binary sound control

@@ -4,7 +4,7 @@
 #include <util/delay.h>
 
 #include "../twi.h"
-#include "rprintf.h"
+#include "../rprintf.h"
 
 #include "uart.h"
 #include "utils.h"
@@ -29,20 +29,6 @@ int main (void)
 		rprintfCRLF();
 		rprintf("Speed = %d", command.speed);
 		rprintfCRLF();
-		
-		if (command.name == HARD_STOP) {
-			halt();
-		} else if (command.name == SOFT_STOP) {
-			halt();
-		} else if (command.name == GO) {
-			go(command.commandDir, command.speed);
-		} else if (command.name == MOVE) {
-			move(command.commandDir, command.speed, command.distance, TRUE);
-		} else if (command.name == SPIN) {
-			spin(command.commandSide, command.speed);
-		} else if (command.name == TWIST) {
-			twist(command.commandSide, command.speed, command.distance);
-		}
 		
 		switch (command.name) {
 			case HARD_STOP:

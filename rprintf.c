@@ -20,11 +20,15 @@
 //*****************************************************************************
 
 #include <avr/pgmspace.h>
-//#include <string-avr.h>
-//#include <stdlib.h>
 #include <stdarg.h>
-#include "../global.h"
+
+#include "global.h"
+
 #include "rprintf.h"
+
+#ifdef UARTS_MULTIPLEXED
+#include "EinsteinHardware/channels.h"
+#endif
 
 #ifndef TRUE
 	#define TRUE	-1
@@ -42,8 +46,7 @@
 //static char HexChars[] = "0123456789ABCDEF";
 // use this to store hex conversion in program memory
 //static prog_char HexChars[] = "0123456789ABCDEF";
-//static char __attribute__ ((progmem)) HexChars[] = "0123456789ABCDEF"; // JSR
-const static char __attribute__ ((progmem)) HexChars[] = "0123456789ABCDEF";
+static const char __attribute__ ((progmem)) HexChars[] = "0123456789ABCDEF";
 
 #define hexchar(x)	pgm_read_byte( HexChars+((x)&0x0f) )
 //#define hexchar(x)	((((x)&0x0F)>9)?((x)+'A'-10):((x)+'0'))
@@ -63,6 +66,9 @@ void rprintfInit(void (*putchar_func)(unsigned char c))
 // send a character/byte to the current output device
 void rprintfChar(unsigned char c)
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	// do LF -> CR/LF translation
 	if(c == '\n')
 		rputchar('\r');
@@ -74,6 +80,9 @@ void rprintfChar(unsigned char c)
 // prints a null-terminated string stored in RAM
 void rprintfStr(char str[])
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	// send a string stored in RAM
 	// check to make sure we have a good pointer
 	if (!str) return;
@@ -89,6 +98,9 @@ void rprintfStr(char str[])
 // prints number of characters indicated by <len>
 void rprintfStrLen(char str[], unsigned int start, unsigned int len)
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	register int i=0;
 
 	// check to make sure we have a good pointer
@@ -119,6 +131,9 @@ void rprintfStrLen(char str[], unsigned int start, unsigned int len)
 // prints a null-terminated string stored in program ROM
 void rprintfProgStr(const char str[])
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	// print a string stored in program memory
 	register char c;
 
@@ -134,6 +149,9 @@ void rprintfProgStr(const char str[])
 // prints carriage return and line feed
 void rprintfCRLF(void)
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	// print CR/LF
 	//rprintfChar('\r');
 	// LF -> CR/LF translation built-in to rprintfChar()
@@ -144,6 +162,9 @@ void rprintfCRLF(void)
 // prints an unsigned 4-bit number in hex (1 digit)
 void rprintfu04(unsigned char data)
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	// print 4-bit hex value
 //	char Character = data&0x0f;
 //	if (Character>9)
@@ -157,6 +178,9 @@ void rprintfu04(unsigned char data)
 // prints an unsigned 8-bit number in hex (2 digits)
 void rprintfu08(unsigned char data)
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	// print 8-bit hex value
 	rprintfu04(data>>4);
 	rprintfu04(data);
@@ -166,6 +190,9 @@ void rprintfu08(unsigned char data)
 // prints an unsigned 16-bit number in hex (4 digits)
 void rprintfu16(unsigned short data)
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	// print 16-bit hex value
 	rprintfu08(data>>8);
 	rprintfu08(data);
@@ -175,6 +202,9 @@ void rprintfu16(unsigned short data)
 // prints an unsigned 32-bit number in hex (8 digits)
 void rprintfu32(unsigned long data)
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	// print 32-bit hex value
 	rprintfu16(data>>16);
 	rprintfu16(data);
@@ -194,6 +224,9 @@ void rprintfu32(unsigned long data)
 //	uartPrintfNum(16, 6, FALSE, '.', 0x5AA5);  -->  "..5AA5"
 void rprintfNum(char base, char numDigits, char isSigned, char padchar, long n)
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	// define a global HexChars or use line below
 	//static char HexChars[16] = "0123456789ABCDEF";
 	char *p, buf[32];
@@ -263,6 +296,9 @@ void rprintfNum(char base, char numDigits, char isSigned, char padchar, long n)
 // floating-point print
 void rprintfFloat(char numDigits, double x)
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	unsigned char firstplace = FALSE;
 	unsigned char negative;
 	unsigned char i, digit;
@@ -320,6 +356,9 @@ void rprintfFloat(char numDigits, double x)
 // %c - character
 int rprintf1RamRom(unsigned char stringInRom, const char *format, ...)
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	// simple printf routine
 	// define a global HexChars or use line below
 	//static char HexChars[16] = "0123456789ABCDEF";
@@ -387,6 +426,9 @@ int rprintf1RamRom(unsigned char stringInRom, const char *format, ...)
 // **this printf does not support floating point numbers
 int rprintf2RamRom(unsigned char stringInRom, const char *sfmt, ...)
 {
+#ifdef UARTS_MULTIPLEXED
+	selectUartChannel(getRemoteCommName());
+#endif
 	register unsigned char *f, *bp;
 	register long l;
 	register unsigned long u;

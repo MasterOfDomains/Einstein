@@ -1,7 +1,7 @@
 #include "hwglobal.h"
 
 #include "../twi.h"
-#include "rprintf.h"
+#include "../rprintf.h"
 #include "../a2d.h"
 #include "uart2.h"
 

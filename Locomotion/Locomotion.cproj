@@ -124,6 +124,10 @@
       <SubType>compile</SubType>
       <Link>buffer.c</Link>
     </Compile>
+    <Compile Include="..\rprintf.c">
+      <SubType>compile</SubType>
+      <Link>rprintf.c</Link>
+    </Compile>
     <Compile Include="..\twi.c">
       <SubType>compile</SubType>
       <Link>twi.c</Link>
@@ -150,9 +154,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="motors.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="rprintf.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="uart.c">

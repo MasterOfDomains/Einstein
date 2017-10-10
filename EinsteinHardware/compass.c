@@ -10,7 +10,7 @@
 #include "compass.h"
 
 #include "../twi.h"
-#include "rprintf.h"
+#include "../rprintf.h"
 
 static u16 homeHeading;
 

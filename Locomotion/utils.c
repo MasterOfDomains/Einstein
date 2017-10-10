@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "rprintf.h"
+#include "../rprintf.h"
 #include "uart.h"
 
 #include "utils.h"
