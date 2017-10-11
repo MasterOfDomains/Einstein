@@ -13,14 +13,14 @@
 #define OCR_LEFT OCR0A
 #define OCR_RIGHT OCR0B
 // Port
-#define MOTORS_PORT PORTB
+#define MOTORS_PORT PORTC
 // Port Bits
-#define LEFT_FORWARD PB2
-#define LEFT_PWM PB3
-#define RIGHT_PWM PB4
-#define LEFT_BACKWARD PB5
-#define RIGHT_FORWARD PB6
-#define RIGHT_BACKWARD PB7
+#define LEFT_FORWARD PC0
+#define LEFT_PWM PD6
+#define RIGHT_PWM PD5
+#define LEFT_BACKWARD PC1
+#define RIGHT_FORWARD PC2
+#define RIGHT_BACKWARD PC3
 
 void go(direction dir, u08 speed)
 {

@@ -90,7 +90,6 @@ void initRobot(void)
 	while (1) {
 		go(FORWARD, 100);
 		_delay_ms(5000);
-		i2cSendStop();	
 	}
 	
 	/*

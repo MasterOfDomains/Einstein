@@ -63,6 +63,7 @@ void init(void)
 	rprintfInit(uartSendByte);
 	rprintfProgStrM("Starting...");
 	rprintfCRLF();
+	initMotors();
 	initInterface();
 }
 
@@ -113,6 +114,4 @@ void initPorts(void)
 
 	cbi(DDRD, PD0); // No pull-up on UART Rx
 	cbi(DDRD, PD2); // No pull-up on Interrupt
-	cbi(DDRD, PD5); // PWM off
-	cbi(DDRD, PD6); // PWM off
 }
