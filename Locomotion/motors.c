@@ -68,7 +68,12 @@ void halt(void)
 	MOTORS_PORT &= ~(1 << LEFT_BACKWARD);
 	MOTORS_PORT &= ~(1 << RIGHT_FORWARD);
 	MOTORS_PORT &= ~(1 << RIGHT_BACKWARD);
-	*/	
+	*/
+	
+	setSpeed(LEFT, MIDDLE, 0);
+	setSpeed(RIGHT, MIDDLE, 0);
+	leftForward = FALSE;
+	rightForward = FALSE;
 }
 
 void setSpeed(side wheel, direction motorDir, u08 speed)
@@ -107,57 +112,86 @@ void setSpeed(side wheel, direction motorDir, u08 speed)
 	}
 }
 
+void testMotorsHalt() {
+	rprintf("Halt");
+	rprintfCRLF();
+	halt();
+	_delay_ms(5000);
+}
+
 void testMotors(void)
 {
-	while(1)
-	{
-		rprintf("F");
-		rprintfCRLF();
 #define SPEED 200
 #define TIME 1000
-
-		while(1)
-		{
-			go(FORWARD, SPEED);
-			_delay_ms(TIME);
-			halt();
-			_delay_ms(TIME / 2);
-
-			go(BACKWARD, SPEED);
-			_delay_ms(TIME);
-			halt();
-			_delay_ms(TIME / 2);
+	while(1)
+	{
+		rprintf("Left Forward 127");
+		rprintfCRLF();
+		setSpeed(LEFT, FORWARD, 127);
+		_delay_ms(5000);
 			
-			spin(LEFT, SPEED);
-			_delay_ms(TIME);
-			halt();
-			_delay_ms(TIME / 2);
+		testMotorsHalt();
 
-			spin(RIGHT, SPEED);
-			_delay_ms(TIME * 2);
-			halt();
-			_delay_ms(TIME / 2);
+		rprintf("Right Forward 127");
+		rprintfCRLF();
+		setSpeed(RIGHT, FORWARD, 127);
+		_delay_ms(5000);
 			
-			spin(LEFT, SPEED);
-			_delay_ms(TIME);
-			halt();
-			_delay_ms(TIME / 2);
-		}
+		testMotorsHalt();
+			
+		rprintf("Left Forward 127");
+		rprintfCRLF();
+		setSpeed(LEFT, BACKWARD, 127);
+		_delay_ms(5000);
+						
+		testMotorsHalt();
 
-		while(1);
+		rprintf("Right Forward 127");
+		rprintfCRLF();
+		setSpeed(RIGHT, BACKWARD, 127);
+		_delay_ms(5000);
+						
+		testMotorsHalt();
+						
 		/*
-		_delay_ms(3000);
+		rprintf("Going Forward");
+		rprintfCRLF();
+		go(FORWARD, SPEED);
+		_delay_ms(TIME);
 		halt();
-		_delay_ms(1000);
+		_delay_ms(TIME);
 
-		//debugLEDoff();
-		rprintf("B");
-		setSpeed(LEFT, BACKWARD, 255);
-		setSpeed(RIGHT, BACKWARD, 255);
-		_delay_ms(1000);
+		rprintf("Going Backward");
+		rprintfCRLF();
+		go(BACKWARD, SPEED);
+		_delay_ms(TIME);
 		halt();
-		_delay_ms(1000);
+		_delay_ms(TIME);
+			
+		rprintf("Spinning Left");
+		rprintfCRLF();
+		spin(LEFT, SPEED);
+		_delay_ms(TIME);
+		halt();
+		_delay_ms(TIME);
+
+		rprintf("Spinning Right");
+		rprintfCRLF();
+		spin(RIGHT, SPEED);
+		_delay_ms(TIME * 2);
+		halt();
+		_delay_ms(TIME);
+			
+		rprintf("Spinning Back (Left)");
+		rprintfCRLF();
+		spin(LEFT, SPEED);
+		_delay_ms(TIME);
+		halt();
+		_delay_ms(TIME);
 		*/
+			
+		rprintf("Done");
+		rprintfCRLF();
 	}
 }
 

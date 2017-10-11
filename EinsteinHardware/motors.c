@@ -17,8 +17,6 @@
 #define MOTORS_PORT PORTB
 // Port Bits
 #define LEFT_FORWARD PB2
-#define LEFT_PWM PB3
-#define RIGHT_PWM PB4
 #define LEFT_BACKWARD PB5
 #define RIGHT_FORWARD PB6
 #define RIGHT_BACKWARD PB7
