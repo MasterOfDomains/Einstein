@@ -32,6 +32,9 @@ int main(void)
 	_delay_ms(3000);
 	initRobot();
 	
+	testMotors();
+	while(1);
+	
 	demo();
 
 	//u08 sendDataLength = 4;
@@ -86,11 +89,6 @@ void initRobot(void)
 	// Two-Wire Interface Devices
 	i2cInit();
 	initMotors();
-	
-	while (1) {
-		go(FORWARD, 100);
-		_delay_ms(5000);
-	}
 	
 	/*
 	initCompass();  // Calls i2cInit

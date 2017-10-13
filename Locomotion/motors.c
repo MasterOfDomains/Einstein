@@ -15,12 +15,12 @@
 // Port
 #define MOTORS_PORT PORTC
 // Port Bits
-#define LEFT_FORWARD PC0
+#define LEFT_FORWARD PC1
 #define LEFT_PWM PD6
 #define RIGHT_PWM PD5
-#define LEFT_BACKWARD PC1
-#define RIGHT_FORWARD PC2
-#define RIGHT_BACKWARD PC3
+#define LEFT_BACKWARD PC0
+#define RIGHT_FORWARD PC3
+#define RIGHT_BACKWARD PC2
 
 void go(direction dir, u08 speed)
 {
@@ -127,29 +127,29 @@ void testMotors(void)
 	{
 		rprintf("Left Forward 127");
 		rprintfCRLF();
-		setSpeed(LEFT, FORWARD, 127);
-		_delay_ms(5000);
+		setSpeed(LEFT, FORWARD, SPEED);
+		_delay_ms(TIME * 5);
 			
 		testMotorsHalt();
 
 		rprintf("Right Forward 127");
 		rprintfCRLF();
-		setSpeed(RIGHT, FORWARD, 127);
-		_delay_ms(5000);
+		setSpeed(RIGHT, FORWARD, SPEED);
+		_delay_ms(TIME * 5);
 			
 		testMotorsHalt();
 			
-		rprintf("Left Forward 127");
+		rprintf("Left Backward 127");
 		rprintfCRLF();
-		setSpeed(LEFT, BACKWARD, 127);
-		_delay_ms(5000);
+		setSpeed(LEFT, BACKWARD, SPEED);
+		_delay_ms(TIME * 5);
 						
 		testMotorsHalt();
 
-		rprintf("Right Forward 127");
+		rprintf("Right Backward 127");
 		rprintfCRLF();
-		setSpeed(RIGHT, BACKWARD, 127);
-		_delay_ms(5000);
+		setSpeed(RIGHT, BACKWARD, SPEED);
+		_delay_ms(TIME * 5);
 						
 		testMotorsHalt();
 						

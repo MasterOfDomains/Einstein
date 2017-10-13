@@ -197,59 +197,37 @@ void setSpeed(side motorSide, direction motorDir, u08 speed)
 
 void testMotors(void)
 {
-#ifdef EXTERNAL_MOTOR_CONTROL
-#else
+	
+#define SPEED 200
+#define TIME 1000
+
 	while(1)
 	{
-		rprintf("F");
-		rprintfCRLF();
-#define SPEED 200
-#define TIME 1000;
-
-		while(1)
-		{
-			go(FORWARD, SPEED)
-			_delay_ms(TIME);
-			halt();
-			_delay_ms(TIME / 2);
-
-			go(BACKWARD, SPEED)
-			_delay_ms(TIME);
-			halt();
-			_delay_ms(TIME / 2);
-			
-			spin(LEFT, SPEED);
-			_delay_ms(TIME);
-			halt();
-			_delay_ms(TIME / 2);
-
-			spin(RIGHT, SPEED);
-			_delay_ms(TIME * 2);
-			halt();
-			_delay_ms(TIME / 2);
-			
-			spin(LEFT, SPEED);
-			_delay_ms(TIME);
-			halt();
-			_delay_ms(TIME / 2);
-		}
-
-		while(1);
-		/*
-		_delay_ms(3000);
+		go(FORWARD, SPEED);
+		_delay_ms(TIME);
 		halt();
-		_delay_ms(1000);
+		_delay_ms(TIME / 2);
 
-		//debugLEDoff();
-		rprintf("B");
-		setSpeed(LEFT, BACKWARD, 255);
-		setSpeed(RIGHT, BACKWARD, 255);
-		_delay_ms(1000);
+		go(BACKWARD, SPEED);
+		_delay_ms(TIME);
 		halt();
-		_delay_ms(1000);
-		*/
-	}
-#endif
+		_delay_ms(TIME / 2);
+			
+		spin(LEFT, SPEED);
+		_delay_ms(TIME);
+		halt();
+		_delay_ms(TIME / 2);
+
+		spin(RIGHT, SPEED);
+		_delay_ms(TIME * 2);
+		halt();
+		_delay_ms(TIME / 2);
+			
+		spin(LEFT, SPEED);
+		_delay_ms(TIME);
+		halt();
+		_delay_ms(TIME / 2);
+	}	
 }
 
 void initMotors(void)
