@@ -65,7 +65,9 @@
 
 #define NUM_ENCODERS 2
 
-// Left
+#define LEFT_ENCODER 0
+#define RIGHT_ENCODER 1
+
 // -------------------- Encoder 0 connections --------------------
 // Phase A quadrature encoder output should connect to this interrupt line:
 // *** NOTE: the choice of interrupt PORT, DDR, and PIN must match the external
@@ -80,10 +82,10 @@
 #define ENC0_ISCX1					ISC01	// matching Interrupt Sense Config bit1
 // PhaseA Port/Pin Configuration
 // *** PORTx, DDRx, PINx, and Pxn should all have the same letter for "x" ***
-#define ENC0_PHASEA_PORT			PORTC	// PhaseA port register
-#define ENC0_PHASEA_DDR				DDRC	// PhaseA port direction register
-#define ENC0_PHASEA_PORTIN			PINC	// PhaseA port input register
-#define ENC0_PHASEA_PIN				PC1		// PhaseA port pin
+#define ENC0_PHASEA_PORT			PORTD	// PhaseA port register
+#define ENC0_PHASEA_DDR				DDRD	// PhaseA port direction register
+#define ENC0_PHASEA_PORTIN			PIND	// PhaseA port input register
+#define ENC0_PHASEA_PIN				PD2		// PhaseA port pin
 // Phase B quadrature encoder output should connect to this direction line:
 // *** PORTx, DDRx, PINx, and Pxn should all have the same letter for "x" ***
 //#define ENC0_PHASEB_PORT			PORTE	// PhaseB port register
@@ -106,10 +108,10 @@
 #define ENC1_ISCX1					ISC11	// matching Interrupt Sense Config bit1
 // PhaseA Port/Pin Configuration
 // *** PORTx, DDRx, PINx, and Pxn should all have the same letter for "x" ***
-#define ENC1_PHASEA_PORT			PORTC	// PhaseA port register
-#define ENC1_PHASEA_PORTIN			PINC	// PhaseA port input register
-#define ENC1_PHASEA_DDR				DDRC	// PhaseA port direction register
-#define ENC1_PHASEA_PIN				PC3		// PhaseA port pin
+#define ENC1_PHASEA_PORT			PORTD	// PhaseA port register
+#define ENC1_PHASEA_PORTIN			PIND	// PhaseA port input register
+#define ENC1_PHASEA_DDR				DDRD	// PhaseA port direction register
+#define ENC1_PHASEA_PIN				PD3		// PhaseA port pin
 // Phase B quadrature encoder output should connect to this direction line:
 // *** PORTx, DDRx, PINx, and Pxn should all have the same letter for "x" ***
 //#define ENC1_PHASEB_PORT			PORTE	// PhaseB port register

@@ -9,6 +9,8 @@
 #define RIGHT_STRAIGHT_SPEED 150
 
 void testMotors(void);
+void testEncoders();
+
 void initMotors(void);
 
 // Stop both sides

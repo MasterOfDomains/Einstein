@@ -36,8 +36,8 @@ volatile EncoderStateType EncoderState[NUM_ENCODERS];
 
 u08 getEncoderNumber(side robotSide)
 {
-	if (robotSide == LEFT) return 0;
-	else return 1;
+	if (robotSide == LEFT) return LEFT_ENCODER;
+	else return RIGHT_ENCODER;
 }
 
 

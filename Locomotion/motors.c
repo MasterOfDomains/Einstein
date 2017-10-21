@@ -119,6 +119,25 @@ void testMotorsHalt() {
 	_delay_ms(5000);
 }
 
+
+void testEncoders() {
+	s32 distLeft = 0;
+	s32 distRight = 0;
+	
+	while (1) {
+		if (encoderGetPosition(LEFT_ENCODER) != distLeft) {
+			distLeft = encoderGetPosition(LEFT_ENCODER);
+			rprintf("Left: %d", distLeft);
+			rprintfCRLF();
+		}
+		if (encoderGetPosition(RIGHT_ENCODER) != distRight) {
+			distRight = encoderGetPosition(RIGHT_ENCODER);
+			rprintf("Right: %d", distRight);
+			rprintfCRLF();
+		}
+	}
+}
+
 void testMotors(void)
 {
 #define SPEED 200

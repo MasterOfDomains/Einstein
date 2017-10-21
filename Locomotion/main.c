@@ -7,6 +7,7 @@
 #include "../rprintf.h"
 
 #include "uart.h"
+#include "encoder.h"
 #include "lutils.h"
 #include "interface.h"
 #include "motors.h"
@@ -18,7 +19,7 @@ int main (void)
 {
 	_delay_ms(3000);
 	init();
-	//testMotors();
+
 	while (1)
 	{
 		struct commandStruct command = waitForCommand();
@@ -65,6 +66,7 @@ void init(void)
 	rprintfProgStrM("Starting...");
 	rprintfCRLF();
 	initMotors();
+	initEncoders();
 	initInterface();
 }
 
