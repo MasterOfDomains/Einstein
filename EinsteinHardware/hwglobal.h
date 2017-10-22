@@ -160,8 +160,6 @@ typedef enum
 	ASSISTANT
 } uartName;
 
-#define EXTERNAL_MOTOR_CONTROL
-
 #define SERVOS_UART 0
 #define SERVOS_UART_BAUDRATE 19200
 

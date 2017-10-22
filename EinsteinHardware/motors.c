@@ -35,7 +35,7 @@ typedef enum
 	SPIN
 } command;
 
-void externalMove(side moveSide, direction dir, float amount, u08 speed)
+void externalMove(side moveSide, direction dir, u08 speed, float amount)
 {
 	// Convert amount to byte array for i2c transfer
 	union
@@ -78,7 +78,7 @@ void externalSpin(side spinSide, u08 speed)
 	_delay_ms(7);
 }
 
-void externalTwist(side spinSide, float amount, u08 speed)
+void externalTwist(side spinSide, u08 speed, float amount)
 {
 	u08 sendDataLength = 8;
 	u08 sendData[sendDataLength];
@@ -198,11 +198,18 @@ void setSpeed(side motorSide, direction motorDir, u08 speed)
 void testMotors(void)
 {
 	
-#define SPEED 200
+#define SPEED 127
 #define TIME 1000
 
 	while(1)
 	{
+		externalMove(CENTER, FORWARD, SPEED, 32);
+		_delay_ms(TIME / 2);
+				
+		externalMove(CENTER, BACKWARD, SPEED, 32);
+		_delay_ms(TIME / 2);
+				
+		/*
 		go(FORWARD, SPEED);
 		_delay_ms(TIME);
 		halt();
@@ -227,6 +234,7 @@ void testMotors(void)
 		_delay_ms(TIME);
 		halt();
 		_delay_ms(TIME / 2);
+		*/
 	}	
 }
 
