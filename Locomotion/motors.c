@@ -22,7 +22,7 @@
 #define RIGHT_FORWARD PC3
 #define RIGHT_BACKWARD PC2
 
-void signalDistanceTraveled();
+void signalDistanceTraversed();
 BOOL isInterrupt();
 
 void go(direction dir, u08 speed)
@@ -68,8 +68,7 @@ void move(direction dir, u08 speed, float distance, BOOL stop)
 		avgDist = (distLeft + distRight)/2;
 	}
 	if (stop) halt();
-	signalDistanceTraveled();
-	encoderOff();
+	signalDistanceTraversed();
 }
 
 void twist(side spinSide, u08 speed, float amount)
@@ -82,7 +81,7 @@ void twist(side spinSide, u08 speed, float amount)
 	}
 	halt();
 	
-	signalDistanceTraveled();
+	signalDistanceTraversed();
 	encoderOff();
 }
 
@@ -226,7 +225,7 @@ void testEncoders() {
 	}
 }
 
-void signalDistanceTraveled()
+void signalDistanceTraversed()
 {
 	if (PORT_IS_ON(INTERRUPTER_PORT, INTERRUPTER_BIT))
 	{

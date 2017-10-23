@@ -35,6 +35,8 @@ typedef enum
 	SPIN
 } command;
 
+BOOL distanceReached();
+
 void externalMove(side moveSide, direction dir, u08 speed, float amount)
 {
 	// Convert amount to byte array for i2c transfer
@@ -204,11 +206,14 @@ void testMotors(void)
 	while(1)
 	{
 		externalMove(CENTER, FORWARD, SPEED, 32);
-		_delay_ms(TIME / 2);
+		while(!distanceReached());
+		
 				
 		externalMove(CENTER, BACKWARD, SPEED, 32);
-		_delay_ms(TIME / 2);
+		while(!distanceReached());
 				
+		while(1);
+
 		/*
 		go(FORWARD, SPEED);
 		_delay_ms(TIME);
@@ -258,3 +263,6 @@ void initMotors(void)
 #endif
 }
 
+BOOL distanceReached() {
+	return(PORT_IS_OFF(PORTC, PC2));
+}
