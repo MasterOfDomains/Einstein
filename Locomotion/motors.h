@@ -2,8 +2,10 @@
 #define MOTORS_H
 
 #include "../global.h"
-
 #include "lutils.h"
+
+#define INTERRUPTER_PORT PORTB
+#define INTERRUPTER_BIT PB0
 
 #define LEFT_STRAIGHT_SPEED 150
 #define RIGHT_STRAIGHT_SPEED 150

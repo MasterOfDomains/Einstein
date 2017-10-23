@@ -151,7 +151,7 @@ void initPorts(void)
 	DDRB = 0b11111111;
 	//       ||||||||
 	//       |||||||\___0: Debug LED, OUTPUT, Pin 1
-	//       ||||||\____1: 
+	//       ||||||\____1: Clock Out, Pin 2
 	//       |||||\_____2: Left Motor FORWARD, OUTPUT, Pin 3 / Interrupt In
 	//       ||||\______3: Left Motor PWM (OC0A), OUTPUT, Pin 4
 	//       |||\_______4: Right Motor PWM (OC0B), OUTPUT, Pin 5
@@ -159,7 +159,7 @@ void initPorts(void)
 	//       |\_________6: Right Motor FORWARD, OUTPUT, Pin 7
 	//       \__________7: Right Motor BACKWARD, OUTPUT, Pin 8
 
-	DDRC = 0b11111111;
+	DDRC = 0b11111011;
 	//       ||||||||
 	//       |||||||\___0: I2C SCL, I/O, 
 	//       ||||||\____1: I2C SDA, I/O,
@@ -170,6 +170,7 @@ void initPorts(void)
 	//       |\_________6: 
 	//       \__________7:
 
+	cbi(DDRB, PC2); // No pull-up on Interrupter
 	DDRD = 0b11111010;
 	//       ||||||||
 	//       |||||||\___0: UART 0 Rx (RXD0), INPUT, Pin 14

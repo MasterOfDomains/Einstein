@@ -72,9 +72,9 @@ void init(void)
 
 void initPorts(void)
 {
-	DDRB = 0b00000111;
+	DDRB = 0b00000110;
 	//       ||||||||
-	//       |||||||\___0: Dir Right, Pin 14
+	//       |||||||\___0: Interrupter, Pin 14
 	//       ||||||\____1: LED , Pin 15
 	//       |||||\_____2: Interrupt Out (SS'), Pin 16
 	//       ||||\______3: \
@@ -83,6 +83,7 @@ void initPorts(void)
 	//       |\_________6: Clock In, Pin 9
 	//       \__________7: (Leave floating), Pin 10
 
+	cbi(DDRB, PB0); // No pull-up on Interrupter
 	sbi(DDRB, PB1); // LED off
 	cbi(DDRB, PB2); // Interrupt off
 	cbi(DDRB, PB6); // No pull-up on clock input
