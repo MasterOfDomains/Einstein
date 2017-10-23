@@ -219,7 +219,11 @@ void move(direction dir, u08 speed, float distance, BOOL stop)
 	resetEncoderPositions();
 	s32 distLeft = 0;
 	s32 distRight = 0;
+#ifdef TICKS_PER_UNIT
 	u32 encoderTicks = distance * TICKS_PER_UNIT;
+#else
+	u32 encoderTicks = distance;
+#endif
 	go(dir, speed);
 	s32 avgDist = 0;
 	while (abs(avgDist) < encoderTicks)

@@ -52,7 +52,11 @@ float getDistanceTraveled()
 	volatile EncoderStateType leftEncoder = EncoderState[getEncoderNumber(LEFT)];
 	volatile EncoderStateType rightEncoder = EncoderState[getEncoderNumber(RIGHT)];
 	u32 ticksTraveled = (u64) (leftEncoder.position + rightEncoder.position)/2;
+#ifdef TICKS_PER_UNIT
 	return ((float) ticksTraveled) / TICKS_PER_UNIT;
+#else
+	return ((float) ticksTraveled);
+#endif
 }
 
 float getDistanceTraveledLeft()

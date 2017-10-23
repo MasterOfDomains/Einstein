@@ -96,8 +96,6 @@
 #include "encoderconf.h"
 #include "Lutils.h"
 
-#define TICKS_PER_UNIT 8
-
 // JSR - For supporting single channel encoders
 BOOL leftForward;
 BOOL rightForward;
