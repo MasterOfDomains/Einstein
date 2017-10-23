@@ -46,6 +46,32 @@ void spin(side spinSide, u08 speed)
 	}
 }
 
+void move(direction dir, u08 speed, float distance, BOOL stop)
+{
+	rprintf("move distance=");
+	rprintfFloat(4, distance);
+	rprintfCRLF();
+	resetEncoderPositions();
+	s32 distLeft = 0;
+	s32 distRight = 0;
+	#ifdef TICKS_PER_UNIT
+	u32 encoderTicks = distance * TICKS_PER_UNIT;
+	#else
+	u32 encoderTicks = distance;
+	#endif
+	go(dir, speed);
+	s32 avgDist = 0;
+	while (abs(avgDist) < encoderTicks && !isInterrupt())
+	{
+		distLeft = getEncoderTicks(LEFT);
+		distRight = getEncoderTicks(RIGHT);
+		avgDist = (distLeft + distRight)/2;
+	}
+	if (stop) halt();
+	signalDistanceTraveled();
+	encoderOff();
+}
+
 void twist(side spinSide, u08 speed, float amount)
 {
 	resetEncoderPositions();
@@ -58,28 +84,6 @@ void twist(side spinSide, u08 speed, float amount)
 	
 	signalDistanceTraveled();
 	encoderOff();
-}
-
-void halt(void)
-{
-	// Hard Stop
-	MOTORS_PORT |= (1 << LEFT_FORWARD);
-	MOTORS_PORT |= (1 << LEFT_BACKWARD);
-	MOTORS_PORT |= (1 << RIGHT_FORWARD);
-	MOTORS_PORT |= (1 << RIGHT_BACKWARD);
-	
-	/*	
-	// Soft Stop
-	MOTORS_PORT &= ~(1 << LEFT_FORWARD);
-	MOTORS_PORT &= ~(1 << LEFT_BACKWARD);
-	MOTORS_PORT &= ~(1 << RIGHT_FORWARD);
-	MOTORS_PORT &= ~(1 << RIGHT_BACKWARD);
-	*/
-	
-	setSpeed(LEFT, MIDDLE, 0);
-	setSpeed(RIGHT, MIDDLE, 0);
-	leftForward = FALSE;
-	rightForward = FALSE;
 }
 
 void setSpeed(side wheel, direction motorDir, u08 speed)
@@ -118,30 +122,26 @@ void setSpeed(side wheel, direction motorDir, u08 speed)
 	}
 }
 
-void move(direction dir, u08 speed, float distance, BOOL stop)
+void halt(void)
 {
-	rprintf("move distance=");
-	rprintfFloat(4, distance);
-	rprintfCRLF();
-	resetEncoderPositions();
-	s32 distLeft = 0;
-	s32 distRight = 0;
-#ifdef TICKS_PER_UNIT
-	u32 encoderTicks = distance * TICKS_PER_UNIT;
-#else
-	u32 encoderTicks = distance;
-#endif
-	go(dir, speed);
-	s32 avgDist = 0;
-	while (abs(avgDist) < encoderTicks && !isInterrupt())
-	{
-		distLeft = getEncoderTicks(LEFT);
-		distRight = getEncoderTicks(RIGHT);
-		avgDist = (distLeft + distRight)/2;
-	}
-	if (stop) halt();
-	signalDistanceTraveled();
-	encoderOff();
+	// Hard Stop
+	MOTORS_PORT |= (1 << LEFT_FORWARD);
+	MOTORS_PORT |= (1 << LEFT_BACKWARD);
+	MOTORS_PORT |= (1 << RIGHT_FORWARD);
+	MOTORS_PORT |= (1 << RIGHT_BACKWARD);
+	
+	/*	
+	// Soft Stop
+	MOTORS_PORT &= ~(1 << LEFT_FORWARD);
+	MOTORS_PORT &= ~(1 << LEFT_BACKWARD);
+	MOTORS_PORT &= ~(1 << RIGHT_FORWARD);
+	MOTORS_PORT &= ~(1 << RIGHT_BACKWARD);
+	*/
+	
+	setSpeed(LEFT, MIDDLE, 0);
+	setSpeed(RIGHT, MIDDLE, 0);
+	leftForward = FALSE;
+	rightForward = FALSE;
 }
 
 void initMotors(void)
