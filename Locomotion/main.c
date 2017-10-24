@@ -68,6 +68,27 @@ void init(void)
 	initMotors();
 	initEncoders();
 	initInterface();
+	
+	rprintfCRLF();
+	rprintfProgStrM("Sides");
+	rprintfCRLF();
+	rprintf("LEFT: %d", LEFT);
+	rprintfCRLF();
+	rprintf("RIGHT: %d", RIGHT);
+	rprintfCRLF();
+	rprintf("CENTER: %d", CENTER);
+	rprintfCRLF();
+	rprintfCRLF();
+	rprintfProgStrM("Directions");
+	rprintfCRLF();
+	rprintf("FORWARD: %d", FORWARD);
+	rprintfCRLF();
+	rprintf("BACKWARD: %d", BACKWARD);
+	rprintfCRLF();
+	rprintf("MIDDLE: %d", MIDDLE);
+	rprintfCRLF();
+	rprintfCRLF();
+
 }
 
 void initPorts(void)
