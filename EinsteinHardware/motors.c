@@ -36,6 +36,7 @@ typedef enum
 } command;
 
 BOOL distanceReached();
+void emergencyStop();
 
 void externalMove(side moveSide, direction dir, u08 speed, float amount)
 {
@@ -207,11 +208,14 @@ void testMotors(void)
 	{
 		externalMove(CENTER, FORWARD, SPEED, 32);
 		while(!distanceReached());
-		
 				
 		externalMove(CENTER, BACKWARD, SPEED, 32);
 		while(!distanceReached());
-				
+
+		externalMove(CENTER, FORWARD, SPEED, 1000);
+		_delay_ms(2000);
+		emergencyStop();
+		
 		while(1);
 
 		/*
@@ -263,6 +267,12 @@ void initMotors(void)
 #endif
 }
 
-BOOL distanceReached() {
+BOOL distanceReached() 
+{
 	return(PORT_IS_OFF(PORTC, PC2));
+}
+
+void emergencyStop() 
+{
+	PORT_OFF(PORTC, PC2);
 }
