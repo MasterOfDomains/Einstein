@@ -217,33 +217,6 @@ void testMotors(void)
 		emergencyStop();
 		
 		while(1);
-
-		/*
-		go(FORWARD, SPEED);
-		_delay_ms(TIME);
-		halt();
-		_delay_ms(TIME / 2);
-
-		go(BACKWARD, SPEED);
-		_delay_ms(TIME);
-		halt();
-		_delay_ms(TIME / 2);
-			
-		spin(LEFT, SPEED);
-		_delay_ms(TIME);
-		halt();
-		_delay_ms(TIME / 2);
-
-		spin(RIGHT, SPEED);
-		_delay_ms(TIME * 2);
-		halt();
-		_delay_ms(TIME / 2);
-			
-		spin(LEFT, SPEED);
-		_delay_ms(TIME);
-		halt();
-		_delay_ms(TIME / 2);
-		*/
 	}	
 }
 
