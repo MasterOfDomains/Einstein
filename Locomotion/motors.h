@@ -10,6 +10,9 @@
 #define LEFT_STRAIGHT_SPEED 150
 #define RIGHT_STRAIGHT_SPEED 150
 
+#define LEFT_ENCODER 0
+#define RIGHT_ENCODER 1
+
 void testMotors(void);
 void testEncoders();
 

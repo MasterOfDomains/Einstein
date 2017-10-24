@@ -65,9 +65,6 @@
 
 #define NUM_ENCODERS 2
 
-#define LEFT_ENCODER 0
-#define RIGHT_ENCODER 1
-
 // -------------------- Encoder 0 connections --------------------
 // Phase A quadrature encoder output should connect to this interrupt line:
 // *** NOTE: the choice of interrupt PORT, DDR, and PIN must match the external
