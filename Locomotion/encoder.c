@@ -61,14 +61,22 @@ float getDistanceTraveled()
 
 float getDistanceTraveledLeft()
 {
-	volatile EncoderStateType leftEncoder = EncoderState[getEncoderNumber(LEFT)];
+volatile EncoderStateType leftEncoder = EncoderState[getEncoderNumber(LEFT)];
+#ifdef TICKS_PER_UNIT
+	return ((float) leftEncoder.position) / TICKS_PER_UNIT;
+#else
 	return ((float) leftEncoder.position);
+#endif
 }
 
 float getDistanceTraveledRight()
 {
-	volatile EncoderStateType rightEncoder = EncoderState[getEncoderNumber(RIGHT)];
+volatile EncoderStateType rightEncoder = EncoderState[getEncoderNumber(RIGHT)];
+#ifdef TICKS_PER_UNIT
+	return ((float) rightEncoder.position) / TICKS_PER_UNIT;
+#else
 	return ((float) rightEncoder.position);
+#endif
 }
 
 void resetEncoderPositions()
