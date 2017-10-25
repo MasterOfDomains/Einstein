@@ -96,6 +96,9 @@
 #include "encoderconf.h"
 #include "Lutils.h"
 
+#define LEFT_ENCODER 0
+#define RIGHT_ENCODER 1
+
 // JSR - For supporting single channel encoders
 BOOL leftForward;
 BOOL rightForward;

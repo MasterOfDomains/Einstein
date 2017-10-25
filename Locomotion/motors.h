@@ -4,14 +4,8 @@
 #include "../global.h"
 #include "lutils.h"
 
-#define INTERRUPTER_PORT PORTB
-#define INTERRUPTER_BIT PB0
-
 #define LEFT_STRAIGHT_SPEED 150
 #define RIGHT_STRAIGHT_SPEED 150
-
-#define LEFT_ENCODER 0
-#define RIGHT_ENCODER 1
 
 void testMotors(void);
 void testEncoders();

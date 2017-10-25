@@ -21,6 +21,16 @@ typedef enum
 	HORIZONTAL
 } orientation;
 
+typedef enum
+{
+	GO,
+	MOVE,
+	SPIN,
+	TWIST,
+	HARD_STOP,
+	SOFT_STOP
+} locomotionCommandName;
+
 // Flip direction or side
 direction oppositeDir(direction dir);
 side oppositeSide(side pSide);

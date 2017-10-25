@@ -6,19 +6,9 @@
 
 #include "lutils.h"
 
-typedef enum
-{
-	GO,
-	MOVE,
-	SPIN,
-	TWIST,
-	HARD_STOP,
-	SOFT_STOP
-} commandName;
-
 struct commandStruct
 {
-	commandName name;
+	locomotionCommandName name;
 	direction commandDir;
 	side commandSide;
 	float distance;

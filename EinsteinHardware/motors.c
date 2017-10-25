@@ -26,15 +26,6 @@
 
 #define EXT_ADDRESS 0xA0
 
-typedef enum
-{
-	GO,
-	MOVE,
-	MOVE_LEFT,
-	MOVE_RIGHT,
-	SPIN
-} command;
-
 BOOL distanceReached();
 void emergencyStop();
 

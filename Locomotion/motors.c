@@ -9,6 +9,11 @@
 #include "lutils.h"
 #include "encoder.h"
 
+
+#define INTERRUPTER_PORT PORTB
+#define INTERRUPTER_DDR DDRB
+#define INTERRUPTER_BIT PB0
+
 // Output Compare Registers
 #define OCR_LEFT OCR0A
 #define OCR_RIGHT OCR0B
@@ -24,6 +29,7 @@
 
 void signalDistanceTraversed();
 BOOL isInterrupt();
+void reset();
 
 void go(direction dir, u08 speed)
 {
@@ -51,7 +57,7 @@ void move(direction dir, u08 speed, float distance, BOOL stop)
 	rprintf("move distance=");
 	rprintfFloat(4, distance);
 	rprintfCRLF();
-	resetEncoderPositions();
+	reset();
 	s32 distLeft = 0;
 	s32 distRight = 0;
 	u32 encoderTicks = distance;
@@ -74,7 +80,7 @@ void move(direction dir, u08 speed, float distance, BOOL stop)
 
 void twist(side spinSide, u08 speed, float amount)
 {
-	resetEncoderPositions();
+	reset();
 	s32 avgDist = 0;
 	while (avgDist < amount && !isInterrupt())
 	{
@@ -230,6 +236,7 @@ void signalDistanceTraversed()
 {
 	if (PORT_IS_ON(INTERRUPTER_PORT, INTERRUPTER_BIT))
 	{
+		sbi(INTERRUPTER_DDR, INTERRUPTER_BIT); // Set to output
 		PORT_OFF(INTERRUPTER_PORT, INTERRUPTER_BIT);
 	}
 }
@@ -237,4 +244,9 @@ void signalDistanceTraversed()
 BOOL isInterrupt()
 {
 	return PORT_IS_OFF(INTERRUPTER_PORT, INTERRUPTER_BIT);
+}
+
+void reset() {
+	cbi(INTERRUPTER_DDR, INTERRUPTER_BIT); // Set to input
+	resetEncoderPositions();
 }

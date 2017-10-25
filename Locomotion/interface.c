@@ -1,11 +1,9 @@
 #include "interface.h"
 
-#include <util/delay.h> // delete?
-
 #include "../twi.h"
 #include "../rprintf.h" // delete?
 #include "lutils.h"
-
+#include "encoder.h"
 
 #define LOC_ADDRESS 0xA0
 
@@ -15,10 +13,16 @@ unsigned char localBufferLength;
 
 volatile BOOL newReceiveFlag = FALSE;
 
+union
+{
+	float fltAmount;
+	u08 bytes[4];
+} amountConverter;
+
 void i2cSlaveReceiveService(u08 receiveDataLength, u08* receiveData);
 u08 i2cSlaveTransmitService(u08 transmitDataLengthMax, u08* transmitData);
 
-commandName getName(void);
+locomotionCommandName getName(void);
 
 struct commandStruct waitForCommand(void)
 {
@@ -30,7 +34,7 @@ struct commandStruct waitForCommand(void)
 	//unsigned char workBuffer[localBufferLength];
 	//for (u08 j = 0; j < localBufferLength; j++)
 	//	workBuffer[j] = localBuffer[j];
-	commandName name = getName();
+	locomotionCommandName name = getName();
 	returnVal.name = name;
 	switch (name)
 	{
@@ -43,11 +47,6 @@ struct commandStruct waitForCommand(void)
 		case MOVE:
 			returnVal.commandSide = localBuffer[2];
 			returnVal.commandDir = localBuffer[3];
-			union
-			{
-				float fltAmount;
-				u08 bytes[4];
-			} amountConverter;
 			amountConverter.bytes[0] = localBuffer[4];
 			amountConverter.bytes[1] = localBuffer[5];
 			amountConverter.bytes[2] = localBuffer[6];
@@ -83,9 +82,9 @@ struct commandStruct waitForCommand(void)
 	return returnVal;
 }
 
-commandName getName(void)
+locomotionCommandName getName(void)
 {
-	commandName returnVal;
+	locomotionCommandName returnVal;
 	u08 char1, char2;
 	char1 = localBuffer[0];
 	char2 = localBuffer[1];
@@ -143,14 +142,17 @@ u08 i2cSlaveTransmitService(u08 transmitDataLengthMax, u08* transmitData)
 
 	// this function will run when a master somewhere else on the bus
 	// addresses us and wishes to read data from us
+	
+	amountConverter.fltAmount = getDistanceTraveled();
 
 	// copy the local buffer to the transmit buffer
 	for (i = 0; i < localBufferLength; i++)
 	{
+		localBuffer[i] = amountConverter.bytes[i];
 		*transmitData++ = localBuffer[i];
 	}
 
 	localBuffer[0]++;
-
+	resetEncoderPositions();
 	return localBufferLength;
 }
