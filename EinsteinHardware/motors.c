@@ -29,6 +29,30 @@
 BOOL distanceReached();
 void signalToStopSlave();
 
+float externalGetDistance()
+{
+	u08 receiveDataLength = 4;
+	u08 receiveData[receiveDataLength];
+
+
+	//i2cMasterSend(EXT_ADDRESS, sendDataLength, sendData);
+	i2cMasterReceive(EXT_ADDRESS, receiveDataLength, receiveData);
+	i2cWaitForComplete();
+	_delay_ms(7);
+	
+	union
+	{
+		float fltAmount;
+		u08 bytes[4];
+	} amountConverter;
+	
+	amountConverter.bytes[0] = receiveData[0];
+	amountConverter.bytes[1] = receiveData[1];
+	amountConverter.bytes[2] = receiveData[2];
+	amountConverter.bytes[3] = receiveData[3];
+	return amountConverter.fltAmount;
+}
+
 void externalGo(direction dir, u08 speed)
 {
 	u08 sendDataLength = 4;
@@ -240,6 +264,9 @@ void testMotors(void)
 		
 		rprintfProgStrM("Should be stopped now for 2 seconds");
 		rprintfCRLF();
+		rprintfProgStrM("Moved: ");
+		rprintfFloat(4, externalGetDistance());
+		rprintfCRLF();
 		_delay_ms(2000);
 
 		rprintfProgStrM("Moving Backward to be interrupted after 2 secs");
@@ -250,6 +277,9 @@ void testMotors(void)
 		externalSoftStop(); // Ensures stopped and reset
 
 		rprintfProgStrM("Should be stopped now for 2 seconds");
+		rprintfCRLF();
+		rprintfProgStrM("Moved: ");
+		rprintfFloat(4, externalGetDistance());
 		rprintfCRLF();
 		_delay_ms(2000);
 	}	
