@@ -27,7 +27,37 @@
 #define EXT_ADDRESS 0xA0
 
 BOOL distanceReached();
-void emergencyStop();
+void signalToStopSlave();
+
+void externalGo(direction dir, u08 speed)
+{
+	u08 sendDataLength = 4;
+	u08 sendData[sendDataLength];
+	sendData[0] = 'G';
+	sendData[1] = 'O';
+
+	sendData[2] = dir; // Direction
+	sendData[3] = speed; // Speed
+
+	i2cMasterSend(EXT_ADDRESS, sendDataLength, sendData);
+	i2cWaitForComplete();
+	_delay_ms(7);
+}
+
+void externalSpin(side spinSide, u08 speed)
+{
+	u08 sendDataLength = 4;
+	u08 sendData[sendDataLength];
+	sendData[0] = 'S';
+	sendData[1] = 'P';
+
+	sendData[2] = spinSide; // Side
+	sendData[3] = speed; // Speed
+
+	i2cMasterSend(EXT_ADDRESS, sendDataLength, sendData);
+	i2cWaitForComplete();
+	_delay_ms(7);
+}
 
 void externalMove(side moveSide, direction dir, u08 speed, float amount)
 {
@@ -57,21 +87,6 @@ void externalMove(side moveSide, direction dir, u08 speed, float amount)
 	_delay_ms(7);
 }
 
-void externalSpin(side spinSide, u08 speed)
-{
-	u08 sendDataLength = 4;
-	u08 sendData[sendDataLength];
-	sendData[0] = 'S';
-	sendData[1] = 'P';
-
-	sendData[2] = spinSide; // Side
-	sendData[3] = speed; // Speed
-
-	i2cMasterSend(EXT_ADDRESS, sendDataLength, sendData);
-	i2cWaitForComplete();
-	_delay_ms(7);
-}
-
 void externalTwist(side spinSide, u08 speed, float amount)
 {
 	u08 sendDataLength = 8;
@@ -88,15 +103,24 @@ void externalTwist(side spinSide, u08 speed, float amount)
 	_delay_ms(7);
 }
 
-void externalGo(direction dir, u08 speed)
+void externalSoftStop()
 {
-	u08 sendDataLength = 4;
+	u08 sendDataLength = 2;
 	u08 sendData[sendDataLength];
-	sendData[0] = 'G';
-	sendData[1] = 'O';
+	sendData[0] = 'S';
+	sendData[1] = 'S';
 
-	sendData[2] = dir; // Direction
-	sendData[3] = speed; // Speed
+	i2cMasterSend(EXT_ADDRESS, sendDataLength, sendData);
+	i2cWaitForComplete();
+	_delay_ms(7);
+}
+
+void externalHardStop()
+{
+	u08 sendDataLength = 2;
+	u08 sendData[sendDataLength];
+	sendData[0] = 'H';
+	sendData[1] = 'S';
 
 	i2cMasterSend(EXT_ADDRESS, sendDataLength, sendData);
 	i2cWaitForComplete();
@@ -197,17 +221,37 @@ void testMotors(void)
 
 	while(1)
 	{
+		rprintfProgStrM("Moving Forward");
+		rprintfCRLF();
 		externalMove(CENTER, FORWARD, SPEED, 32);
 		while(!distanceReached());
 				
+		rprintfProgStrM("Moving Backward");
+		rprintfCRLF();
 		externalMove(CENTER, BACKWARD, SPEED, 32);
 		while(!distanceReached());
 
+		rprintfProgStrM("Moving Forward to be interrupted after 2 secs");
+		rprintfCRLF();
 		externalMove(CENTER, FORWARD, SPEED, 1000);
-		_delay_ms(2000);
-		emergencyStop();
+		_delay_ms(2000); // Doing something useful
+		signalToStopSlave();
+		externalSoftStop(); // Ensures stopped and reset
 		
-		while(1);
+		rprintfProgStrM("Should be stopped now for 2 seconds");
+		rprintfCRLF();
+		_delay_ms(2000);
+
+		rprintfProgStrM("Moving Backward to be interrupted after 2 secs");
+		rprintfCRLF();
+		externalMove(CENTER, BACKWARD, SPEED, 1000);
+		_delay_ms(2000); // Doing something useful
+		signalToStopSlave();
+		externalSoftStop(); // Ensures stopped and reset
+
+		rprintfProgStrM("Should be stopped now for 2 seconds");
+		rprintfCRLF();
+		_delay_ms(2000);
 	}	
 }
 
@@ -236,7 +280,8 @@ BOOL distanceReached()
 	return(PORT_IS_OFF(PORTC, PC2));
 }
 
-void emergencyStop() 
+void signalToStopSlave()
 {
 	PORT_OFF(PORTC, PC2);
+	_delay_ms(100);
 }
