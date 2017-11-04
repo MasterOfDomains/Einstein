@@ -1,7 +1,7 @@
 #include "interface.h"
 
 #include "../twi.h"
-#include "../rprintf.h" // delete?
+#include "../rprintf.h"
 #include "lutils.h"
 #include "encoder.h"
 
@@ -9,7 +9,6 @@
 
 #define LB_ARRAY_SIZE 10
 unsigned char localBuffer[LB_ARRAY_SIZE];
-unsigned char localBufferLength;
 
 volatile BOOL newReceiveFlag = FALSE;
 
@@ -31,9 +30,6 @@ struct commandStruct waitForCommand(void)
 	rprintfCRLF();
 	while (!newReceiveFlag);
 	newReceiveFlag = FALSE;
-	//unsigned char workBuffer[localBufferLength];
-	//for (u08 j = 0; j < localBufferLength; j++)
-	//	workBuffer[j] = localBuffer[j];
 	locomotionCommandName name = getName();
 	returnVal.name = name;
 	switch (name)
@@ -116,43 +112,34 @@ void initInterface(void)
 	i2cSetLocalDeviceAddr(LOC_ADDRESS, TRUE);
 	i2cSetSlaveReceiveHandler(i2cSlaveReceiveService);
 	i2cSetSlaveTransmitHandler(i2cSlaveTransmitService);
-
-	//bufferInit(&i2cBuffer, localBuffer, localBufferLength);
-	//bufferFlush(&i2cBuffer);
 }
 
 void i2cSlaveReceiveService(u08 receiveDataLength, u08* receiveData)
 {
 	u08 i;
-	// this function will run when a master somewhere else on the bus
-	// addresses us and wishes to write data to us
-
-	// copy the received data to a local buffer
 	for (i = 0; i < receiveDataLength; i++)
 	{
 		localBuffer[i] = *receiveData++;
 	}
-	localBufferLength = receiveDataLength;
 	newReceiveFlag = TRUE;
 }
 
 u08 i2cSlaveTransmitService(u08 transmitDataLengthMax, u08* transmitData)
 {
 	u08 i;
-
-	// this function will run when a master somewhere else on the bus
-	// addresses us and wishes to read data from us
-	
-	amountConverter.fltAmount = getDistanceTraveled();
-
-	// copy the local buffer to the transmit buffer
-	for (i = 0; i < localBufferLength; i++)
+	for (i = 0; i < LB_ARRAY_SIZE; i++) 
 	{
-		localBuffer[i] = amountConverter.bytes[i];
+		localBuffer[0] = amountConverter.bytes[0];
+	}
+	amountConverter.fltAmount = getDistanceTraveled();
+	localBuffer[0] = amountConverter.bytes[0];
+	localBuffer[1] = amountConverter.bytes[1];
+	localBuffer[2] = amountConverter.bytes[2];
+	localBuffer[3] = amountConverter.bytes[3];
+	for (i = 0; i < LB_ARRAY_SIZE; i++)
+	{
 		*transmitData++ = localBuffer[i];
 	}
-
 	localBuffer[0]++;
-	resetEncoderPositions();
-	return localBufferLength;
+	return LB_ARRAY_SIZE;
 }

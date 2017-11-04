@@ -188,9 +188,12 @@ SIGNAL(ENC0_SIGNAL)
 	// encoder has generated a pulse
 	// check the relative phase of the input channels
 	// and update position accordingly
-	//if( ((inb(ENC0_PHASEA_PORTIN) & (1<<ENC0_PHASEA_PIN)) == 0) ^
-	//	((inb(ENC0_PHASEB_PORTIN) & (1<<ENC0_PHASEB_PIN)) == 0) )
-	if( ((inb(ENC0_PHASEA_PORTIN) & (1<<ENC0_PHASEA_PIN)) == 0) ^ leftForward )
+#ifdef ENC0_PHASEB_PIN
+	if( ((inb(ENC0_PHASEA_PORTIN) & (1<<ENC0_PHASEA_PIN)) == 0) ^
+		((inb(ENC0_PHASEB_PORTIN) & (1<<ENC0_PHASEB_PIN)) == 0) )
+#else
+	if(leftForward)
+#endif
 	{
 		EncoderState[0].position++;
 	}
@@ -208,9 +211,12 @@ SIGNAL(ENC1_SIGNAL)
 	// encoder has generated a pulse
 	// check the relative phase of the input channels
 	// and update position accordingly
-	//if( ((inb(ENC1_PHASEA_PORTIN) & (1<<ENC1_PHASEA_PIN)) == 0) ^
-	//	((inb(ENC1_PHASEB_PORTIN) & (1<<ENC1_PHASEB_PIN)) == 0) )
-	if( ((inb(ENC1_PHASEA_PORTIN) & (1<<ENC1_PHASEA_PIN)) == 0) ^ rightForward )
+#ifdef ENC1_PHASEB_PIN
+	if( ((inb(ENC1_PHASEA_PORTIN) & (1<<ENC1_PHASEA_PIN)) == 0) ^
+		((inb(ENC1_PHASEB_PORTIN) & (1<<ENC1_PHASEB_PIN)) == 0) )
+#else
+	if(rightForward)
+#endif
 	{
 		EncoderState[1].position++;
 	}

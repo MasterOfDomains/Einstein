@@ -9,8 +9,8 @@
 #include "lutils.h"
 #include "encoder.h"
 
-
 #define INTERRUPTER_PORT PORTB
+#define INTERRUPTER_PORT_IN PINB
 #define INTERRUPTER_DDR DDRB
 #define INTERRUPTER_BIT PB0
 
@@ -175,45 +175,6 @@ void testMotorsHalt() {
 	_delay_ms(5000);
 }
 
-void testMotors(void)
-{
-	#define SPEED 200
-	#define TIME 1000
-	while(1)
-	{
-		rprintf("Left Forward 127");
-		rprintfCRLF();
-		setSpeed(LEFT, FORWARD, SPEED);
-		_delay_ms(TIME * 5);
-		
-		testMotorsHalt();
-
-		rprintf("Right Forward 127");
-		rprintfCRLF();
-		setSpeed(RIGHT, FORWARD, SPEED);
-		_delay_ms(TIME * 5);
-		
-		testMotorsHalt();
-		
-		rprintf("Left Backward 127");
-		rprintfCRLF();
-		setSpeed(LEFT, BACKWARD, SPEED);
-		_delay_ms(TIME * 5);
-		
-		testMotorsHalt();
-
-		rprintf("Right Backward 127");
-		rprintfCRLF();
-		setSpeed(RIGHT, BACKWARD, SPEED);
-		_delay_ms(TIME * 5);
-		
-		testMotorsHalt();
-		
-		rprintf("Done");
-		rprintfCRLF();
-	}
-}
-
 void testEncoders() {
 	s32 distLeft = 0;
 	s32 distRight = 0;
@@ -232,21 +193,22 @@ void testEncoders() {
 	}
 }
 
+BOOL isInterrupt()
+{
+	return PORT_IS_OFF(INTERRUPTER_PORT_IN, INTERRUPTER_BIT);
+}
+
 void signalDistanceTraversed()
 {
-	if (PORT_IS_ON(INTERRUPTER_PORT, INTERRUPTER_BIT))
+	if (!isInterrupt())
 	{
 		sbi(INTERRUPTER_DDR, INTERRUPTER_BIT); // Set to output
 		PORT_OFF(INTERRUPTER_PORT, INTERRUPTER_BIT);
 	}
 }
 
-BOOL isInterrupt()
-{
-	return PORT_IS_OFF(INTERRUPTER_PORT, INTERRUPTER_BIT);
-}
-
 void reset() {
 	cbi(INTERRUPTER_DDR, INTERRUPTER_BIT); // Set to input
+	cbi(INTERRUPTER_PORT, INTERRUPTER_BIT); // Disable pull-up
 	resetEncoderPositions();
 }

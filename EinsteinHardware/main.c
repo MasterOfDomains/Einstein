@@ -169,9 +169,8 @@ void initPorts(void)
 	//       ||\________5: 
 	//       |\_________6: 
 	//       \__________7: Arm Power, Pin 29
-	//       \__________7:
 
-	cbi(DDRB, PC2); // No pull-up on Interrupter
+	//cbi(DDRB, PC2); // No pull-up on Interrupter
 	DDRD = 0b11111010;
 	//       ||||||||
 	//       |||||||\___0: UART 0 Rx (RXD0), INPUT, Pin 14

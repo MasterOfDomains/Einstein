@@ -13,8 +13,9 @@
 // Output Compare Registers
 #define OCR_LEFT OCR0A
 #define OCR_RIGHT OCR0B
-// Port
+// Ports
 #define MOTORS_PORT PORTB
+
 // Port Bits
 #define LEFT_FORWARD PB2
 #define LEFT_BACKWARD PB5
@@ -26,26 +27,42 @@
 
 #define EXT_ADDRESS 0xA0
 
-BOOL distanceReached();
-void signalToStopSlave();
+#define INTERRUPTER_BIT PC2
+#define INTERRUPTER_DDR DDRC
+#define INTERRUPTER_PORT PORTC
+#define INTERRUPTER_PORT_IN PINC
+
+BOOL distanceReached()
+{
+	return(PORT_IS_OFF(INTERRUPTER_PORT_IN, INTERRUPTER_BIT));
+}
+
+void signalToStopSlave()
+{
+	sbi(INTERRUPTER_DDR, INTERRUPTER_BIT); // Set to output
+	PORT_OFF(INTERRUPTER_PORT, INTERRUPTER_BIT);
+	_delay_ms(100);
+}
+
+void resetInterrupterInput() {
+	cbi(INTERRUPTER_DDR, INTERRUPTER_BIT); // Set to input
+	cbi(INTERRUPTER_PORT, INTERRUPTER_BIT); // Disable pull-up
+}
+
+void waitForInterrupterReset() {
+	while (PORT_IS_OFF(INTERRUPTER_PORT_IN, INTERRUPTER_BIT)); // Wait for slave to release interrupter line
+}
 
 float externalGetDistance()
 {
-	u08 receiveDataLength = 4;
+	u08 receiveDataLength = 0x20;
 	u08 receiveData[receiveDataLength];
-
-
-	//i2cMasterSend(EXT_ADDRESS, sendDataLength, sendData);
 	i2cMasterReceive(EXT_ADDRESS, receiveDataLength, receiveData);
-	i2cWaitForComplete();
-	_delay_ms(7);
-	
 	union
 	{
 		float fltAmount;
 		u08 bytes[4];
 	} amountConverter;
-	
 	amountConverter.bytes[0] = receiveData[0];
 	amountConverter.bytes[1] = receiveData[1];
 	amountConverter.bytes[2] = receiveData[2];
@@ -85,6 +102,7 @@ void externalSpin(side spinSide, u08 speed)
 
 void externalMove(side moveSide, direction dir, u08 speed, float amount)
 {
+	resetInterrupterInput();
 	// Convert amount to byte array for i2c transfer
 	union
 	{
@@ -109,10 +127,12 @@ void externalMove(side moveSide, direction dir, u08 speed, float amount)
 	i2cMasterSend(EXT_ADDRESS, sendDataLength, sendData);
 	i2cWaitForComplete();
 	_delay_ms(7);
+	waitForInterrupterReset();
 }
 
 void externalTwist(side spinSide, u08 speed, float amount)
 {
+	resetInterrupterInput();
 	u08 sendDataLength = 8;
 	u08 sendData[sendDataLength];
 	sendData[0] = 'T';
@@ -125,6 +145,7 @@ void externalTwist(side spinSide, u08 speed, float amount)
 	i2cMasterSend(EXT_ADDRESS, sendDataLength, sendData);
 	i2cWaitForComplete();
 	_delay_ms(7);
+	waitForInterrupterReset();
 }
 
 void externalSoftStop()
@@ -249,39 +270,43 @@ void testMotors(void)
 		rprintfCRLF();
 		externalMove(CENTER, FORWARD, SPEED, 32);
 		while(!distanceReached());
-				
+
+		_delay_ms(2000);
+
 		rprintfProgStrM("Moving Backward");
 		rprintfCRLF();
 		externalMove(CENTER, BACKWARD, SPEED, 32);
 		while(!distanceReached());
 
-		rprintfProgStrM("Moving Forward to be interrupted after 2 secs");
+		_delay_ms(2000);
+
+		rprintfProgStrM("Moving Forward to be interrupted after 5 secs");
 		rprintfCRLF();
 		externalMove(CENTER, FORWARD, SPEED, 1000);
-		_delay_ms(2000); // Doing something useful
+		_delay_ms(5000); // Doing something useful
 		signalToStopSlave();
 		externalSoftStop(); // Ensures stopped and reset
 		
-		rprintfProgStrM("Should be stopped now for 2 seconds");
+		rprintfProgStrM("Should be stopped now for 5 seconds");
 		rprintfCRLF();
 		rprintfProgStrM("Moved: ");
-		rprintfFloat(4, externalGetDistance());
+		rprintfFloat(5, externalGetDistance());
 		rprintfCRLF();
-		_delay_ms(2000);
+		_delay_ms(5000);
 
-		rprintfProgStrM("Moving Backward to be interrupted after 2 secs");
+		rprintfProgStrM("Moving Backward to be interrupted after 5 secs");
 		rprintfCRLF();
 		externalMove(CENTER, BACKWARD, SPEED, 1000);
-		_delay_ms(2000); // Doing something useful
+		_delay_ms(5000); // Doing something useful
 		signalToStopSlave();
 		externalSoftStop(); // Ensures stopped and reset
 
-		rprintfProgStrM("Should be stopped now for 2 seconds");
+		rprintfProgStrM("Should be stopped now for 5 seconds");
 		rprintfCRLF();
 		rprintfProgStrM("Moved: ");
-		rprintfFloat(4, externalGetDistance());
+		rprintfFloat(5, externalGetDistance());
 		rprintfCRLF();
-		_delay_ms(2000);
+		_delay_ms(5000);
 	}	
 }
 
@@ -303,15 +328,4 @@ void initMotors(void)
     // Enable PWM for both pins.
 	TCCR0A |= (1 << COM0A1) | (1 << COM0B1);
 #endif
-}
-
-BOOL distanceReached() 
-{
-	return(PORT_IS_OFF(PORTC, PC2));
-}
-
-void signalToStopSlave()
-{
-	PORT_OFF(PORTC, PC2);
-	_delay_ms(100);
 }

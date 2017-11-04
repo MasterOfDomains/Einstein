@@ -68,27 +68,6 @@ void init(void)
 	initMotors();
 	initEncoders();
 	initInterface();
-	
-	rprintfCRLF();
-	rprintfProgStrM("Sides");
-	rprintfCRLF();
-	rprintf("LEFT: %d", LEFT);
-	rprintfCRLF();
-	rprintf("RIGHT: %d", RIGHT);
-	rprintfCRLF();
-	rprintf("CENTER: %d", CENTER);
-	rprintfCRLF();
-	rprintfCRLF();
-	rprintfProgStrM("Directions");
-	rprintfCRLF();
-	rprintf("FORWARD: %d", FORWARD);
-	rprintfCRLF();
-	rprintf("BACKWARD: %d", BACKWARD);
-	rprintfCRLF();
-	rprintf("MIDDLE: %d", MIDDLE);
-	rprintfCRLF();
-	rprintfCRLF();
-
 }
 
 void initPorts(void)
@@ -104,7 +83,7 @@ void initPorts(void)
 	//       |\_________6: Clock In, Pin 9
 	//       \__________7: (Leave floating), Pin 10
 
-	cbi(DDRB, PB0); // No pull-up on Interrupter
+	//cbi(DDRB, PB0); // No pull-up on Interrupter
 	sbi(DDRB, PB1); // LED off
 	cbi(DDRB, PB2); // Interrupt off
 	cbi(DDRB, PB6); // No pull-up on clock input
@@ -121,7 +100,7 @@ void initPorts(void)
 	//       |\_________6: Reset, Pin 1
 	//       \__________7: (Not Available)
 
-	cbi(DDRC, PC6); // No pull-up for Reset input
+	//cbi(DDRC, PC6); // No pull-up for Reset input
 
 	DDRD = 0b01100010;
 	//       ||||||||
@@ -134,9 +113,11 @@ void initPorts(void)
 	//       |\_________6: PWM Left (OC0A), Pin 12
 	//       \__________7: Encoder B (Left), Pin 13
 
+	/*
 	cbi(DDRD, PD0); // No pull-up on UART Rx
 	cbi(DDRD, PD2); // No pull-up for encoder input
 	cbi(DDRD, PD3); // No pull-up for encoder input
 	cbi(DDRD, PD4); // No pull-up for encoder input
 	cbi(DDRD, PD7); // No pull-up for encoder input
+	*/
 }
