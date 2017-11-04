@@ -59,8 +59,12 @@ struct commandStruct waitForCommand(void)
 		case TWIST:
 			returnVal.commandSide = localBuffer[2];
 			returnVal.commandDir = MIDDLE;
-			returnVal.distance = localBuffer[3];
-			returnVal.speed = localBuffer[4];
+			amountConverter.bytes[0] = localBuffer[3];
+			amountConverter.bytes[1] = localBuffer[4];
+			amountConverter.bytes[2] = localBuffer[5];
+			amountConverter.bytes[3] = localBuffer[6];
+			returnVal.distance = amountConverter.fltAmount;
+			returnVal.speed = localBuffer[7];
 			break;
 		case HARD_STOP:
 			returnVal.commandSide = 0;

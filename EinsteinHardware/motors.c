@@ -103,7 +103,6 @@ void externalSpin(side spinSide, u08 speed)
 void externalMove(side moveSide, direction dir, u08 speed, float amount)
 {
 	resetInterrupterInput();
-	// Convert amount to byte array for i2c transfer
 	union
 	{
 		float fltAmount;
@@ -118,10 +117,10 @@ void externalMove(side moveSide, direction dir, u08 speed, float amount)
 
 	sendData[2] = moveSide; // Side
 	sendData[3] = dir; // Direction
-	sendData[4] = amountConverter.bytes[0]; // Amount
-	sendData[5] = amountConverter.bytes[1]; // Amount
-	sendData[6] = amountConverter.bytes[2]; // Amount
-	sendData[7] = amountConverter.bytes[3]; // Amount
+	sendData[4] = amountConverter.bytes[0];
+	sendData[5] = amountConverter.bytes[1];
+	sendData[6] = amountConverter.bytes[2];
+	sendData[7] = amountConverter.bytes[3];
 	sendData[8] = speed; // Speed
 
 	i2cMasterSend(EXT_ADDRESS, sendDataLength, sendData);
@@ -133,14 +132,23 @@ void externalMove(side moveSide, direction dir, u08 speed, float amount)
 void externalTwist(side spinSide, u08 speed, float amount)
 {
 	resetInterrupterInput();
+	union
+	{
+		float fltAmount;
+		u08 bytes[4];
+	} amountConverter;
+	amountConverter.fltAmount = amount;
 	u08 sendDataLength = 8;
 	u08 sendData[sendDataLength];
 	sendData[0] = 'T';
 	sendData[1] = 'W';
 
 	sendData[2] = spinSide; // Side
-	sendData[3] = amount; // Amount
-	sendData[4] = speed; // Speed
+	sendData[3] = amountConverter.bytes[0];
+	sendData[4] = amountConverter.bytes[1];
+	sendData[5] = amountConverter.bytes[2];
+	sendData[6] = amountConverter.bytes[3];
+	sendData[7] = speed; // Speed
 
 	i2cMasterSend(EXT_ADDRESS, sendDataLength, sendData);
 	i2cWaitForComplete();
