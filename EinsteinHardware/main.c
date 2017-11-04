@@ -168,6 +168,7 @@ void initPorts(void)
 	//       |||\_______4: 
 	//       ||\________5: 
 	//       |\_________6: 
+	//       \__________7: Arm Power, Pin 29
 	//       \__________7:
 
 	cbi(DDRB, PC2); // No pull-up on Interrupter
