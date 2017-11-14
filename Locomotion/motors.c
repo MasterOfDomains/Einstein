@@ -58,12 +58,12 @@ void move(direction dir, u08 speed, float distance, BOOL stop)
 	rprintfFloat(4, distance);
 	rprintfCRLF();
 	reset();
-	s32 distLeft = 0;
-	s32 distRight = 0;
-	u32 encoderTicks = distance;
+	float distLeft = 0;
+	float distRight = 0;
+	float encoderTicks = distance;
 	go(dir, speed);
-	s32 avgDist = 0;
-	while (abs(avgDist) < encoderTicks && !isInterrupt())
+	float avgDist = 0;
+	while (fabs(avgDist) < fabs(encoderTicks) && !isInterrupt())
 	{
 #ifdef TICKS_PER_UNIT
 		distLeft = getEncoderTicks(LEFT) / TICKS_PER_UNIT;
@@ -81,7 +81,7 @@ void move(direction dir, u08 speed, float distance, BOOL stop)
 void twist(side spinSide, u08 speed, float amount)
 {
 	reset();
-	s32 avgDist = 0;
+	float avgDist = 0;
 	while (avgDist < amount && !isInterrupt())
 	{
 		avgDist = (abs(getDistanceTraveledLeft()) + abs(getDistanceTraveledRight()))/2;
@@ -166,6 +166,25 @@ void initMotors(void)
 
     // Enable PWM for both pins.
 	TCCR0A |= (1 << COM0A1) | (1 << COM0B1);
+}
+
+void testMotors() {
+	while (1) {
+		rprintfProgStrM("Moving Forward");
+		rprintfCRLF();
+		move(FORWARD, 50, 32, TRUE);
+		rprintfProgStrM("Forward Distance: ");
+		rprintfFloat(4, getDistanceTraveled());
+		rprintfCRLF();
+		_delay_ms(2000);
+		rprintfProgStrM("Moving Backward");
+		rprintfCRLF();
+		move(BACKWARD, 50, 32, TRUE);
+		rprintfProgStrM("Backward Distance: ");
+		rprintfFloat(12, getDistanceTraveled());
+		rprintfCRLF();
+		_delay_ms(2000);	
+	}
 }
 
 void testMotorsHalt() {

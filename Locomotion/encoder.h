@@ -144,7 +144,7 @@ s32 encoderGetPosition(u08 encoderNum);
 void encoderSetPosition(u08 encoderNum, s32 position);
 
 // Distance traveled in "ticks" of one side
-u32 getEncoderTicks(side robotSide);
+s32 getEncoderTicks(side robotSide);
 
 // Overall distance traveled in UNIT_OF_DISTANCE
 float getDistanceTraveled();

@@ -41,7 +41,7 @@ u08 getEncoderNumber(side robotSide)
 }
 
 
-u32 getEncoderTicks(side robotSide)
+s32 getEncoderTicks(side robotSide)
 {
 	volatile EncoderStateType ticks = EncoderState[getEncoderNumber(robotSide)];
 	return ticks.position;
