@@ -21,7 +21,7 @@
 void initRobot(void);
 void initPorts(void);
 void signalStart();
-void demo();
+void shortDemo();
 
 void wait(u16 miliseconds) {
 	for (u16 i = 0; i < miliseconds; i++) _delay_ms(1);
@@ -32,10 +32,9 @@ int main(void)
 	_delay_ms(3000);
 	initRobot();
 	
-	testMotors();
-	while(1);
+	//testMotors();
 	
-	demo();
+	shortDemo();
 
 	//u08 sendDataLength = 4;
 	//u08 sendData[sendDataLength];
@@ -51,19 +50,35 @@ int main(void)
 	return 0;
 }
 
-void demo() {
+void shortDemo() {
 	raiseArm();
-	spin(LEFT, 60);
+	twist(LEFT, 255, 20);
 	rotateArmToPos(88, FALSE); // Right
 	halt();
-	spin(RIGHT, 50);
+	_delay_ms(500);
+	twist(RIGHT, 255, 40);
 	rotateArmToPos(168, FALSE); // Left
 	halt();
-	spin(LEFT, 60);
+	_delay_ms(500);
+	twist(LEFT, 255, 20);
 	rotateArmToPos(128, FALSE);
 	halt();
+	_delay_ms(500);
 	closeGripper();
-	openGripper();	
+	_delay_ms(500);
+	openGripper();
+	_delay_ms(500);
+	rotateArmToPos(BIN_LEFT, FALSE);
+	closeGripper();
+	_delay_ms(500);
+	openGripper();
+	_delay_ms(500);
+	rotateArmToPos(BIN_RIGHT, FALSE);
+	closeGripper();
+	_delay_ms(500);
+	openGripper();
+	_delay_ms(500);
+	rotateArmToPos(ROTATE_HOME, FALSE);
 }
 
 void initRobot(void)
