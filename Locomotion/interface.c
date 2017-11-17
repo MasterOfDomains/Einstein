@@ -99,6 +99,8 @@ locomotionCommandName getName(void)
 		returnVal = MOVE;
 	else if (char1 == 'S' && char2 == 'P')
 		returnVal = SPIN;
+	else if (char1 == 'T' && char2 == 'W')
+		returnVal = TWIST;
 	else if (char1 == 'S' && char2 == 'S')
 		returnVal = SOFT_STOP;
 	else if (char1 == 'H' && char2 == 'S')

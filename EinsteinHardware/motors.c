@@ -210,6 +210,22 @@ void spin(side spinSide, u08 speed)
 #endif
 }
 
+void move(direction dir, u08 speed, u32 amount) {
+#ifdef EXTERNAL_MOTOR_CONTROL
+	externalMove(CENTER, dir, speed, amount);
+#else
+
+#endif
+}
+
+void twist(side spinSide, u08 speed, u32 amount) {
+#ifdef EXTERNAL_MOTOR_CONTROL
+	externalTwist(spinSide, speed, amount);
+#else
+
+#endif
+}
+
 void halt(void)
 {
 #ifdef EXTERNAL_MOTOR_CONTROL
@@ -272,49 +288,33 @@ void testMotors(void)
 #define SPEED 127
 #define TIME 1000
 
-	while(1)
+	while (1)
 	{
 		rprintfProgStrM("Moving Forward");
 		rprintfCRLF();
-		externalMove(CENTER, FORWARD, SPEED, 32);
+		move(FORWARD, SPEED, 5);
 		while(!distanceReached());
 
 		_delay_ms(2000);
 
 		rprintfProgStrM("Moving Backward");
 		rprintfCRLF();
-		externalMove(CENTER, BACKWARD, SPEED, 32);
+		move(BACKWARD, SPEED, 5);
 		while(!distanceReached());
 
 		_delay_ms(2000);
 
-		rprintfProgStrM("Moving Forward to be interrupted after 5 secs");
+		rprintfProgStrM("Twisting Left");
 		rprintfCRLF();
-		externalMove(CENTER, FORWARD, SPEED, 1000);
-		_delay_ms(5000); // Doing something useful
-		signalToStopSlave();
-		externalSoftStop(); // Ensures stopped and reset
+		twist(LEFT, SPEED, 10);
 		
-		rprintfProgStrM("Should be stopped now for 5 seconds");
+		_delay_ms(2000);
+		
+		rprintfProgStrM("Twisting Right");
 		rprintfCRLF();
-		rprintfProgStrM("Moved: ");
-		rprintfFloat(5, externalGetDistance());
-		rprintfCRLF();
-		_delay_ms(5000);
-
-		rprintfProgStrM("Moving Backward to be interrupted after 5 secs");
-		rprintfCRLF();
-		externalMove(CENTER, BACKWARD, SPEED, 1000);
-		_delay_ms(5000); // Doing something useful
-		signalToStopSlave();
-		externalSoftStop(); // Ensures stopped and reset
-
-		rprintfProgStrM("Should be stopped now for 5 seconds");
-		rprintfCRLF();
-		rprintfProgStrM("Moved: ");
-		rprintfFloat(5, externalGetDistance());
-		rprintfCRLF();
-		_delay_ms(5000);
+		twist(RIGHT, SPEED, 10);
+		
+		_delay_ms(2000);
 	}	
 }
 

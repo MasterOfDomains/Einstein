@@ -25,11 +25,4 @@ void move(direction dir, u08 speed, u32 amount);
 void spin(side spinSide, u08 speed);
 void twist(side spinSide, u08 speed, u32 amount);
 
-#ifdef EXTERNAL_MOTOR_CONTROL
-void externalGo(direction dir, u08 speed);
-void externalMove(side moveSide, direction dir, u08 speed, float amount);
-void externalSpin(side spinSide, u08 speed);
-void externalTwist(side spinSide, u08 speed, float amount);
-#endif
-
 #endif

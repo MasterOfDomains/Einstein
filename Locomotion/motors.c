@@ -82,14 +82,13 @@ void twist(side spinSide, u08 speed, float amount)
 {
 	reset();
 	float avgDist = 0;
+	spin(spinSide, speed);
 	while (avgDist < amount && !isInterrupt())
 	{
-		avgDist = (abs(getDistanceTraveledLeft()) + abs(getDistanceTraveledRight()))/2;
+		avgDist = (fabs(getDistanceTraveledLeft()) + fabs(getDistanceTraveledRight()))/2;
 	}
 	halt();
-	
 	signalDistanceTraversed();
-	encoderOff();
 }
 
 void setSpeed(side wheel, direction motorDir, u08 speed)
