@@ -8,7 +8,6 @@
 #define LEFT_STRAIGHT_SPEED 150
 #define RIGHT_STRAIGHT_SPEED 150
 
-void testMotors(void);
 void initMotors(void);
 
 // Stop both sides
@@ -24,5 +23,8 @@ void move(direction dir, u08 speed, u32 amount);
 // Both sides opposite directions
 void spin(side spinSide, u08 speed);
 void twist(side spinSide, u08 speed, u32 amount);
+
+void testMotors(void);
+void testMotorsAndEncoders(void);
 
 #endif

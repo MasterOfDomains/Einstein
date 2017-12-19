@@ -170,19 +170,34 @@ void initMotors(void)
 void testMotors() {
 	while (1) {
 		rprintfProgStrM("Moving Forward");
+		_delay_ms(2000);
 		rprintfCRLF();
-		move(FORWARD, 50, 32, TRUE);
+		go(FORWARD, 175);
+		rprintfProgStrM("Moving Backward");
+		_delay_ms(2000);
+		rprintfCRLF();
+		go(BACKWARD, 175);
+	}
+}
+
+void testMotorsAndEncoders() {
+	while (1) {
+		rprintfProgStrM("Moving Forward");
+		rprintfCRLF();
+		_delay_ms(2000);
+		move(FORWARD, 127, 32, TRUE);
 		rprintfProgStrM("Forward Distance: ");
 		rprintfFloat(4, getDistanceTraveled());
 		rprintfCRLF();
 		_delay_ms(2000);
 		rprintfProgStrM("Moving Backward");
 		rprintfCRLF();
-		move(BACKWARD, 50, 32, TRUE);
+		_delay_ms(2000);
+		move(BACKWARD, 127, 32, TRUE);
 		rprintfProgStrM("Backward Distance: ");
-		rprintfFloat(12, getDistanceTraveled());
+		rprintfFloat(4, getDistanceTraveled());
 		rprintfCRLF();
-		_delay_ms(2000);	
+		_delay_ms(2000);
 	}
 }
 

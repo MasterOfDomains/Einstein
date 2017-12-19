@@ -284,37 +284,67 @@ void setSpeed(side motorSide, direction motorDir, u08 speed)
 
 void testMotors(void)
 {
-	
-#define SPEED 127
-#define TIME 1000
+	#define SPEED 150
+
+	while (1)
+	{
+		rprintfProgStrM("Going Forward");
+		_delay_ms(2000);
+		rprintfCRLF();
+		go(FORWARD, SPEED);
+		_delay_ms(5000);
+
+		rprintfProgStrM("Going Backward");
+		_delay_ms(2000);
+		rprintfCRLF();
+		go(BACKWARD, SPEED);
+		_delay_ms(5000);
+
+		rprintfProgStrM("Spinning Left");
+		_delay_ms(2000);
+		rprintfCRLF();
+		spin(LEFT, SPEED);
+		_delay_ms(5000);
+
+		rprintfProgStrM("Spinning Right");
+		_delay_ms(2000);
+		rprintfCRLF();
+		spin(RIGHT, SPEED);
+		_delay_ms(5000);
+	}
+}
+
+void testMotorsAndEncoders(void)
+{
+#ifndef SPEED
+#define SPEED 200
+#endif
 
 	while (1)
 	{
 		rprintfProgStrM("Moving Forward");
+		_delay_ms(2000);
 		rprintfCRLF();
 		move(FORWARD, SPEED, 5);
 		while(!distanceReached());
 
-		_delay_ms(2000);
-
 		rprintfProgStrM("Moving Backward");
+		_delay_ms(2000);
 		rprintfCRLF();
 		move(BACKWARD, SPEED, 5);
 		while(!distanceReached());
 
-		_delay_ms(2000);
-
 		rprintfProgStrM("Twisting Left");
+		_delay_ms(2000);
 		rprintfCRLF();
 		twist(LEFT, SPEED, 10);
-		
-		_delay_ms(2000);
+		while(!distanceReached());
 		
 		rprintfProgStrM("Twisting Right");
+		_delay_ms(2000);
 		rprintfCRLF();
 		twist(RIGHT, SPEED, 10);
-		
-		_delay_ms(2000);
+		while(!distanceReached());
 	}	
 }
 
