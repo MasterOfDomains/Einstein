@@ -104,6 +104,7 @@ struct armBendRelations
 void raiseArm(void);
 
 void initArm(void);
+void setHomePosition(armServo servo, int position);
 void armOn(void);
 void armOff(void);
 void returnArm(void);
@@ -115,6 +116,8 @@ void displayArmPositions(void);
 BOOL rotateArm(side rotateSide);
 // Rotates to predetermined position. Set "clear" to ensures clearence
 void rotateArmToPos(armRotatePosition pos, BOOL clear);
+
+void rotateWristToPos(int destPos);
 void grip(gripperPosition pos);
 void closeGripper(void);
 void openGripper(void);

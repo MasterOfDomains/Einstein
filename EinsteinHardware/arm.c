@@ -216,6 +216,11 @@ void rotateArmToPos(armRotatePosition destPos, BOOL clear)
 	}
 }
 
+void rotateWristToPos(int destPos)
+{
+	moveServo(WRIST_ROTATE, destPos);
+}
+
 void bendArmToPos(armBendRelationsName posName)
 {
 	struct armBendRelations pos = armPos(posName);
@@ -289,6 +294,11 @@ void bendArmToPos(armBendRelationsName posName)
 		moveServo(largestMovement.servo, largestMovement.currPos);
 		_delay_ms(SERVO_DELAY);
 	}
+}
+
+void setHomePosition(armServo servo, int position) {
+	moveServo(WRIST_ROTATE, position);
+	setHome(servo);
 }
 
 void initArm(void)

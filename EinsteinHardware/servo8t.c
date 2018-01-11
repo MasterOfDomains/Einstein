@@ -15,7 +15,7 @@
 u16 msDelay = 250;
 u16 sampleSize = 4;
 
-void getReturn(void);
+BOOL getReturn(void);
 void sendCommand(u08 servo, char command);
 
 /*
@@ -126,12 +126,16 @@ void moveServo(u08 servo, u08 pos)
 	getReturn();
 }
 
-void getReturn(void)
+BOOL getReturn(void)
 {
+	BOOL success = FALSE;
 	u08 cr;
 	while (!uartReceiveByte(SERVOS_UART, &cr));
-	if (cr != '\r')
+	if (cr != '\r') {
 		rprintf("No CR, received %d\n\r", cr);
+		success = TRUE;
+	}
+	return success;
 }
 
 u08 getServoPos(u08 servo)
