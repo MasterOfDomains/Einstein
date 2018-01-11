@@ -156,8 +156,7 @@ typedef enum
 	CAMERA,
 	SERVOS,
 	USB,
-	BLUETOOTH,
-	ASSISTANT
+	BLUETOOTH
 } uartName;
 
 #define SERVOS_UART 0
