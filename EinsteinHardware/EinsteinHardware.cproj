@@ -165,6 +165,12 @@
     <Compile Include="core.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="head.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="head.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="hwglobal.c">
       <SubType>compile</SubType>
     </Compile>
