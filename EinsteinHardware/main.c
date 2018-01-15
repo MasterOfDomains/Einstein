@@ -17,6 +17,7 @@
 #include "arm.h"
 #include "servo8t.h"
 #include "compass.h"
+#include "head.h"
 
 void initRobot(void);
 void initPorts(void);
@@ -31,6 +32,14 @@ int main(void)
 {
 	_delay_ms(3000);
 	initRobot();
+	
+	while (1) {
+		struct headSonarReadings readings = readHeadSonars();
+		rprintf("Left: %d, Right: %d", readings.left, readings.right);
+		//rprintf("IR: %d", getIR());
+		rprintfCRLF();
+		_delay_ms(3000);
+	}
 	
 	//testMotors();
 	
@@ -101,9 +110,11 @@ void initRobot(void)
 	a2dSetPrescaler(ADC_PRESCALE_DIV32);
 	a2dSetReference(ADC_REFERENCE_AVCC);
 	
+	initHead();
+	
 	// Two-Wire Interface Devices
-	i2cInit();
-	initMotors();
+	//i2cInit();
+	//initMotors();
 	
 	/*
 	initCompass();  // Calls i2cInit
@@ -111,9 +122,9 @@ void initRobot(void)
 	*/
 	
 	// Arm
-	initServo8t();
-	initArm();
-	armOn();
+	//initServo8t();
+	//initArm();
+	//armOn();
 }
 
 static void dutyCycleLED(u08 dutyCycle, u08 pulseWidth, u16 *currentTime) {
@@ -147,32 +158,31 @@ void signalStart() {
 
 void initPorts(void)
 {
-	DDRA = 0b00000000;  //configure all A ports for input				0x00
-	PORTA = 0b00000000; //make sure pull-up resistors are turned off	0x00
 
 	// ANALOG PORTS
-	DDRA = 0b11111111;
+	DDRA = 0b00000000;
 	//       ||||||||
-	//       |||||||\___0: 
+	//       |||||||\___0: IR 1, Pin 40
 	//       ||||||\____1: 
 	//       |||||\_____2: 
 	//       ||||\______3: 
 	//       |||\_______4: 
 	//       ||\________5: 
-	//       |\_________6: 
-	//       \__________7:
+	//       |\_________6: Left Head Sonar, Pin 34
+	//       \__________7: Right Head Sonar, Pin 33
 
-	// DIGITAL PORTSC:\Robot\Zeus2014\Zeus2014.hex
+	PORTA = 0b00000000; //make sure pull-up resistors are turned off
+	
 	DDRB = 0b11111111;
 	//       ||||||||
 	//       |||||||\___0: Debug LED, OUTPUT, Pin 1
 	//       ||||||\____1: Clock Out, Pin 2
-	//       |||||\_____2: Left Motor FORWARD, OUTPUT, Pin 3 / Interrupt In
-	//       ||||\______3: Left Motor PWM (OC0A), OUTPUT, Pin 4
-	//       |||\_______4: Right Motor PWM (OC0B), OUTPUT, Pin 5
-	//       ||\________5: Left Motor BACKWARD, OUTPUT, Pin 6
-	//       |\_________6: Right Motor FORWARD, OUTPUT, Pin 7
-	//       \__________7: Right Motor BACKWARD, OUTPUT, Pin 8
+	//       |||||\_____2:							/ Left Motor FORWARD, OUTPUT, Pin 3
+	//       ||||\______3:							/ Left Motor PWM (OC0A), OUTPUT, Pin 4
+	//       |||\_______4:							/ Right Motor PWM (OC0B), OUTPUT, Pin 5
+	//       ||\________5:							/ Left Motor BACKWARD, OUTPUT, Pin 6
+	//       |\_________6:							/ Right Motor FORWARD, OUTPUT, Pin 7
+	//       \__________7: Read head sonar enable	/ Right Motor BACKWARD, OUTPUT, Pin 8
 
 	DDRC = 0b11111011;
 	//       ||||||||
@@ -185,7 +195,6 @@ void initPorts(void)
 	//       |\_________6: 
 	//       \__________7: Arm Power, Pin 29
 
-	//cbi(DDRB, PC2); // No pull-up on Interrupter
 	DDRD = 0b11111010;
 	//       ||||||||
 	//       |||||||\___0: UART 0 Rx (RXD0), INPUT, Pin 14
