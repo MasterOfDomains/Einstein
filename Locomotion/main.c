@@ -19,7 +19,7 @@ int main (void)
 {
 	_delay_ms(3000);
 	init();
-
+	//testMotors();
 	while (1)
 	{
 		struct commandStruct command = waitForCommand();
