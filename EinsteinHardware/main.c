@@ -101,9 +101,11 @@ void initRobot(void)
 	a2dSetPrescaler(ADC_PRESCALE_DIV32);
 	a2dSetReference(ADC_REFERENCE_AVCC);
 	
+	initHead();
+	
 	// Two-Wire Interface Devices
-	i2cInit();
-	initMotors();
+	//i2cInit();
+	//initMotors();
 	
 	/*
 	initCompass();  // Calls i2cInit
@@ -111,9 +113,9 @@ void initRobot(void)
 	*/
 	
 	// Arm
-	initServo8t();
-	initArm();
-	armOn();
+	//initServo8t();
+	//initArm();
+	//armOn();
 }
 
 static void dutyCycleLED(u08 dutyCycle, u08 pulseWidth, u16 *currentTime) {

@@ -172,7 +172,7 @@ typedef enum
 #define BLUETOOTH_UART_BAUDRATE 115200
 
 #define USB_UART 1
-#define USB_UART_BAUDRATE 115200
+#define USB_UART_BAUDRATE 9600
 
 #define DEBUG_LED
 
