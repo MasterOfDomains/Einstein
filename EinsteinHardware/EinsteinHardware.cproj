@@ -91,9 +91,10 @@
   <avrgcc.compiler.symbols.DefSymbols>
     <ListValues>
       <Value>DEBUG</Value>
-      <Value>F_CPU=8000000UL</Value>
+      <Value>F_CPU=14745600UL</Value>
       <Value>_AVR_</Value>
       <Value>EXTERNAL_MOTOR_CONTROL</Value>
+      <Value>UARTS_MULTIPLEXED</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>

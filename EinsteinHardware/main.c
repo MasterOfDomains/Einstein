@@ -112,19 +112,21 @@ void initRobot(void)
 	
 	initHead();
 	
-	// Two-Wire Interface Devices
-	//i2cInit();
-	//initMotors();
-	
-	/*
+#ifdef COMPASS
 	initCompass();  // Calls i2cInit
 	testCompass();
-	*/
+#endif
 	
+#ifdef BREADBOARD
+	// Two-Wire Interface Devices
+	i2cInit();
+	initMotors();
+
 	// Arm
-	//initServo8t();
-	//initArm();
-	//armOn();
+	initServo8t();
+	initArm();
+	armOn();
+#endif
 }
 
 static void dutyCycleLED(u08 dutyCycle, u08 pulseWidth, u16 *currentTime) {
