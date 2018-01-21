@@ -13,28 +13,39 @@
 #define SONAR_ENABLE PB7
 #define LEFT_SONAR PA6
 #define RIGHT_SONAR PA7
-#define SONAR_POWERUP_TIME 100
+#define SONAR_PORT PINA
+#define SONAR_ACTIVATION_PULSE_TIME 100
+#define SONAR_CYCLES_PER_INCH 41
+#define MAX_SONAR_CYCLES 4140
 
-void clearADCs() {
-	a2dConvert8bit(LEFT_SONAR);
-	a2dConvert8bit(RIGHT_SONAR);
-	a2dConvert8bit(LEFT_SONAR);
-	a2dConvert8bit(RIGHT_SONAR);
+float getSonarDistance(side sonarSide) {
+	s08 bit = -1;
+	if (sonarSide == LEFT) {
+		bit = LEFT_SONAR;
+	} else if (sonarSide == RIGHT) {
+		bit = RIGHT_SONAR;
+	} else {
+		signalFatalError(INVALID_SENSOR);
+	}
+	u32 sonarCycles = 0;
+	while (PORT_IS_OFF(SONAR_PORT, bit)); // Wait for pulse
+	while (PORT_IS_ON(SONAR_PORT, bit))
+	{
+		sonarCycles += 1;
+		if (sonarCycles == MAX_SONAR_CYCLES) {
+			break;
+		}
+	}
+	return (float)sonarCycles/SONAR_CYCLES_PER_INCH;
 }
 
 struct headSonarReadings readHeadSonars() {
-	clearADCs();
 	struct headSonarReadings readings;
 	PORT_ON(SONAR_ENABLE_PORT, SONAR_ENABLE);
-	
-	_delay_us(SONAR_POWERUP_TIME);
-	readings.left = a2dConvert8bit(LEFT_SONAR);
-	
+	_delay_us(SONAR_ACTIVATION_PULSE_TIME);
 	PORT_OFF(SONAR_ENABLE_PORT, SONAR_ENABLE);
-	
-	_delay_us(SONAR_POWERUP_TIME);
-	readings.right= a2dConvert8bit(RIGHT_SONAR);
-
+	readings.left = getSonarDistance(LEFT);
+	readings.right= getSonarDistance(RIGHT);
 	return readings;
 }
 
@@ -43,5 +54,5 @@ u08 getIR() {
 }
 
 void initHead() {
-	PORT_OFF(PORTB, PB7); // Disable
+	PORT_OFF(PORTB, PB7); // Disable sonars
 }
