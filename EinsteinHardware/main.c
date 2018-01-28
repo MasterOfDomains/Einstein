@@ -117,7 +117,7 @@ void initRobot(void)
 	testCompass();
 #endif
 	
-#ifndef BREADBOARD
+#ifndef MAIN_BOARD_ONLY
 	// Two-Wire Interface Devices
 	i2cInit();
 	initMotors();
