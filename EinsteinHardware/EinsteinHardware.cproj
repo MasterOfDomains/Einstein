@@ -95,6 +95,8 @@
       <Value>_AVR_</Value>
       <Value>EXTERNAL_MOTOR_CONTROL</Value>
       <Value>UARTS_MULTIPLEXED</Value>
+      <Value>F_CPU_IN_CIRCUIT=14745600UL</Value>
+      <Value>F_CPU_BREADBOARD=8000000UL</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
