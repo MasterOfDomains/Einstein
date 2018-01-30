@@ -4,6 +4,7 @@
 #include "../utils.h"
 
 #include "hwglobal.h"
+#include "avrcam.h"
 
 struct headSonarReadings
 {

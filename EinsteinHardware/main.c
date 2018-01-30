@@ -104,6 +104,8 @@ void initRobot(void)
 	rprintfCRLF();
 	rprintfProgStrM("Starting...\n\r");
 	rprintfCRLF();
+	
+	initCamera(CAMERA_UART);
 
 	// ADCs
 	a2dInit();
