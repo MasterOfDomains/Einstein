@@ -6,24 +6,27 @@
 
 #include "hwutils.h"
 
+uartName currentUart0Channel = VOID;
 uartName currentUart1Channel = VOID;
-uartName currentUart2Channel = VOID;
 
 struct uartChannel getUartChannel(uartName name);
 
 struct uartChannel selectUartChannel(uartName name)
 {
 	struct uartChannel channel;
+
 	channel = getUartChannel(name);
-	if ((channel.avrUart == 1 && currentUart1Channel != channel.name) ||
-	    (channel.avrUart == 2 && currentUart2Channel != channel.name))
+	if ((channel.avrUart == 0 && currentUart0Channel != channel.name) ||
+	    (channel.avrUart == 1 && currentUart1Channel != channel.name))
 	{
-		if (channel.avrUart == 1)
+		if (channel.avrUart == 0)
+			currentUart0Channel = channel.name;
+		else if (channel.avrUart == 1)
 			currentUart1Channel = channel.name;
-		else if (channel.avrUart == 2)
-			currentUart2Channel = channel.name;
+
 		// Switching a UART's channel requires resetting baud rate
 		uartSetBaudRate(channel.avrUart, channel.baudRate);
+
 		switch (channel.muxChannel)
 		{
 			case (0):
