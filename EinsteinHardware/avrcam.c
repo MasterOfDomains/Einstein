@@ -21,7 +21,6 @@ BOOL pingCamera(void);
 void clearColorMap(void);
 
 u16 *inputBufferDataLength;
-u16 inputBufferSize;
 
 struct trackingColorArray
 {
@@ -398,7 +397,6 @@ void initCamera(u08 avrUart)
 	
 	camBuffer = uartGetRxBuffer(cameraUART);
 	inputBufferDataLength = &camBuffer->datalength;
-	inputBufferSize = camBuffer->size;
 	
 	while (!pingCamera())
 		_delay_ms(1000);
