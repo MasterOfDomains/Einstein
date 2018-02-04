@@ -386,20 +386,13 @@ void initCamera(u08 avrUart)
 	rprintfProgStrM("Initializing Camera");
 	rprintfCRLF();
 	cameraUART = avrUart;
-	cBuffer *camBuffer;
-	
-				
-	rprintfCRLF();
-	rprintf("Calling...");
-	rprintfCRLF();
-	
 	selectUartChannel(CAMERA);
-	
+	cBuffer *camBuffer;
 	camBuffer = uartGetRxBuffer(cameraUART);
 	inputBufferDataLength = &camBuffer->datalength;
 	
 	while (!pingCamera())
-		_delay_ms(1000);
+		_delay_ms(10);
 		
 	rprintfProgStrM("Comm Successful");
 	rprintfCRLF();
@@ -407,6 +400,9 @@ void initCamera(u08 avrUart)
 	clearTrackingColors();
 	addTrackingColor(YELLOW);
 	addTrackingColor(ORANGE);
+	addTrackingColor(RED);
+	addTrackingColor(BLUE);
+	addTrackingColor(GREEN);
 	createColorMap();
 	setColorMap();
 
