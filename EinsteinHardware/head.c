@@ -55,4 +55,5 @@ u08 getIR() {
 
 void initHead() {
 	PORT_OFF(PORTB, PB7); // Disable sonars
+	initCamera(CAMERA_UART);
 }

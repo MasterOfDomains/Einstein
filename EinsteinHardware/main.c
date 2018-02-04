@@ -93,38 +93,29 @@ void shortDemo() {
 void initRobot(void)
 {
 	initPorts();
-
 	signalStart();
-
 	armOff();
 
-	// UARTs and printf
 	uartInit();
 	setRemoteComm(USB);
 	rprintfCRLF();
-	rprintfProgStrM("Starting...\n\r");
+	rprintfProgStrM("Starting...");
 	rprintfCRLF();
 	
-	initCamera(CAMERA_UART);
-
-	// ADCs
 	a2dInit();
 	a2dSetPrescaler(ADC_PRESCALE_DIV32);
 	a2dSetReference(ADC_REFERENCE_AVCC);
 	
-	initHead();
-	
-#ifdef COMPASS
-	initCompass();  // Calls i2cInit
-	testCompass();
-#endif
+	i2cInit();
 	
 #ifndef MAIN_BOARD_ONLY
-	// Two-Wire Interface Devices
-	i2cInit();
+#ifdef COMPASS
+	initCompass();
+#endif
+#ifndef BREADBOARD
 	initMotors();
-
-	// Arm
+#endif
+	initHead();
 	initServo8t();
 	initArm();
 	armOn();

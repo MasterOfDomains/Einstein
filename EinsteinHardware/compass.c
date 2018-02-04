@@ -170,11 +170,11 @@ u16 readCompass()
 
 void testCompass()
 {
-	while (TRUE)
-	{
-		rprintf("Compass = %d\n\r", readCompass());
-		_delay_ms(1000);
-	}
+	//while (TRUE)
+	//{
+		//rprintf("Compass = %d\n\r", readCompass());
+		//_delay_ms(1000);
+	//}
 }
 
 u16 getHomeHeading(void)
@@ -203,7 +203,6 @@ void calibrateCompass(void)
 
 void initCompass()
 {
-	i2cInit();
 	u08 sendData = 'O'; // Update Bridge Offsets
 	i2cMasterSend(0x42, 1, &sendData);
 	_delay_ms(7);
