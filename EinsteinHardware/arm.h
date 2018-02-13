@@ -26,9 +26,9 @@ typedef enum
 
 typedef enum
 {
-	LEVEL,
-	VERTICAL_LEFT,
-	VERTIAL_RIGHT
+	GRIPPER_LEVEL,
+	GRIPPER_VERTICAL_LEFT,
+	GRIPPER_VERTIAL_RIGHT
 } wirstRotationPositionName;
 
 typedef enum
@@ -65,7 +65,6 @@ void rotateWristToPos(int destPos);
 void grip(gripperPosition pos);
 void closeGripper(void);
 void openGripper(void);
-armRotatePosition getArmRotateSide(side rotateSide);
 
 #endif
 
