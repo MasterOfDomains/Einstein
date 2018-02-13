@@ -1,30 +1,30 @@
 #include "arm.h"
 
 /*------- Servo Positions And Directions of Movement --------------------------------
-'
-'     Servo             Number     Home       Down             Up
-'
-'     SHOULDER_ROTATE   1          167        Clockwise        Counter-Clockwise
-'     SHOULDER_EXTEND   2          156        Forward          Backward
-'     ELBOW             3          125        Forward          Backward
-'     WRIST_EXTEND      4          147        Backward         Forward
-'     WRIST_ROTATE      5          145        Clockwise        Counter-Clockwise
-'     GRIPPER           6          125        Close            Open
-'
-'                     /   \
-'                     \   /
-'                      (o) Wrist Extend
-'                      | |
-'                      | |
-'                      (o) Elbow
-'                      | |
-'                      | |
-'                      (o) Shoulder Extend
-'                    -------
-'                    |     |
-'
-'              <-- Front Of Robot: Forward
-'
+
+Servo             Number	Init	Home	Down		Up
+
+SHOULDER_ROTATE   1			128		128		Clockwise	Counter-Clockwise
+SHOULDER_EXTEND   2			85		122		Forward		Backward
+ELBOW             3			221		90		Forward		Backward
+WRIST_EXTEND      4			39		68		Backward	Forward
+WRIST_ROTATE      5			124		145		Clockwise	Counter-Clockwise
+GRIPPER           6			127		127		Close		Open
+
+                     /   \
+                     \   /
+                      (o) Wrist Extend
+                      | |
+                      | |
+                      (o) Elbow
+                      | |
+                      | |
+                      (o) Shoulder Extend
+                    -------
+                    |     |
+
+              <-- Front Of Robot: Forward
+
 -----------------------------------------------------------------------------------*/
 
 #include <avr/io.h>
@@ -36,10 +36,21 @@
 
 #define ARM_ON_PORT PORTC
 #define ARM_ON PC7
-#define SERVO_DELAY 20 // ms
+#define SERVO_DELAY_MS 20
+
+typedef struct armServoMovement
+{
+	armServo servo;
+	u08 startPos;
+	u08 currPos;
+	u08 destPos;
+	s16 difference;
+} armServoMovement;
 
 struct armPositionStruct
 {
+	armPositionName name;
+	s08 index;
 	u08 shoulderRotate;
 	u08 shoulder;
 	u08 elbow;
@@ -48,85 +59,69 @@ struct armPositionStruct
 	u08 gripper;
 };
 
-//struct armBendR
-
-struct armPositionStruct armInitPositions; // At power-up
-struct armPositionStruct armHomePositions; // Default or not in use
-struct armPositionStruct armPositions; // Current
-
-struct armServoMovement
+struct armPositionsStruct
 {
-	// Copied
-	armServo servo;
-	u08 initPos;
-	u08 startPos;
-	s16 relation;
-	// Calculated
-	u08 destPos;
-	s16 difference;
-	u08 currPos;
+	struct armPositionStruct positions[20];
+	u08 length;
 };
 
-struct armBendRelations armBends[23];
+struct armPositionsStruct armPositions;
+struct armPositionStruct currentArmPosition;
 
-void moveArmServo(armServo servo, u08 dest)
-{
-	u08 startPos, currPos;
-	s08 inc = 1;
+struct armPositionStruct getArmPosition(armPositionName name);
+struct armPositionStruct getNewArmPosition(armPositionName name);
+struct armServoMovement getArmServoMovement(armServo servo, u08 destPos);
+u08 *getCurrentArmServoPosition(armServo servo);
+void incrementTowardPosition(armServoMovement movement);
+void moveArmServo(armServo servo, u08 dest);
+void populateArmPositions();
+
+struct armPositionStruct getArmPosition(armPositionName name) {
+	struct armPositionStruct position;
+	
+	for (u08 i = 0; i < armPositions.length; i++) {
+		if (armPositions.positions->name == name) {
+			position = armPositions.positions[name];
+			break;
+		}
+	}
+	return position;
+}
+
+u08 *getCurrentArmServoPosition(armServo servo) {
+	u08 *returnVal;
 	switch (servo)
 	{
+		case SHOULDER_ROTATE:
+			returnVal = &currentArmPosition.shoulderRotate;
+			break;
 		case SHOULDER:
-			startPos = armPositions.shoulder;
+			returnVal = &currentArmPosition.shoulder;
 			break;
 		case ELBOW:
-			startPos = armPositions.elbow;
+			returnVal = &currentArmPosition.elbow;
+			break;
+		case WRIST_ROTATE:
+			returnVal = &currentArmPosition.wristRotate;
 			break;
 		case WRIST:
-			startPos = armPositions.wrist;
+			returnVal = &currentArmPosition.wrist;
+			break;
+		case GRIPPER:
+			returnVal = &currentArmPosition.gripper;
 			break;
 		default:
-			rprintf("Servo not supported");
+			signalFatalError(INVALID_SERVO);
+			returnVal = NULL;
 	}
-	rprintf("startPos=%d, dest=%d\n\r", startPos, dest);
-	currPos = startPos;
-	if (startPos > dest)
-		inc *= -1;
-	rprintf("inc=");
-	rprintfNum(10, 3, TRUE, ' ', inc);
-	rprintfCRLF();
-	while (dest != currPos)
-	{
-		currPos = (s16)currPos + inc;
-		moveServo(servo, currPos);			
-		_delay_ms(SERVO_DELAY);
-	}
+	return returnVal;
 }
 
 void raiseArm(void)
 {
-	moveArmServo(SHOULDER, armHomePositions.shoulder);
-	moveArmServo(ELBOW, armHomePositions.elbow);
-	moveArmServo(WRIST, armHomePositions.wrist);
-}
-
-armRotatePosition getArmRotateSide(side rotateSide)
-{
-	armRotatePosition pos;
-	if (rotateSide == LEFT)
-		pos = SIDE_LEFT;
-	else //(rotateSide == RIGHT)
-		pos = SIDE_RIGHT;
-	return pos;
-}
-
-struct armBendRelations armPos(armBendRelationsName pos)
-{
-	struct armBendRelations returnStruct;
-	if (pos >= (sizeof(armBends)/sizeof(struct armBendRelations)))
-		signalFatalError(INVALID_ARM_POSITION);
-	else
-		returnStruct = armBends[pos];
-	return returnStruct;
+	moveArmServo(SHOULDER, getArmPosition(HOME).shoulder);
+	moveArmServo(ELBOW, getArmPosition(HOME).elbow);
+	moveArmServo(WRIST, getArmPosition(HOME).wrist);
 }
 
 void armOn()
@@ -143,156 +138,131 @@ void armOff()
 
 void returnArm()
 {
-	rotateArmToPos(ROTATE_HOME, TRUE);
+	//rotateArmToPos(ROTATE_HOME);
 	grip(GRIPPER_HOME);
-	bendArmToPos(ARM_BEND_INIT);
+	moveArmToPos(HOME);
 }
 
 void closeGripper(void)
 {
-	moveServo(GRIPPER, 79);
+	moveArmServo(GRIPPER, 79);
 	_delay_ms(500);
 }
 
 void openGripper(void)
 {
-	moveServo(GRIPPER, armHomePositions.gripper);
+	moveArmServo(GRIPPER, GRIPPER_OPEN_GRAB);
 	_delay_ms(500);
 }
 
 void grip(gripperPosition pos)
 {
-	moveServo(GRIPPER, pos);
+	moveArmServo(GRIPPER, pos);
 	_delay_ms(500);
 }
 
 BOOL rotateArm(side rotateSide)
 {
 	BOOL withinRange = TRUE;
-	u08 destPos;
+	u08 destPos = 0;
+	u08 *position = getCurrentArmServoPosition(SHOULDER_ROTATE);
 	if (rotateSide == LEFT)
 	{
-		destPos = armPositions.shoulderRotate + 1;
+		destPos = *position + 1;
 		if (destPos > SIDE_LEFT + OVER_ROTATE_ALLOWANCE)
 			withinRange = FALSE;
-		else
-			armPositions.shoulderRotate = destPos;
 	}
 	else if (rotateSide == RIGHT)
 	{
-		destPos = armPositions.shoulderRotate - 1;
+		destPos = *position - 1;
 		if (destPos < SIDE_RIGHT - OVER_ROTATE_ALLOWANCE)
 			withinRange = FALSE;
-		else
-			armPositions.shoulderRotate = destPos;
 	}
-	if (withinRange)
+	if (withinRange && destPos)
 	{
-		rprintf(" Rotate %d ", armPositions.shoulderRotate);
+		rprintf(" Rotate to %d ", destPos);
 		rprintfCRLF();
-		moveServo(SHOULDER_ROTATE, armPositions.shoulderRotate);
-		_delay_ms(SERVO_DELAY);
+		moveArmServo(SHOULDER_ROTATE, destPos);
+		_delay_ms(SERVO_DELAY_MS);
 	}
 	return withinRange;
 }
 
-void rotateArmToPos(armRotatePosition destPos, BOOL clear)
+void incrementTowardPosition(armServoMovement movement)
 {
-	if (clear)
-		bendArmToPos(ARM_BEND_ROTATE);
-	side moveSide;
-	if (destPos < armPositions.shoulderRotate)
-		moveSide = RIGHT;
-	else
-		moveSide = LEFT;
-	while (armPositions.shoulderRotate != destPos)
-	{
-		if (moveSide == LEFT)
-			armPositions.shoulderRotate += 1;
-		else if (moveSide == RIGHT)
-			armPositions.shoulderRotate -= 1;
-		moveServo(SHOULDER_ROTATE, armPositions.shoulderRotate);
-		_delay_ms(SERVO_DELAY);
+	s08 inc = 1;
+	rprintf("%d", movement.currPos);
+	if (movement.destPos < movement.currPos) {
+		inc = -1;
 	}
+	movement.currPos = movement.currPos + inc;
+	moveArmServo(movement.servo, movement.currPos);
 }
 
-void rotateWristToPos(int destPos)
+void moveArmServo(armServo servo, u08 dest)
 {
-	moveServo(WRIST_ROTATE, destPos);
-}
-
-void bendArmToPos(armBendRelationsName posName)
-{
-	struct armBendRelations pos = armPos(posName);
-	struct armServoMovement shoulderMovement, elbowMovement;
-	shoulderMovement.servo = SHOULDER;
-	shoulderMovement.initPos = armInitPositions.shoulder;
-	shoulderMovement.startPos = armPositions.shoulder;
-	elbowMovement.servo = ELBOW;
-	elbowMovement.initPos = armInitPositions.elbow;
-	elbowMovement.startPos = armPositions.elbow;
-
-	shoulderMovement.relation = pos.shoulder;
-	elbowMovement.relation = pos.elbow;
-
-	shoulderMovement.destPos = (s16)shoulderMovement.initPos + shoulderMovement.relation;
-	elbowMovement.destPos = (s16)elbowMovement.initPos + elbowMovement.relation;
-	shoulderMovement.difference = (s16)shoulderMovement.startPos - 
-		(s16)shoulderMovement.destPos;
-	elbowMovement.difference = (s16)elbowMovement.startPos - (s16)elbowMovement.destPos;
-	u08 *largestMovementPos, *smallestMovementPos;
-	struct armServoMovement largestMovement, smallestMovement;
-	if (abs(shoulderMovement.difference) > abs(elbowMovement.difference))
-	{
-		largestMovement = shoulderMovement;
-		smallestMovement = elbowMovement;
-		largestMovementPos = &armPositions.shoulder;
-		smallestMovementPos = &armPositions.elbow;
-	}
-	else
-	{
-		largestMovement = elbowMovement;
-		smallestMovement = shoulderMovement;
-		largestMovementPos = &armPositions.elbow;
-		smallestMovementPos = &armPositions.shoulder;
-	}
-
-	u08 largestMoveInc = abs(largestMovement.difference)/abs(smallestMovement.difference);
-	largestMovement.currPos = largestMovement.startPos;
-	smallestMovement.currPos = smallestMovement.startPos;
-	while (smallestMovement.currPos != smallestMovement.destPos)
-	{
-		if (smallestMovement.currPos < smallestMovement.destPos)
-			smallestMovement.currPos += 1;
-		else
-			smallestMovement.currPos -= 1;
-		*smallestMovementPos = smallestMovement.currPos;
-		moveServo(smallestMovement.servo, smallestMovement.currPos);
-		for (u08 largeTicks = 0; largeTicks < largestMoveInc; largeTicks++)
+	if (dest != 0) {
+		rprintf("*servo=%d\n\r", servo);
+		s08 inc = 1;
+		u08 *position = getCurrentArmServoPosition(servo);
+		rprintf("*position=%d, dest=%d\n\r", *position, dest);
+		u08 currPos = *position;
+		if (*position > dest)
+			inc *= -1;
+		while (dest != currPos)
 		{
-			if (largestMovement.currPos != largestMovement.destPos)
-			{
-				if (largestMovement.currPos < largestMovement.destPos)
-					largestMovement.currPos += 1;
-				else
-					largestMovement.currPos -= 1;
-				*largestMovementPos = largestMovement.currPos;
-				moveServo(largestMovement.servo, largestMovement.currPos);
-				_delay_ms(SERVO_DELAY);
-			}
-			else
-				break;
+			*position = (s16)*position + inc;
+			rprintf("*position=%d\n\r", *position);
+			moveServo(servo, *position);			
+			_delay_ms(SERVO_DELAY_MS);
 		}
+		*getCurrentArmServoPosition(servo) = currPos;
 	}
-	while (largestMovement.currPos != largestMovement.destPos)
-	{
-		if (largestMovement.currPos < largestMovement.destPos)
-			largestMovement.currPos += 1;
-		else
-			largestMovement.currPos -= 1;
-		*largestMovementPos = largestMovement.currPos;
-		moveServo(largestMovement.servo, largestMovement.currPos);
-		_delay_ms(SERVO_DELAY);
+}
+
+struct armServoMovement getArmServoMovement(armServo servo, u08 destPos) {
+	struct armServoMovement movement;
+	movement.servo = servo;
+	movement.startPos = *getCurrentArmServoPosition(servo);
+	movement.currPos = movement.startPos;
+	movement.destPos = destPos;
+	if (destPos != 0)
+		movement.difference = (s16)movement.startPos - (s16)movement.destPos;
+	return movement;
+}
+
+void moveArmToPos(armPositionName posName)
+{
+	armServoMovement movements[NUM_SERVOS];
+	movements[SHOULDER_ROTATE - 1] = getArmServoMovement(SHOULDER_ROTATE, getArmPosition(posName).shoulderRotate);
+	movements[SHOULDER - 1] = getArmServoMovement(SHOULDER, getArmPosition(posName).shoulder);
+	movements[ELBOW - 1] = getArmServoMovement(ELBOW, getArmPosition(posName).elbow);
+	movements[WRIST - 1] = getArmServoMovement(WRIST, getArmPosition(posName).wrist);
+	movements[WRIST_ROTATE - 1] = getArmServoMovement(WRIST_ROTATE, getArmPosition(posName).wristRotate);
+	movements[GRIPPER - 1] = getArmServoMovement(GRIPPER, getArmPosition(posName).gripper);
+	u08 largestMovement = 0;
+	for (u08 servo = 0; servo < NUM_SERVOS; servo++) {
+		if (movements[servo].difference != 0 && movements[servo].difference > largestMovement)
+			largestMovement = movements[servo].difference;
+	}
+	u08 percentComplete = 0;
+	for (u08 moveIncrement = 0; moveIncrement < abs(largestMovement); moveIncrement++) {
+		for (u08 servo = 0; servo < NUM_SERVOS; servo++) {
+			armServoMovement movement = movements[servo];
+			u08 amountMoved;
+			u08 *currentPosition = getCurrentArmServoPosition(movement.servo);
+			if (*currentPosition != movement.destPos) {
+				amountMoved = abs((s16)movement.startPos - (u16)movement.currPos);
+				if (movement.difference == largestMovement) {
+					incrementTowardPosition(movement);
+					percentComplete = abs((u16)(amountMoved * 100) / movement.difference);
+				} else {
+					if (abs((u16)(amountMoved * 100) / movement.difference) < percentComplete) {
+						incrementTowardPosition(movement);
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -301,121 +271,78 @@ void setHomePosition(armServo servo, int position) {
 	setHome(servo);
 }
 
-void initArm(void)
+struct armPositionStruct getNewArmPosition(armPositionName name) {
+	struct armPositionStruct returnStruct;
+	returnStruct.name = name;
+	returnStruct.index = armPositions.length;
+	returnStruct.shoulderRotate = 0;
+	returnStruct.shoulder = 0;
+	returnStruct.elbow = 0;
+	returnStruct.wristRotate = 0;
+	returnStruct.wrist = 0;
+	return returnStruct;
+}
+
+void populateArmPositions()
 {
-	// "Initializing Arm\n\r"
+	armPositions.length = 0;
 	
-	//static const int mystring[] PROGMEM = "Hello";
-	//rprintfProgStrM(mystring); // wide character array initialized from non-wide string
+	struct armPositionStruct init = getNewArmPosition(INIT);
+	init.shoulderRotate = getServoPos(SHOULDER_ROTATE);
+	init.shoulder = getServoPos(SHOULDER);
+	init.elbow = getServoPos(ELBOW);
+	init.wrist = getServoPos(WRIST);
+	init.wristRotate = getServoPos(WRIST_ROTATE);
+	init.gripper = getServoPos(GRIPPER);
+	armPositions.positions[armPositions.length++] = init;
 	
-	// #define rprintfProgStrM(string)			(rprintfProgStr(PSTR(string)))
-	
-	//rprintfProgStrM("Hello"); // incompatible pointer type [-Wincompatible-pointer-types]
-	
-	//const char error_code1[7] PROGMEM = {"error1"};
-	//rprintfProgStrM(error_code1);
-	
-	//rprintfProgStr(PSTR("")); // incompatible pointer type [-Wincompatible-pointer-types]
-	
-	//char *mycharPtr = 'A';
-	//rprintfProgStr(mycharPtr); // incompatible pointer type [-Wincompatible-pointer-types]
+	currentArmPosition = init;
 
-	//rprintfProgStr('A'); // makes pointer from integer without a cast [-Wint-conversion]
+	struct armPositionStruct home = getNewArmPosition(HOME);
+	home.shoulder = 122;
+	home.elbow = 90;
+	home.wrist =145;
+	armPositions.positions[armPositions.length++] = home;
 	
-	//char *mychar;
-	//rprintfProgStr(&mychar); // incompatible pointer type [-Wincompatible-pointer-types]
-	//rprintfProgStrM(mychar); // incompatible pointer type [-Wincompatible-pointer-types]
-	//rprintfProgStrM(*mychar); // makes pointer from integer without a cast [-Wint-conversion]
-	
-	//char mychar;
-	//rprintfProgStr(&mychar); // incompatible pointer type [-Wincompatible-pointer-types]
-	//rprintfProgStrM(mychar); // makes pointer from integer without a cast [-Wint-conversion]
-	//rprintfProgStrM(*mychar); // invalid type argument of unary '*' (have 'int')
+	struct armPositionStruct crouch = getNewArmPosition(CROUCH);
+	crouch.shoulder = 130;
+	crouch.elbow = 80;
+	crouch.wrist = 58;
+	armPositions.positions[armPositions.length++] = crouch;
+}
 
-	
-	//rprintfProgStr(1); // makes pointer from integer without a cast [-Wint-conversion]
-
-	//rprintf("Hello");
-
-	/*
-	struct armBendRelations armBendFloorGrab1 = { -151, -92 };
-	struct armBendRelations armBendFloorGrab2 = { -152, -97 };
-	struct armBendRelations armBendFloorGrab3 = { -154, -104 };
-	struct armBendRelations armBendFloorGrab4 = { -156, -112 };
-	struct armBendRelations armBendFloorGrab5 = { -159, -120 };
-	struct armBendRelations armBendCargoFeel1 = { -143, -74 };
-	struct armBendRelations armBendCargoFeel2 = { -144, -78 };
-	struct armBendRelations armBendCargoFeel3 = { -146, -84 };
-	struct armBendRelations armBendCargoFeel4 = { -149, -93 };
-	struct armBendRelations armBendCargoFeel5 = { -152, -102 };
-	struct armBendRelations armBendInit = { 0, 0 };
-	struct armBendRelations armBendRotate = { -60, -68 };
-	struct armBendRelations armBendFloorLook = { -50, 2 };
-	struct armBendRelations armBendFloorDropA = { -113, -74 };
-	struct armBendRelations armBendFloorDropB = { -159, -120 };
-	struct armBendRelations armBendFloorDrop = { -156, -112 };
-	struct armBendRelations armBendBinDrop = { -39, -14 };
-	struct armBendRelations armBendBinClear = { -50, -5 };
-	struct armBendRelations armBendBinGrab = { -54, -5 };
-	struct armBendRelations armBendBinMeasure_Rail = { -25, -12 };
-	struct armBendRelations armBendBinMeasure_Sea = { -29, 0 };
-	struct armBendRelations armBendBinMeasure_Air = { -42, 0 };
-	struct armBendRelations armBendPlatformLook = { -130, -81 };
-	armBends[ARM_BEND_FLOOR_GRAB_1] = armBendFloorGrab1;
-	armBends[ARM_BEND_FLOOR_GRAB_2] = armBendFloorGrab2;
-	armBends[ARM_BEND_FLOOR_GRAB_3] = armBendFloorGrab3;
-	armBends[ARM_BEND_FLOOR_GRAB_4] = armBendFloorGrab4;
-	armBends[ARM_BEND_FLOOR_GRAB_5] = armBendFloorGrab5;
-	armBends[ARM_BEND_CARGO_FEEL_1] = armBendCargoFeel1;
-	armBends[ARM_BEND_CARGO_FEEL_2] = armBendCargoFeel2;
-	armBends[ARM_BEND_CARGO_FEEL_3] = armBendCargoFeel3;
-	armBends[ARM_BEND_CARGO_FEEL_4] = armBendCargoFeel4;
-	armBends[ARM_BEND_CARGO_FEEL_5] = armBendCargoFeel5;
-	armBends[ARM_BEND_INIT] = armBendInit;
-	armBends[ARM_BEND_ROTATE] = armBendRotate;
-	armBends[ARM_BEND_FLOOR_LOOK] = armBendFloorLook;
-	armBends[ARM_BEND_FLOOR_DROP_A] = armBendFloorDropA;
-	armBends[ARM_BEND_FLOOR_DROP_B] = armBendFloorDropB;
-	armBends[ARM_BEND_FLOOR_DROP] = armBendFloorDrop;
-	armBends[ARM_BEND_BIN_DROP] = armBendBinDrop;
-	armBends[ARM_BEND_BIN_CLEAR] = armBendBinClear;
-	armBends[ARM_BEND_BIN_GRAB] = armBendBinGrab;
-	armBends[ARM_BEND_BIN_MEASURE_RAIL] = armBendBinMeasure_Rail;
-	armBends[ARM_BEND_BIN_MEASURE_SEA] = armBendBinMeasure_Sea;
-	armBends[ARM_BEND_BIN_MEASURE_AIR] = armBendBinMeasure_Air;
-	armBends[ARM_BEND_PLATFORM_LOOK] = armBendPlatformLook;
-	*/
-
-	armInitPositions.shoulderRotate = getServoPos(SHOULDER_ROTATE);
-	armInitPositions.shoulder = getServoPos(SHOULDER);
-	armInitPositions.elbow = getServoPos(ELBOW);
-	armInitPositions.wrist = getServoPos(WRIST);
-	armInitPositions.wristRotate = getServoPos(WRIST_ROTATE);
-	armInitPositions.gripper = getServoPos(GRIPPER);
-
-	armPositions.shoulderRotate = armInitPositions.shoulderRotate;
-	armPositions.shoulder = armInitPositions.shoulder;
-	armPositions.elbow = armInitPositions.elbow;
-	armPositions.wrist = armInitPositions.wrist;
-	armPositions.wristRotate = armInitPositions.wristRotate;
-	armPositions.gripper = armInitPositions.gripper;
-	
-	armHomePositions.shoulderRotate = armInitPositions.shoulderRotate;
-	armHomePositions.shoulder = 122;
-	armHomePositions.elbow = 90;
-	armHomePositions.wrist = 68;
-	armHomePositions.wristRotate = armInitPositions.wristRotate;
-	armHomePositions.gripper = armPositions.gripper;
-	
+void initArm()
+{
+	populateArmPositions();
 	//grip(GRIPPER_OPEN_GRAB);
 	//powerDownArm();
 }
 
-void displayArmPositions(void)
+void displayArmPositions(struct armPositionStruct position)
 {
-	//rprintf("Rotate: %d\n\r", armPositions.rotate);
-	rprintf("Shoulder: %d\n\r", armPositions.shoulder);
-	rprintf("Elbow: %d\n\r", armPositions.elbow);
-	//rprintf("Gripper: %d\n\r", armPositions.gripper);
+	switch (position.name) {
+		case CROUCH:
+		rprintfProgStrM("Crouch ");
+		break;
+		case HOME:
+		rprintfProgStrM("Home ");
+		break;
+		case INIT:
+		rprintfProgStrM("Init ");
+		break;
+		case LEAN:
+		rprintfProgStrM("Lean ");
+		break;
+		case SIT:
+		rprintfProgStrM("Sit ");
+		break;
+	}
+	rprintfNum(10, 2, FALSE, ' ', position.index);
+	rprintfCRLF();
+	rprintf("S-Rotate: %d\n\r", position.shoulderRotate);
+	rprintf("Shoulder: %d\n\r", position.shoulder);
+	rprintf("Elbow: %d\n\r", position.elbow);
+	rprintf("W-Rotate: %d\n\r", position.wristRotate);
+	rprintf("Wrist: %d\n\r", position.wrist);
+	rprintf("Gripper: %d\n\r", position.gripper);
 }
-

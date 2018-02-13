@@ -32,62 +32,43 @@ int main(void)
 {
 	_delay_ms(3000);
 	initRobot();
-	
-	while (1) {
-		struct headSonarReadings readings = readHeadSonars();
-		rprintf("Left: %d, Right: %d", readings.left, readings.right);
-		//rprintf("IR: %d", getIR());
-		rprintfCRLF();
-		_delay_ms(3000);
-	}
-	
-	//testMotors();
-	
 	shortDemo();
-
-	//u08 sendDataLength = 4;
-	//u08 sendData[sendDataLength];
-	//sendData[0] = 'S';
-	//sendData[1] = 'P';	i2cMasterSend(0, 0, sendData);
-
-	//printf("myvar = " + myvar);
-	//wait(myvar);
-	//go(FORWARD, 123);
-
 	while(1);
-
 	return 0;
 }
 
 void shortDemo() {
+	displayArmPositions();
 	raiseArm();
+	rprintf("Raised\n\r");
+	displayArmPositions();
 	twist(LEFT, 255, 20);
-	rotateArmToPos(88, FALSE); // Right
+	//rotateArmToPos(88); // Right
 	halt();
 	_delay_ms(500);
 	twist(RIGHT, 255, 40);
-	rotateArmToPos(168, FALSE); // Left
+	//rotateArmToPos(168); // Left
 	halt();
 	_delay_ms(500);
 	twist(LEFT, 255, 20);
-	rotateArmToPos(128, FALSE);
+	//rotateArmToPos(128);
 	halt();
 	_delay_ms(500);
 	closeGripper();
 	_delay_ms(500);
 	openGripper();
 	_delay_ms(500);
-	rotateArmToPos(BIN_LEFT, FALSE);
+	//rotateArmToPos(BIN_LEFT);
 	closeGripper();
 	_delay_ms(500);
 	openGripper();
 	_delay_ms(500);
-	rotateArmToPos(BIN_RIGHT, FALSE);
+	//rotateArmToPos(BIN_RIGHT);
 	closeGripper();
 	_delay_ms(500);
 	openGripper();
 	_delay_ms(500);
-	rotateArmToPos(ROTATE_HOME, FALSE);
+	//rotateArmToPos(ROTATE_HOME);
 }
 
 void initRobot(void)
