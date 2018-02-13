@@ -5,15 +5,6 @@
 #include "hwutils.h"
 #include "servo8t.h"
 
-#define NUM_SERVOS 6
-#define MAX_SHOULDER_BEND -159 // Most extended
-#define MIN_SHOULDER_BEND -50 // Most retracted
-#define MAX_ELBOW_BEND -120 // Most extended
-#define MIN_ELBOW_BEND 2 // Most folded
-#define MAX_ROTATE_LEFT 238
-#define MAX_ROTATE_RIGHT 12
-#define OVER_ROTATE_ALLOWANCE 0
-
 typedef enum
 {
 	SHOULDER_ROTATE = 1,
@@ -32,6 +23,13 @@ typedef enum
 	LEAN,
 	SIT
 } armPositionName;
+
+typedef enum
+{
+	LEVEL,
+	VERTICAL_LEFT,
+	VERTIAL_RIGHT
+} wirstRotationPositionName;
 
 typedef enum
 {

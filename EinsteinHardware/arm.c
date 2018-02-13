@@ -38,6 +38,16 @@ GRIPPER           6			127		127		Close		Open
 #define ARM_ON PC7
 #define SERVO_DELAY_MS 20
 
+#define NUM_SERVOS 6
+#define MAX_SHOULDER_BEND -159 // Most extended
+#define MIN_SHOULDER_BEND -50 // Most retracted
+#define MAX_ELBOW_BEND -120 // Most extended
+#define MIN_ELBOW_BEND 2 // Most folded
+#define MAX_ROTATE_LEFT 238
+#define MAX_ROTATE_RIGHT 12
+#define GRIPPER_VERTICAL_DIST 100
+#define OVER_ROTATE_ALLOWANCE 0
+
 typedef struct armServoMovement
 {
 	armServo servo;
@@ -183,9 +193,28 @@ BOOL rotateArm(side rotateSide)
 		rprintf(" Rotate to %d ", destPos);
 		rprintfCRLF();
 		moveArmServo(SHOULDER_ROTATE, destPos);
-		_delay_ms(SERVO_DELAY_MS);
 	}
 	return withinRange;
+}
+
+void rotateWrist(wirstRotationPositionName positionName)
+{
+	u08 homePosition = getArmPosition(HOME).wristRotate;
+	u08 position = 0;
+	switch (positionName) {
+		case GRIPPER_LEVEL:
+			position = homePosition;
+			break;
+		case GRIPPER_VERTIAL_RIGHT:
+			position = homePosition - GRIPPER_VERTICAL_DIST;
+			break;
+		case GRIPPER_VERTICAL_LEFT:
+			position = homePosition + GRIPPER_VERTICAL_DIST;
+			break;
+	}
+	rprintf(" W-Rotate to %d ", position);
+	rprintfCRLF();
+	moveArmServo(SHOULDER_ROTATE, position);
 }
 
 void incrementTowardPosition(armServoMovement movement)
