@@ -90,16 +90,16 @@ void initRobot(void)
 	i2cInit();
 	
 #ifndef MAIN_BOARD_ONLY
-#ifdef COMPASS
-	initCompass();
-#endif
-#ifndef BREADBOARD
-	initMotors();
-#endif
-	initHead();
-	initServo8t();
-	initArm();
-	armOn();
+	#ifdef COMPASS
+		initCompass();
+	#endif
+	#ifndef BREADBOARD
+		initMotors();
+		initHead();
+		initServo8t();
+		initArm();
+		armOn();
+	#endif
 #endif
 }
 
