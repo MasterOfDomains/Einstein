@@ -65,6 +65,9 @@ void rotateWristToPos(int destPos);
 void grip(gripperPosition pos);
 void closeGripper(void);
 void openGripper(void);
+void moveArmServo(armServo servo, u08 dest);
+
+BOOL checkArmPositions(void); // Delete this
 
 #endif
 
