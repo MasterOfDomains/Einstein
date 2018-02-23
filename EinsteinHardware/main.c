@@ -22,7 +22,7 @@
 void initRobot(void);
 void initPorts(void);
 void signalStart();
-void shortDemo();
+void testNewArmCode();
 
 void wait(u16 miliseconds) {
 	for (u16 i = 0; i < miliseconds; i++) _delay_ms(1);
@@ -32,43 +32,39 @@ int main(void)
 {
 	_delay_ms(3000);
 	initRobot();
-	shortDemo();
+	
+	#define PAUSE 500
+	testNewArmCode();
 	while(1);
 	return 0;
 }
 
-void shortDemo() {
-	displayArmPositions();
-	raiseArm();
-	rprintf("Raised\n\r");
-	displayArmPositions();
-	twist(LEFT, 255, 20);
-	//rotateArmToPos(88); // Right
-	halt();
-	_delay_ms(500);
-	twist(RIGHT, 255, 40);
-	//rotateArmToPos(168); // Left
-	halt();
-	_delay_ms(500);
-	twist(LEFT, 255, 20);
-	//rotateArmToPos(128);
-	halt();
-	_delay_ms(500);
-	closeGripper();
-	_delay_ms(500);
-	openGripper();
-	_delay_ms(500);
-	//rotateArmToPos(BIN_LEFT);
-	closeGripper();
-	_delay_ms(500);
-	openGripper();
-	_delay_ms(500);
-	//rotateArmToPos(BIN_RIGHT);
-	closeGripper();
-	_delay_ms(500);
-	openGripper();
-	_delay_ms(500);
-	//rotateArmToPos(ROTATE_HOME);
+void gripperDemo()
+{
+	grip(GRIPPER_CLOSED);
+	grip(0);
+	rotateGripper(GRIPPER_VERTIAL_RIGHT);
+	grip(GRIPPER_CLOSED);
+	grip(0);
+
+	rotateGripper(GRIPPER_VERTICAL_LEFT);
+	grip(GRIPPER_CLOSED);
+	grip(0);
+				
+	rotateGripper(GRIPPER_LEVEL);
+	grip(GRIPPER_OPEN);
+	grip(0);
+	_delay_ms(PAUSE);
+}
+
+void testNewArmCode() {
+	moveArmToPos(HOME);
+	rprintfCRLF();
+	_delay_ms(PAUSE);
+
+	while (1) {
+		gripperDemo();
+	}	
 }
 
 void initRobot(void)
@@ -182,4 +178,3 @@ void initPorts(void)
 	//       |\_________6: UART Select, OUTPUT, Pin 20
 	//       \__________7: UART Select, OUTPUT, Pin 21
 }
-

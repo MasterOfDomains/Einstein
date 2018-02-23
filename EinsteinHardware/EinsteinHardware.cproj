@@ -156,6 +156,9 @@
     <Compile Include="arm.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="armpos.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="avrcam.c">
       <SubType>compile</SubType>
     </Compile>
