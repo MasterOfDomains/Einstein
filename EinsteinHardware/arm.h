@@ -4,6 +4,7 @@
 #include "hwglobal.h"
 #include "hwutils.h"
 #include "servo8t.h"
+#include "armpos.h"
 
 typedef enum
 {
@@ -11,7 +12,7 @@ typedef enum
 	SHOULDER = 2,
 	ELBOW = 3,
 	WRIST = 4,
-	WRIST_ROTATE = 5,
+	GRIPPER_ROTATE = 5,
 	GRIPPER = 6
 } armServo;
 
@@ -29,7 +30,7 @@ typedef enum
 	GRIPPER_LEVEL,
 	GRIPPER_VERTICAL_LEFT,
 	GRIPPER_VERTIAL_RIGHT
-} wirstRotationPositionName;
+} gripperRotationPositionName;
 
 typedef enum
 {
@@ -42,10 +43,8 @@ typedef enum
 
 typedef enum
 {
-	GRIPPER_CLOSED = 20, // was 85
-	GRIPPER_HOME = 50,
-	GRIPPER_OPEN_GRAB = 63,
-	GRIPPER_OPEN_BIN = 58
+	GRIPPER_CLOSED = 73,
+	GRIPPER_OPEN = 163
 } gripperPosition;
 
 void raiseArm(void);
@@ -56,18 +55,16 @@ void armOn(void);
 void armOff(void);
 void returnArm(void);
 void moveArmToPos(armPositionName posName);
+void moveArmServo(armServo servo, u08 dest);
 
 // Rotates one tick if in range. Returns FALSE if not
 // Leaves arm bend in current position. Does not ensure "Clearence"
 BOOL rotateArm(side rotateSide);
 
-void rotateWristToPos(int destPos);
+// Pass numeric position. Pass 0 to return to initial (level) position.
 void grip(gripperPosition pos);
-void closeGripper(void);
-void openGripper(void);
-void moveArmServo(armServo servo, u08 dest);
-
-BOOL checkArmPositions(void); // Delete this
+// Pass Enum value only
+void rotateGripper(gripperRotationPositionName positionName);
 
 #endif
 
