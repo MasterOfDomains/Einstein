@@ -59,7 +59,6 @@ typedef struct armServoMovement
 struct armPositionStruct
 {
 	armPositionName name;
-	s08 index;
 	u08 shoulderRotate;
 	u08 shoulder;
 	u08 elbow;
@@ -297,7 +296,6 @@ struct armPositionStruct getNewArmPosition(armPositionName name)
 {
 	struct armPositionStruct returnStruct;
 	returnStruct.name = name;
-	returnStruct.index = armPositions.length;
 	returnStruct.shoulderRotate = 0;
 	returnStruct.shoulder = 0;
 	returnStruct.elbow = 0;
