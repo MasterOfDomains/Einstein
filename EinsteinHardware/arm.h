@@ -33,7 +33,7 @@ typedef enum
 } gripperRotationPositionName;
 
 typedef enum
-{
+{ // 110 is rotated to either side
 	ROTATE_HOME = 127,
 	BIN_RIGHT = 72,
 	BIN_LEFT = 177,
@@ -43,8 +43,8 @@ typedef enum
 
 typedef enum
 {
-	GRIPPER_CLOSED = 73,
-	GRIPPER_OPEN = 163
+	GRIPPER_CLOSED = 82,
+	GRIPPER_OPEN = 136
 } gripperPosition;
 
 void raiseArm(void);

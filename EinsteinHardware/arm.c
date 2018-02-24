@@ -4,8 +4,8 @@
 
 Servo				Number	Init	Home	Down		Up
 
-SHOULDER_ROTATE		1		128		128		Clockwise	Counter-Clockwise
-SHOULDER_EXTEND		2		85		122		Backward	Forward
+SHOULDER_ROTATE		1		135		128		Clockwise	Counter-Clockwise
+SHOULDER_EXTEND		2		36		122		Backward	Forward
 ELBOW				3		221		88		Backward	Forward
 WRIST				4		39		63		Forward		Backward
 GRIPPER_ROTATE		5		122		120		Clockwise	Counter-Clockwise
@@ -35,7 +35,7 @@ GRIPPER				6		127		127		Close		Open
 
 #define ARM_ON_PORT PORTC
 #define ARM_ON PC7
-#define SERVO_DELAY_MS 10
+#define SERVO_DELAY_MS 5
 
 #define NUM_SERVOS 6
 #define MAX_SHOULDER_BEND -159 // Most extended
