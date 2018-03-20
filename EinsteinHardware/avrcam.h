@@ -12,18 +12,17 @@
 #define PICTURE_WIDTH 176
 #define PICTURE_HEIGHT 143
 
+#define MAX_TRACKED_BLOBS 8
 #define MAX_COLORS 8
 
 typedef enum
 {
-	ORANGE = 0,
-	YELLOW = 1,
-	RED = 2,
+	RED = 0,
+	ORANGE = 1,
+	GREEN = 2,
 	BLUE = 3,
-	GREEN = 4,
-	BROWN = 5,
-	WHITE = 6,
-	BLACK = 7
+	YELLOW = 4,
+	WHITE = 5
 } color;
 
 struct colorStruct
@@ -40,25 +39,18 @@ struct colorStruct
 #define COLOR_MAP_LENGTH 48
 char colorMap[COLOR_MAP_LENGTH];
 
-struct blob
+typedef struct blob
 {
 	struct point cornerUL;
 	struct point cornerBR;
 	color blobColor;
-};
+} blob;
 
 struct blobArray
 {
-	struct blob contents[8];
+	blob contents[MAX_TRACKED_BLOBS];
 	u08 length;
 };
-
-void clearTrackingColors(void);
-void addTrackingColor(color colorName);
-void createColorMap(void);
-BOOL setColorMap(void);
-void displayColors(void);
-void displayColor(struct colorStruct displayColor);
 
 struct blobArray getBlobs(void);
 void enableTracking(void);
@@ -68,7 +60,5 @@ u08 getPictureHeight(void);
 u08 getPictureCenter(orientation way);
 void initCamera(u08 avrUart);
 void printColorName(color cName, BOOL crlf);
-struct colorStruct getColor(color colorName);
-struct colorStruct * getColorPointer(color structColor);
-u08 validateColorLimit(u08 limit);
+
 #endif

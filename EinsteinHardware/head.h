@@ -4,7 +4,7 @@
 #include "../utils.h"
 
 #include "hwglobal.h"
-#include "avrcam.h"
+#include "vision.h"
 
 struct headSonarReadings
 {
@@ -14,6 +14,7 @@ struct headSonarReadings
 
 void initHead();
 struct headSonarReadings readHeadSonars();
+void headLights(BOOL on);
 u08 getIR();
 
 #endif
