@@ -34,10 +34,13 @@ blob *getBestBlob(color *blobColor)
 	} else {
 		if (blobs.length > 0) {
 			sortBlobArray(&blobs);
+			
+			// DEBUG
 			rprintfCRLF();
 			rprintfProgStrM("Sorted\n\r");
 			displayBlobArray(&blobs);
 			rprintfCRLF();
+			
 			if (blobColor == NULL) {
 				*blobColor = blobs.contents[0].blobColor;
 			}
@@ -62,42 +65,39 @@ void sortBlobArray(struct blobArray *blobs)
 	}
 }
 
-blob *getBlobCluster(color *blobColor, struct blobArray *blobs, blob *returnBlob)
+blob *getBlobCluster(color *blobColor, struct blobArray *sortedBlobArray, blob *returnBlob)
 {
 	blob *blobCluster = NULL;
-	struct blobArray relevantBlobs; // Correct color
+	struct blobArray relevantBlobs; // Largest blob in sorted array may not be desired color
 	relevantBlobs.length = 0;
-	if (blobColor != NULL) {
-		for (u08 i = 0; i < blobs->length; i++) {
-			if (blobs->contents[i].blobColor == *blobColor) {
-				relevantBlobs.contents[relevantBlobs.length++] = blobs->contents[i];
-			}
+	for (u08 i = 0; i < sortedBlobArray->length; i++) {
+		if (sortedBlobArray->contents[i].blobColor == *blobColor) {
+			relevantBlobs.contents[relevantBlobs.length++] = sortedBlobArray->contents[i];
 		}
-		rprintfProgStrM("Relevant\n\r");
-		displayBlobArray(&relevantBlobs);
-		*blobCluster = relevantBlobs.contents[0]; // Begins as largest blob
-		for (u08 i = 1; i < relevantBlobs.length; i++) { // Loop through the rest by size
-			blob blobClusterCandidate = *blobCluster; // Candidate now includes any added blobs
-			if (relevantBlobs.contents[i].cornerBR.x > blobCluster->cornerBR.x || 
-					relevantBlobs.contents[i].cornerBR.y > blobCluster->cornerBR.y) {
-				// Stretch right side or bottom
-				blobClusterCandidate.cornerBR = relevantBlobs.contents[i].cornerBR;
-			}
-			if (relevantBlobs.contents[i].cornerUL.x < blobCluster->cornerUL.x || 
-					relevantBlobs.contents[i].cornerUL.y < blobCluster->cornerUL.y) {
-				// Stretch left side or top
-				blobClusterCandidate.cornerUL = relevantBlobs.contents[i].cornerUL;
-			}
-			if (getBlobWidth(&blobClusterCandidate) <= MAX_BLOB_SIZE && 
-				getBlobHeight(&blobClusterCandidate) <= MAX_BLOB_SIZE) {
-				*blobCluster = blobClusterCandidate;
-			}
-		}
-		if (getBlobWidth(blobCluster) < MIN_BLOB_SIZE ||
-		    getBlobHeight(blobCluster) < MIN_BLOB_SIZE) {
-				blobCluster = NULL;
-			}
 	}
+	rprintfCRLF();
+	rprintfProgStrM("Relevant:\n\r");
+	displayBlobArray(&relevantBlobs);
+	*blobCluster = relevantBlobs.contents[0]; // Begins as largest blob
+	for (u08 i = 1; i < relevantBlobs.length; i++) { // Loop through the rest by size
+		blob blobClusterCandidate = *blobCluster; // Candidate now includes any added blobs
+		if (relevantBlobs.contents[i].cornerBR.x > blobCluster->cornerBR.x ||
+			relevantBlobs.contents[i].cornerBR.y > blobCluster->cornerBR.y) { // Stretch right or bottom
+			blobClusterCandidate.cornerBR = relevantBlobs.contents[i].cornerBR;
+		}
+		if (relevantBlobs.contents[i].cornerUL.x < blobCluster->cornerUL.x || 
+			relevantBlobs.contents[i].cornerUL.y < blobCluster->cornerUL.y) { // Stretch left or top
+			blobClusterCandidate.cornerUL = relevantBlobs.contents[i].cornerUL;
+		}
+		if (getBlobWidth(&blobClusterCandidate) <= MAX_BLOB_SIZE && 
+			getBlobHeight(&blobClusterCandidate) <= MAX_BLOB_SIZE) {
+			*blobCluster = blobClusterCandidate;
+		}
+	}
+	if (getBlobWidth(blobCluster) < MIN_BLOB_SIZE ||
+		getBlobHeight(blobCluster) < MIN_BLOB_SIZE) {
+			blobCluster = NULL;
+		}
 	return blobCluster;
 }
 
