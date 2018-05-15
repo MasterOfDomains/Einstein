@@ -9,6 +9,8 @@
 
 #define INFRARED PA0
 
+#define HEADLIGHTS_PORT PORTB
+#define HEADLIGHTS_ENABLE PB6
 #define SONAR_ENABLE_PORT PORTB
 #define SONAR_ENABLE PB7
 #define LEFT_SONAR PA6
@@ -17,6 +19,15 @@
 #define SONAR_ACTIVATION_PULSE_TIME 100
 #define SONAR_CYCLES_PER_INCH 41
 #define MAX_SONAR_CYCLES 4140
+
+void headLights(BOOL on) {
+	if (on) {
+		PORT_ON(HEADLIGHTS_PORT, HEADLIGHTS_ENABLE);
+	} else {
+		PORT_OFF(HEADLIGHTS_PORT, HEADLIGHTS_ENABLE);
+	}
+	_delay_ms(250);
+}
 
 float getSonarDistance(side sonarSide) {
 	s08 bit = -1;
@@ -54,6 +65,7 @@ u08 getIR() {
 }
 
 void initHead() {
-	PORT_OFF(PORTB, PB7); // Disable sonars
-	initCamera(CAMERA_UART);
+	PORT_OFF(SONAR_ENABLE_PORT, SONAR_ENABLE); // Disable sonars
+	PORT_OFF(HEADLIGHTS_PORT, HEADLIGHTS_ENABLE); // Turn off headlights
+	initVision();
 }
