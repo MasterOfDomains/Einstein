@@ -117,14 +117,14 @@ BOOL uartReceiveByte_TL(u08 uart, u08 *byte, u08 seconds)
 	BOOL success = FALSE;
 	for (u08 second = 0; second < seconds; second++)
 	{
-		for (u16 miliSecond = 0; miliSecond < 1000; miliSecond++)
+		for (u32 microSecond = 0; microSecond < 100000; microSecond++)
 		{
 			if (uartReceiveByte(uart, byte))
 			{
 				success = TRUE;
 				goto endReceive;
 			}
-			_delay_ms(1);
+			_delay_us(10);
 		}
 	}
 	endReceive:
