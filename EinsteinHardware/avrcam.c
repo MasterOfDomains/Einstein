@@ -90,30 +90,40 @@ void enableTracking(void)
 
 void dumpFrame(void)
 {
-	#ifdef UARTS_MULTIPLEXED
+	rprintfProgStrM("Dumping Frame");
+	rprintfCRLF();
+#ifdef UARTS_MULTIPLEXED
 	selectUartChannel(CAMERA);
-	#endif
-	u08 *data = NULL;
+#endif
+
+#define ROW_START_CHAR 0x0B
+#define ROW_END_CHAR 0x0F
+
+	u08 data;
 	uartSendByte(cameraUART, 'D');
 	uartSendByte(cameraUART, 'F');
 	uartSendByte(cameraUART, '\r');
 	if (getAck()) {
-		rprintfProgStrM("Dumping Frame");
-		rprintfCRLF();
-		u08 endLinesReceived = 0;
-		while (endLinesReceived++ < 73) { // PICTURE_HEIGHT / 2 + 1.5 ???
-			while (*data != 0x0f) {
-				uartReceiveByte(cameraUART, data);
+		for (int row = 0; row < PICTURE_HEIGHT_DUMP; row++) {
+			while (!uartReceiveByte(cameraUART, &data));
+			if (data != ROW_START_CHAR) {
+				goto ARVcam_error;
 			}
-			rprintfProgStrM("-");
+			while (!uartReceiveByte(cameraUART, &data));
+			for (int pixel = 0; pixel < PICTURE_WIDTH; pixel++) {
+				while (!uartReceiveByte(cameraUART, &data));
+			}
+			while (!uartReceiveByte(cameraUART, &data));
+			if (data != ROW_END_CHAR) {
+				goto ARVcam_error;
+			}
 		}
-		rprintfCRLF();
-		rprintfProgStrM("Frame Dumped");
+		rprintfProgStrM("Dumped");
 		rprintfCRLF();
 	} else {
+		ARVcam_error:
 		signalFatalError(AVRCAM_COMM_ERROR);
 	}
-	_delay_ms(50);
 }
 
 void disableTracking(void)
@@ -151,7 +161,7 @@ u08 getPictureWidth(void)
 
 u08 getPictureHeight(void)
 {
-	return PICTURE_HEIGHT;
+	return PICTURE_HEIGHT_BLOBS;
 }
 
 u08 getPictureCenter(orientation way)

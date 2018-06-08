@@ -10,7 +10,8 @@
 #include "hwutils.h"
 
 #define PICTURE_WIDTH 176
-#define PICTURE_HEIGHT 143
+#define PICTURE_HEIGHT_BLOBS 144
+#define PICTURE_HEIGHT_DUMP PICTURE_HEIGHT_BLOBS / 2
 
 #define MAX_TRACKED_BLOBS 8
 #define MAX_COLORS 8
@@ -60,5 +61,6 @@ u08 getPictureHeight(void);
 u08 getPictureCenter(orientation way);
 void initCamera(u08 avrUart);
 void printColorName(color cName, BOOL crlf);
+void dumpFrame(void);
 
 #endif
