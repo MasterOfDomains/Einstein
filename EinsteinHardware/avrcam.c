@@ -208,7 +208,6 @@ char getCK(void)
 
 BOOL getAck(void)
 {
-	//rprintfProgStrM("getAck\n\r");
 	BOOL acked = FALSE, ncked = FALSE;
 #ifdef UARTS_MULTIPLEXED
 	selectUartChannel(CAMERA);
@@ -216,24 +215,25 @@ BOOL getAck(void)
 	unsigned char byte;
 	if (uartReceiveByte_TL(cameraUART, &byte, 3))
 	{
-		char lastChar = byte;
-		if (lastChar == 'A') // ACK?
+		char currentChar = byte;
+		if (currentChar == 'A') // ACK?
 		{
-			lastChar = getCK();
-			if (lastChar == '\r')
+			currentChar = getCK();
+			if (currentChar == '\r')
 				acked = TRUE;
 		}
-		else if (lastChar == 'N') // NCK?
+		else if (currentChar == 'N') // NCK?
 		{
 			rprintf("N\n\r");
-			lastChar = getCK();
-			if (lastChar == '\r')
+			currentChar = getCK();
+			if (currentChar == '\r')
 				ncked = TRUE;
 		}
 		if (!acked && !ncked)
 		{
-			rprintf("No Ack/Nck - lastChar: %d\n\r", lastChar);
-			waitForButton();
+			rprintf("No Ack/Nck - currentChar: %d\n\r", currentChar);
+			emptyBufferToScreen();
+			waitForButton(); // Currently does nothing
 		}
 	}
 	else // No byte received
