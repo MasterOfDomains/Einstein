@@ -65,7 +65,11 @@ u08 getIR() {
 }
 
 void initHead() {
+	rprintfProgStrM("Initializing Head");
+	rprintfCRLF();
 	PORT_OFF(SONAR_ENABLE_PORT, SONAR_ENABLE); // Disable sonars
 	PORT_OFF(HEADLIGHTS_PORT, HEADLIGHTS_ENABLE); // Turn off headlights
 	initVision();
+	rprintfProgStrM("Head Initialized");
+	rprintfCRLF();	
 }
