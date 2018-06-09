@@ -77,7 +77,7 @@ struct armPositionsStruct armPositions;
 struct armPositionStruct currentArmPosition;
 
 struct armPositionStruct getArmPosition(armPositionName name);
-struct armPositionStruct getNewArmPosition(armPositionName name);
+struct armPositionStruct getBlankArmPosition(armPositionName name);
 struct armServoMovement getArmServoMovement(armServo servo, u08 destPos);
 u08 *getCurrentArmServoPosition(armServo servo);
 void incrementTowardPosition(armServoMovement movement);
@@ -292,7 +292,7 @@ void setHomePosition(armServo servo, int position)
 	setHome(servo);
 }
 
-struct armPositionStruct getNewArmPosition(armPositionName name)
+struct armPositionStruct getBlankArmPosition(armPositionName name)
 {
 	struct armPositionStruct returnStruct;
 	returnStruct.name = name;
@@ -308,40 +308,51 @@ struct armPositionStruct getNewArmPosition(armPositionName name)
 void populateArmPositions()
 {
 	armPositions.length = 0;
-	
-	struct armPositionStruct init = getNewArmPosition(INIT);
+	rprintfProgStrM("A");
+	struct armPositionStruct init = getBlankArmPosition(INIT);
+	rprintfProgStrM("B");
 	init.shoulderRotate = getServoPos(SHOULDER_ROTATE);
+	rprintfProgStrM("C");
 	init.shoulder = getServoPos(SHOULDER);
+	rprintfProgStrM("D");
 	init.elbow = getServoPos(ELBOW);
+	rprintfProgStrM("E");
 	init.wrist = getServoPos(WRIST);
+	rprintfProgStrM("F");
 	init.gripperRotate = getServoPos(GRIPPER_ROTATE);
+	rprintfProgStrM("G");
 	init.gripper = getServoPos(GRIPPER);
+	rprintfProgStrM("H");
 	armPositions.positions[armPositions.length++] = init;
 	
 	currentArmPosition = init;
 
-	struct armPositionStruct home = getNewArmPosition(HOME);
+	struct armPositionStruct home = getBlankArmPosition(HOME);
 	home.shoulder = HOME_SHOULDER;
 	home.elbow = HOME_ELBOW;
 	home.wrist = HOME_WRIST;
 	armPositions.positions[armPositions.length++] = home;
-	
-	struct armPositionStruct crouch = getNewArmPosition(CROUCH);
+
+	struct armPositionStruct crouch = getBlankArmPosition(CROUCH);
 	crouch.shoulder = CROUCH_SHOULDER;
 	crouch.elbow = CROUCH_ELBOW;
 	crouch.wrist = CROUCH_WRIST;
 	armPositions.positions[armPositions.length++] = crouch;
-	
-	struct armPositionStruct sit = getNewArmPosition(SIT);
+
+	struct armPositionStruct sit = getBlankArmPosition(SIT);
 	sit.shoulder = SIT_SHOULDER;
 	sit.elbow = SIT_ELBOW;
 	sit.wrist = SIT_WRIST;
 	armPositions.positions[armPositions.length++] = sit;
+	rprintfCRLF();
 }
 
 void initArm()
 {
+	rprintfProgStrM("Initializing Arm");
+	rprintfCRLF();
 	populateArmPositions();
 	//grip(GRIPPER_OPEN_GRAB);
 	//powerDownArm();
-}
+	rprintfProgStrM("Arm Initialized");
+	rprintfCRLF();}

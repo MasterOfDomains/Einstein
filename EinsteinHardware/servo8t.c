@@ -144,13 +144,7 @@ u08 getServoPos(u08 servo)
 
 	if (servo < 1 || servo > 8)
 		signalFatalError(INVALID_SERVO);
-
-	u16 delayTime = 20; // Can be less?
-	_delay_ms(delayTime);
-
-	uartFlushReceiveBuffer(SERVOS_UART);
 	sendCommand(servo, 'g');
-	_delay_ms(delayTime);
 	while (!uartReceiveByte(SERVOS_UART, &pos));
 	getReturn();
 	return pos;
