@@ -308,21 +308,13 @@ struct armPositionStruct getBlankArmPosition(armPositionName name)
 void populateArmPositions()
 {
 	armPositions.length = 0;
-	rprintfProgStrM("A");
 	struct armPositionStruct init = getBlankArmPosition(INIT);
-	rprintfProgStrM("B");
 	init.shoulderRotate = getServoPos(SHOULDER_ROTATE);
-	rprintfProgStrM("C");
 	init.shoulder = getServoPos(SHOULDER);
-	rprintfProgStrM("D");
 	init.elbow = getServoPos(ELBOW);
-	rprintfProgStrM("E");
 	init.wrist = getServoPos(WRIST);
-	rprintfProgStrM("F");
 	init.gripperRotate = getServoPos(GRIPPER_ROTATE);
-	rprintfProgStrM("G");
 	init.gripper = getServoPos(GRIPPER);
-	rprintfProgStrM("H");
 	armPositions.positions[armPositions.length++] = init;
 	
 	currentArmPosition = init;
