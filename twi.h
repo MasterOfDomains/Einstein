@@ -118,11 +118,10 @@
 const u08 twiTest;
 
 // types
-typedef enum
-{
-	I2C_IDLE = 0, I2C_BUSY = 1,
-	I2C_MASTER_TX = 2, I2C_MASTER_RX = 3,
-	I2C_SLAVE_TX = 4, I2C_SLAVE_RX = 5
+typedef enum {
+    I2C_IDLE = 0, I2C_BUSY = 1,
+    I2C_MASTER_TX = 2, I2C_MASTER_RX = 3,
+    I2C_SLAVE_TX = 4, I2C_SLAVE_RX = 5
 } eI2cStateType;
 
 // functions
@@ -142,7 +141,7 @@ void i2cSetSlaveReceiveHandler(void (*i2cSlaveRx_func)(u08 receiveDataLength, u0
 //! Set the user function which handles transmitting (outgoing) data as a slave
 void i2cSetSlaveTransmitHandler(u08 (*i2cSlaveTx_func)(u08 transmitDataLengthMax, u08* transmitData));
 
-// Low-level I2C transaction commands 
+// Low-level I2C transaction commands
 //! Send an I2C start condition in Master mode
 void i2cSendStart(void);
 //! Send an I2C stop condition in Master mode
@@ -151,7 +150,7 @@ void i2cSendStop(void);
 void i2cWaitForComplete(void);
 //! Send an (address|R/W) combination or a data byte over I2C
 void i2cSendByte(u08 data);
-//! Receive a data byte over I2C  
+//! Receive a data byte over I2C
 // ackFlag = TRUE if recevied data should be ACK'ed
 // ackFlag = FALSE if recevied data should be NACK'ed
 void i2cReceiveByte(u08 ackFlag);

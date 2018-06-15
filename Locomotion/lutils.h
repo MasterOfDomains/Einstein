@@ -14,11 +14,10 @@
 #define PORT_IS_ON( port_letter, number )		( port_letter & (1<<number) )
 #define PORT_IS_OFF( port_letter, number )		!( port_letter & (1<<number) )
 
-typedef enum
-{
-	INVALID_SPEED = 0,
-	I2C_COMM_ERROR = 1,
-	I2C_RECEIVED = 2
+typedef enum {
+    INVALID_SPEED = 0,
+    I2C_COMM_ERROR = 1,
+    I2C_RECEIVED = 2
 } errorCode;
 
 // Unrecoverable Error has happened

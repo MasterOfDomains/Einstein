@@ -13,60 +13,61 @@
    This is used to test if the output has been
    changed unintentionally by code changes.
 */
-void test(const char* txt){
-	FILE* fileOut;
-	FILE* refFile;
-	char refFilename[64];
-	char testFilename[64];
+void test(const char* txt)
+{
+    FILE* fileOut;
+    FILE* refFile;
+    char refFilename[64];
+    char testFilename[64];
 
-	mkdir("ref");
-	mkdir("test");
+    mkdir("ref");
+    mkdir("test");
 
-	strcpy(refFilename,"ref/");
-	strncpy(refFilename+4,txt,40);
-	strcat(refFilename,".txt");
+    strcpy(refFilename,"ref/");
+    strncpy(refFilename+4,txt,40);
+    strcat(refFilename,".txt");
 
-	strcpy(testFilename,"test/");
-	strncpy(testFilename+5,txt,40);
-	strcat(testFilename,".txt");
+    strcpy(testFilename,"test/");
+    strncpy(testFilename+5,txt,40);
+    strcat(testFilename,".txt");
 
-	refFile = fopen(refFilename,"r");
-	if(refFile==NULL){
-		// First time
-		fileOut = fopen(refFilename,"w");
-	}else{
-		// We already have a reference
-		fileOut = fopen(testFilename,"w");
-	}
-	setLogFile(fileOut);	// redirect any logging to the file
-	say(txt);
-	fclose(fileOut);
-	setLogFile(stdout);		// redirect any logging back to stdout
+    refFile = fopen(refFilename,"r");
+    if(refFile==NULL) {
+        // First time
+        fileOut = fopen(refFilename,"w");
+    } else {
+        // We already have a reference
+        fileOut = fopen(testFilename,"w");
+    }
+    setLogFile(fileOut);	// redirect any logging to the file
+    say(txt);
+    fclose(fileOut);
+    setLogFile(stdout);		// redirect any logging back to stdout
 
-	if(refFile!=NULL){
-		char refBuf[1];
-		char testBuf[1];
-		int  pos=0;
+    if(refFile!=NULL) {
+        char refBuf[1];
+        char testBuf[1];
+        int  pos=0;
 
-		fileOut = fopen(testFilename,"r");
-		if(_filelength(fileOut->_file) != _filelength(refFile->_file)){
-			printf("'%s'=>Files are different sizes\n",txt);
-		}else{
-			while(!feof(refFile)){
-				fread(refBuf,1,1,refFile);
-				fread(testBuf,1,1,fileOut);
-				if(refBuf[0] != testBuf[0]){
-					printf("'%s'=>Files are different at offset %d\n",txt,pos);
-					break;
-				}
-				pos++;
-			}
-		}
+        fileOut = fopen(testFilename,"r");
+        if(_filelength(fileOut->_file) != _filelength(refFile->_file)) {
+            printf("'%s'=>Files are different sizes\n",txt);
+        } else {
+            while(!feof(refFile)) {
+                fread(refBuf,1,1,refFile);
+                fread(testBuf,1,1,fileOut);
+                if(refBuf[0] != testBuf[0]) {
+                    printf("'%s'=>Files are different at offset %d\n",txt,pos);
+                    break;
+                }
+                pos++;
+            }
+        }
 
 
-		fclose(fileOut);
-		fclose(refFile);
-	}
+        fclose(fileOut);
+        fclose(refFile);
+    }
 
 }
 #endif
@@ -124,7 +125,7 @@ int main(int argc, char* argv[]){
 	test("son of york.");
 	test("The quick brown fox jumped");
 	test("over the lazy dog");
-#endif	
+#endif
 
 	return 0;
 }

@@ -83,100 +83,97 @@ u16 getTorque(u08 servo)
 
 u16 getTorque(u08 servo)
 {
-	u16 returnTorque = 0;
-	u08 torqueLB, torqueHB;
-	u16 currTorque;
-	u16 torqueHB16;
-	uartFlushReceiveBuffer(SERVOS_UART);
-	BOOL nonZeroFlag = FALSE;
-	u08 nonZeroCount = 0;
-	u16 highestIndex = 0;
-	for (u16 sample = 0; sample < sampleSize; sample++)
-	{
-		sendCommand(servo, 't');
-		while (!uartReceiveByte(SERVOS_UART, &torqueLB));
-		while (!uartReceiveByte(SERVOS_UART, &torqueHB));
-		getReturn();
-		torqueHB16 = torqueHB;
-		currTorque = torqueHB16 << 8;
-		currTorque = currTorque + torqueLB;
-		//currTorque += torqueLB;
-		if (currTorque != 0 || nonZeroFlag)
-		{
-			nonZeroFlag = TRUE;
-			if (currTorque > returnTorque)
-			{
-				returnTorque = currTorque;
-				highestIndex = sample;
-			}
-			if (nonZeroCount++ == 10)
-				break;
-		}
-	}
-	rprintf("Torque = %d, Index = %d\n\r", returnTorque, highestIndex);
-	return returnTorque;
+    u16 returnTorque = 0;
+    u08 torqueLB, torqueHB;
+    u16 currTorque;
+    u16 torqueHB16;
+    uartFlushReceiveBuffer(SERVOS_UART);
+    BOOL nonZeroFlag = FALSE;
+    u08 nonZeroCount = 0;
+    u16 highestIndex = 0;
+    for (u16 sample = 0; sample < sampleSize; sample++) {
+        sendCommand(servo, 't');
+        while (!uartReceiveByte(SERVOS_UART, &torqueLB));
+        while (!uartReceiveByte(SERVOS_UART, &torqueHB));
+        getReturn();
+        torqueHB16 = torqueHB;
+        currTorque = torqueHB16 << 8;
+        currTorque = currTorque + torqueLB;
+        //currTorque += torqueLB;
+        if (currTorque != 0 || nonZeroFlag) {
+            nonZeroFlag = TRUE;
+            if (currTorque > returnTorque) {
+                returnTorque = currTorque;
+                highestIndex = sample;
+            }
+            if (nonZeroCount++ == 10) {
+                break;
+            }
+        }
+    }
+    rprintf("Torque = %d, Index = %d\n\r", returnTorque, highestIndex);
+    return returnTorque;
 }
 
 void moveServo(u08 servo, u08 pos)
 {
-	//rprintf("Moving %d to %d\n\r", servo, pos);
-	uartFlushReceiveBuffer(SERVOS_UART);
-	sendCommand(servo, 'a');
-	uartSendByte(SERVOS_UART, pos);
-	getReturn();
+    uartFlushReceiveBuffer(SERVOS_UART);
+    sendCommand(servo, 'a');
+    uartSendByte(SERVOS_UART, pos);
+    getReturn();
 }
 
 BOOL getReturn(void)
 {
-	BOOL success = FALSE;
-	u08 cr;
-	while (!uartReceiveByte(SERVOS_UART, &cr));
-	if (cr != '\r') {
-		rprintf("No CR, received %d\n\r", cr);
-		success = TRUE;
-	}
-	return success;
+    BOOL success = FALSE;
+    u08 cr;
+    while (!uartReceiveByte(SERVOS_UART, &cr));
+    if (cr != '\r') {
+        rprintf("No CR, received %d\n\r", cr);
+        success = TRUE;
+    }
+    return success;
 }
 
 u08 getServoPos(u08 servo)
 {
-	u08 pos = 0;
+    u08 pos = 0;
 
-	if (servo < 1 || servo > 8)
-		signalFatalError(INVALID_SERVO);
-	sendCommand(servo, 'g');
-	while (!uartReceiveByte(SERVOS_UART, &pos));
-	getReturn();
-	return pos;
+    if (servo < 1 || servo > 8) {
+        signalFatalError(INVALID_SERVO);
+    }
+    sendCommand(servo, 'g');
+    while (!uartReceiveByte(SERVOS_UART, &pos));
+    getReturn();
+    return pos;
 }
 
 void initServo8t(void)
 {
-	rprintf("Init servos... ");
-	uartSetBaudRate(SERVOS_UART, SERVOS_UART_BAUDRATE);
-	for (u08 servo = 1; servo <= 8; servo++)
-	{
-		sendCommand(servo, 'h');
-		getReturn();
-	}
-	rprintf("Done");
-	rprintfCRLF();
+    rprintf("Init servos... ");
+    uartSetBaudRate(SERVOS_UART, SERVOS_UART_BAUDRATE);
+    for (u08 servo = 1; servo <= 8; servo++) {
+        sendCommand(servo, 'h');
+        getReturn();
+    }
+    rprintf("Done");
+    rprintfCRLF();
 }
 
 void sendCommand(u08 servo, char command)
 {
 #ifdef UARTS_MULTIPLEXED
-	selectUartChannel(SERVOS);
+    selectUartChannel(SERVOS);
 #endif
-	uartSendByte(SERVOS_UART, '>');
-	uartSendByte(SERVOS_UART, '1');
-	uartSendByte(SERVOS_UART, '0' + servo);
-	uartSendByte(SERVOS_UART, command);
+    uartSendByte(SERVOS_UART, '>');
+    uartSendByte(SERVOS_UART, '1');
+    uartSendByte(SERVOS_UART, '0' + servo);
+    uartSendByte(SERVOS_UART, command);
 }
 
 void setHome(u08 servo)
 {
-	uartFlushReceiveBuffer(SERVOS_UART);
-	sendCommand(servo, 'c');
-	getReturn();
+    uartFlushReceiveBuffer(SERVOS_UART);
+    sendCommand(servo, 'c');
+    getReturn();
 }

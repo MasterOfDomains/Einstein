@@ -58,7 +58,7 @@
 // constants/macros/typdefs
 
 // defines for processor compatibility
-// quick compatiblity for mega128, mega64 
+// quick compatiblity for mega128, mega64
 //#ifndef MCUCR
 //	#define	MCUCR	EICRA
 //#endif

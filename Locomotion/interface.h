@@ -6,13 +6,12 @@
 
 #include "lutils.h"
 
-struct commandStruct
-{
-	locomotionCommandName name;
-	direction commandDir;
-	side commandSide;
-	float distance;
-	u08 speed;
+struct commandStruct {
+    locomotionCommandName name;
+    direction commandDir;
+    side commandSide;
+    float distance;
+    u08 speed;
 };
 
 void initInterface(void);

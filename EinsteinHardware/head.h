@@ -6,10 +6,9 @@
 #include "hwglobal.h"
 #include "vision.h"
 
-struct headSonarReadings
-{
-	u08 left;
-	u08 right;
+struct headSonarReadings {
+    u08 left;
+    u08 right;
 };
 
 void initHead();

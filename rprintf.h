@@ -50,8 +50,8 @@
 // defining RPRINTF_SIMPLE will compile a smaller, simpler, and faster printf() function
 // defining RPRINTF_COMPLEX will compile a larger, more capable, and slower printf() function
 #ifndef RPRINTF_COMPLEX
-	#define RPRINTF_SIMPLE
-	#define RPRINTF_FLOAT
+#define RPRINTF_SIMPLE
+#define RPRINTF_FLOAT
 #endif
 
 // Define RPRINTF_FLOAT to enable the floating-point printf function: rprintfFloat()
@@ -88,7 +88,7 @@ void rprintfStrLen(char str[], unsigned int start, unsigned int len);
 // const char cA PROGMEM  = -1;
 void rprintfProgStr(const char str[]); // (const prog_char str[])
 
-//! Using the function rprintfProgStrM(...) automatically causes 
+//! Using the function rprintfProgStrM(...) automatically causes
 /// your string to be stored in ROM, thereby not wasting precious RAM.
 /// Example usage:
 /// \code
@@ -121,11 +121,11 @@ void rprintfu32(unsigned long data);	///< Print 32-bit hex number. Outputs eight
 void rprintfNum(char base, char numDigits, char isSigned, char padchar, long n);
 
 #ifdef RPRINTF_FLOAT
-	//! floating-point print routine
-	void rprintfFloat(char numDigits, double x);
+//! floating-point print routine
+void rprintfFloat(char numDigits, double x);
 #endif
 
-// NOTE: Below you'll see the function prototypes of rprintf1RamRom and 
+// NOTE: Below you'll see the function prototypes of rprintf1RamRom and
 // rprintf2RamRom.  rprintf1RamRom and rprintf2RamRom are both reduced versions
 // of the regular C printf() command.  However, they are modified to be able
 // to read their text/format strings from RAM or ROM in the Atmel microprocessors.
@@ -153,42 +153,42 @@ void rprintfNum(char base, char numDigits, char isSigned, char padchar, long n);
 /// RPRINTF_COMPLEX in global.h.
 
 #ifdef RPRINTF_SIMPLE
-	//! A simple printf routine.
-	/// Called by rprintf() - does a simple printf (supports %d, %x, %c).
-	/// Supports:
-	/// - %d - decimal
-	/// - %x - hex
-	/// - %c - character
-	int rprintf1RamRom(unsigned char stringInRom, const char *format, ...);
-	// #defines for RAM or ROM operation
-	#define rprintf1(format, args...)  		rprintf1RamRom(STRING_IN_ROM, PSTR(format), ## args)
-	#define rprintf1RAM(format, args...)	rprintf1RamRom(STRING_IN_RAM, format, ## args)
+//! A simple printf routine.
+/// Called by rprintf() - does a simple printf (supports %d, %x, %c).
+/// Supports:
+/// - %d - decimal
+/// - %x - hex
+/// - %c - character
+int rprintf1RamRom(unsigned char stringInRom, const char *format, ...);
+// #defines for RAM or ROM operation
+#define rprintf1(format, args...)  		rprintf1RamRom(STRING_IN_ROM, PSTR(format), ## args)
+#define rprintf1RAM(format, args...)	rprintf1RamRom(STRING_IN_RAM, format, ## args)
 
-	// *** Default rprintf(...) ***
-	// this next line determines what the the basic rprintf() defaults to:
-	#define rprintf(format, args...)  		rprintf1RamRom(STRING_IN_ROM, PSTR(format), ## args)
+// *** Default rprintf(...) ***
+// this next line determines what the the basic rprintf() defaults to:
+#define rprintf(format, args...)  		rprintf1RamRom(STRING_IN_ROM, PSTR(format), ## args)
 #endif
 
 #ifdef RPRINTF_COMPLEX
-	//! A more powerful printf routine.
-	/// Called by rprintf() - does a more powerful printf (supports %d, %u, %o, %x, %c, %s).
-	/// Supports:
-	/// - %d - decimal
-	/// - %u - unsigned decimal
-	/// - %o - octal
-	/// - %x - hex
-	/// - %c - character
-	/// - %s - strings
-	/// - and the width,precision,padding modifiers
-	/// \note This printf does not support floating point numbers.
-	int rprintf2RamRom(unsigned char stringInRom, const char *sfmt, ...);
-	// #defines for RAM or ROM operation
-	#define rprintf2(format, args...)		rprintf2RamRom(STRING_IN_ROM, format, ## args)
-	#define rprintf2RAM(format, args...)	rprintf2RamRom(STRING_IN_RAM, format, ## args)
+//! A more powerful printf routine.
+/// Called by rprintf() - does a more powerful printf (supports %d, %u, %o, %x, %c, %s).
+/// Supports:
+/// - %d - decimal
+/// - %u - unsigned decimal
+/// - %o - octal
+/// - %x - hex
+/// - %c - character
+/// - %s - strings
+/// - and the width,precision,padding modifiers
+/// \note This printf does not support floating point numbers.
+int rprintf2RamRom(unsigned char stringInRom, const char *sfmt, ...);
+// #defines for RAM or ROM operation
+#define rprintf2(format, args...)		rprintf2RamRom(STRING_IN_ROM, format, ## args)
+#define rprintf2RAM(format, args...)	rprintf2RamRom(STRING_IN_RAM, format, ## args)
 
-	// *** Default rprintf(...) ***
-	// this next line determines what the the basic rprintf() defaults to:
-	#define rprintf(format, args...)  		rprintf2RamRom(STRING_IN_ROM, PSTR(format), ## args)
+// *** Default rprintf(...) ***
+// this next line determines what the the basic rprintf() defaults to:
+#define rprintf(format, args...)  		rprintf2RamRom(STRING_IN_ROM, PSTR(format), ## args)
 #endif
 
 #endif

@@ -33,120 +33,108 @@ void reset();
 
 void go(direction dir, u08 speed)
 {
-	rprintf("go speed=%d\n\r", speed);
-	setSpeed(LEFT, dir, speed);
-	setSpeed(RIGHT, dir, speed);
+    rprintf("go speed=%d\n\r", speed);
+    setSpeed(LEFT, dir, speed);
+    setSpeed(RIGHT, dir, speed);
 }
 
 void spin(side spinSide, u08 speed)
 {
-	if (spinSide == LEFT)
-	{
-		setSpeed(LEFT, BACKWARD, speed);
-		setSpeed(RIGHT, FORWARD, speed);
-	}
-	else if (spinSide == RIGHT)
-	{
-		setSpeed(LEFT, FORWARD, speed);
-		setSpeed(RIGHT, BACKWARD, speed);
-	}
+    if (spinSide == LEFT) {
+        setSpeed(LEFT, BACKWARD, speed);
+        setSpeed(RIGHT, FORWARD, speed);
+    } else if (spinSide == RIGHT) {
+        setSpeed(LEFT, FORWARD, speed);
+        setSpeed(RIGHT, BACKWARD, speed);
+    }
 }
 
 void move(direction dir, u08 speed, float distance, BOOL stop)
 {
-	rprintf("move distance=");
-	rprintfFloat(4, distance);
-	rprintfCRLF();
-	reset();
-	float distLeft = 0;
-	float distRight = 0;
-	float encoderTicks = distance;
-	go(dir, speed);
-	float avgDist = 0;
-	while (fabs(avgDist) < fabs(encoderTicks) && !isInterrupt())
-	{
+    rprintf("move distance=");
+    rprintfFloat(4, distance);
+    rprintfCRLF();
+    reset();
+    float distLeft = 0;
+    float distRight = 0;
+    float encoderTicks = distance;
+    go(dir, speed);
+    float avgDist = 0;
+    while (fabs(avgDist) < fabs(encoderTicks) && !isInterrupt()) {
 #ifdef TICKS_PER_UNIT
-		distLeft = getEncoderTicks(LEFT) / TICKS_PER_UNIT;
-		distRight = getEncoderTicks(RIGHT) / TICKS_PER_UNIT;
+        distLeft = getEncoderTicks(LEFT) / TICKS_PER_UNIT;
+        distRight = getEncoderTicks(RIGHT) / TICKS_PER_UNIT;
 #else
-		distLeft = getEncoderTicks(LEFT);
-		distRight = getEncoderTicks(RIGHT);
+        distLeft = getEncoderTicks(LEFT);
+        distRight = getEncoderTicks(RIGHT);
 #endif
-		avgDist = (distLeft + distRight)/2;
-	}
-	if (stop) halt();
-	signalDistanceTraversed();
+        avgDist = (distLeft + distRight)/2;
+    }
+    if (stop) {
+        halt();
+    }
+    signalDistanceTraversed();
 }
 
 void twist(side spinSide, u08 speed, float amount)
 {
-	reset();
-	float avgDist = 0;
-	spin(spinSide, speed);
-	while (avgDist < amount && !isInterrupt())
-	{
-		avgDist = (fabs(getDistanceTraveledLeft()) + fabs(getDistanceTraveledRight()))/2;
-	}
-	halt();
-	signalDistanceTraversed();
+    reset();
+    float avgDist = 0;
+    spin(spinSide, speed);
+    while (avgDist < amount && !isInterrupt()) {
+        avgDist = (fabs(getDistanceTraveledLeft()) + fabs(getDistanceTraveledRight()))/2;
+    }
+    halt();
+    signalDistanceTraversed();
 }
 
 void setSpeed(side wheel, direction motorDir, u08 speed)
 {
-	if (wheel == LEFT)
-	{
-		if (motorDir == BACKWARD)
-		{
-			leftForward = FALSE;
-			PORT_ON(MOTORS_PORT, LEFT_BACKWARD);
-			PORT_OFF(MOTORS_PORT, LEFT_FORWARD);
-		}
-		else if (motorDir == FORWARD)
-		{
-			leftForward = TRUE;
-			PORT_ON(MOTORS_PORT, LEFT_FORWARD);
-			PORT_OFF(MOTORS_PORT, LEFT_BACKWARD);
-		}
-		OCR_LEFT = speed;
-	}
-	else if (wheel == RIGHT)
-	{
-		if (motorDir == BACKWARD)
-		{
-			rightForward = FALSE;
-			PORT_ON(MOTORS_PORT, RIGHT_BACKWARD);
-			PORT_OFF(MOTORS_PORT, RIGHT_FORWARD);
-		}
-		else if (motorDir == FORWARD)
-		{
-			rightForward = TRUE;
-			PORT_ON(MOTORS_PORT, RIGHT_FORWARD);
-			PORT_OFF(MOTORS_PORT, RIGHT_BACKWARD);
-		}
-		OCR_RIGHT = speed;
-	}
+    if (wheel == LEFT) {
+        if (motorDir == BACKWARD) {
+            leftForward = FALSE;
+            PORT_ON(MOTORS_PORT, LEFT_BACKWARD);
+            PORT_OFF(MOTORS_PORT, LEFT_FORWARD);
+        } else if (motorDir == FORWARD) {
+            leftForward = TRUE;
+            PORT_ON(MOTORS_PORT, LEFT_FORWARD);
+            PORT_OFF(MOTORS_PORT, LEFT_BACKWARD);
+        }
+        OCR_LEFT = speed;
+    } else if (wheel == RIGHT) {
+        if (motorDir == BACKWARD) {
+            rightForward = FALSE;
+            PORT_ON(MOTORS_PORT, RIGHT_BACKWARD);
+            PORT_OFF(MOTORS_PORT, RIGHT_FORWARD);
+        } else if (motorDir == FORWARD) {
+            rightForward = TRUE;
+            PORT_ON(MOTORS_PORT, RIGHT_FORWARD);
+            PORT_OFF(MOTORS_PORT, RIGHT_BACKWARD);
+        }
+        OCR_RIGHT = speed;
+    }
 }
 
 void halt(void)
 {
-	// Hard Stop
-	MOTORS_PORT |= (1 << LEFT_FORWARD);
-	MOTORS_PORT |= (1 << LEFT_BACKWARD);
-	MOTORS_PORT |= (1 << RIGHT_FORWARD);
-	MOTORS_PORT |= (1 << RIGHT_BACKWARD);
-	
-	/*	
-	// Soft Stop
-	MOTORS_PORT &= ~(1 << LEFT_FORWARD);
-	MOTORS_PORT &= ~(1 << LEFT_BACKWARD);
-	MOTORS_PORT &= ~(1 << RIGHT_FORWARD);
-	MOTORS_PORT &= ~(1 << RIGHT_BACKWARD);
-	*/
-	
-	setSpeed(LEFT, MIDDLE, 0);
-	setSpeed(RIGHT, MIDDLE, 0);
-	leftForward = FALSE;
-	rightForward = FALSE;
+    // Hard Stop
+    MOTORS_PORT |= (1 << LEFT_FORWARD);
+    MOTORS_PORT |= (1 << LEFT_BACKWARD);
+    MOTORS_PORT |= (1 << RIGHT_FORWARD);
+    MOTORS_PORT |= (1 << RIGHT_BACKWARD);
+
+    /*
+    // Soft Stop
+    MOTORS_PORT &= ~(1 << LEFT_FORWARD);
+    MOTORS_PORT &= ~(1 << LEFT_BACKWARD);
+    MOTORS_PORT &= ~(1 << RIGHT_FORWARD);
+    MOTORS_PORT &= ~(1 << RIGHT_BACKWARD);
+    */
+
+    setSpeed(LEFT, MIDDLE, 0);
+    setSpeed(RIGHT, MIDDLE, 0);
+    leftForward = FALSE;
+    rightForward = FALSE;
 }
 
 void initMotors(void)
@@ -154,94 +142,98 @@ void initMotors(void)
     TCCR0A = 0;
     TCCR0B = 0;
 
-	// Set PWM, Phase Correct
+    // Set PWM, Phase Correct
     TCCR0A |= (1 << WGM00);
 
-	// Use internal Clock Source w/ no pre-scaling
-	TCCR0B |= (1 << CS00);
+    // Use internal Clock Source w/ no pre-scaling
+    TCCR0B |= (1 << CS00);
 
     OCR_LEFT = 0;
     OCR_RIGHT = 0;
 
     // Enable PWM for both pins.
-	TCCR0A |= (1 << COM0A1) | (1 << COM0B1);
+    TCCR0A |= (1 << COM0A1) | (1 << COM0B1);
 }
 
-void testMotors() {
-	while (1) {
-		rprintfProgStrM("Moving Forward");
-		_delay_ms(2000);
-		rprintfCRLF();
-		go(FORWARD, 175);
-		rprintfProgStrM("Moving Backward");
-		_delay_ms(2000);
-		rprintfCRLF();
-		go(BACKWARD, 175);
-	}
+void testMotors()
+{
+    while (1) {
+        rprintfProgStrM("Moving Forward");
+        _delay_ms(2000);
+        rprintfCRLF();
+        go(FORWARD, 175);
+        rprintfProgStrM("Moving Backward");
+        _delay_ms(2000);
+        rprintfCRLF();
+        go(BACKWARD, 175);
+    }
 }
 
-void testMotorsAndEncoders() {
-	while (1) {
-		rprintfProgStrM("Moving Forward");
-		rprintfCRLF();
-		_delay_ms(2000);
-		move(FORWARD, 127, 32, TRUE);
-		rprintfProgStrM("Forward Distance: ");
-		rprintfFloat(4, getDistanceTraveled());
-		rprintfCRLF();
-		_delay_ms(2000);
-		rprintfProgStrM("Moving Backward");
-		rprintfCRLF();
-		_delay_ms(2000);
-		move(BACKWARD, 127, 32, TRUE);
-		rprintfProgStrM("Backward Distance: ");
-		rprintfFloat(4, getDistanceTraveled());
-		rprintfCRLF();
-		_delay_ms(2000);
-	}
+void testMotorsAndEncoders()
+{
+    while (1) {
+        rprintfProgStrM("Moving Forward");
+        rprintfCRLF();
+        _delay_ms(2000);
+        move(FORWARD, 127, 32, TRUE);
+        rprintfProgStrM("Forward Distance: ");
+        rprintfFloat(4, getDistanceTraveled());
+        rprintfCRLF();
+        _delay_ms(2000);
+        rprintfProgStrM("Moving Backward");
+        rprintfCRLF();
+        _delay_ms(2000);
+        move(BACKWARD, 127, 32, TRUE);
+        rprintfProgStrM("Backward Distance: ");
+        rprintfFloat(4, getDistanceTraveled());
+        rprintfCRLF();
+        _delay_ms(2000);
+    }
 }
 
-void testMotorsHalt() {
-	rprintf("Halt");
-	rprintfCRLF();
-	halt();
-	_delay_ms(5000);
+void testMotorsHalt()
+{
+    rprintf("Halt");
+    rprintfCRLF();
+    halt();
+    _delay_ms(5000);
 }
 
-void testEncoders() {
-	s32 distLeft = 0;
-	s32 distRight = 0;
-	
-	while (1) {
-		if (encoderGetPosition(LEFT_ENCODER) != distLeft) {
-			distLeft = encoderGetPosition(LEFT_ENCODER);
-			rprintf("Left: %d", distLeft);
-			rprintfCRLF();
-		}
-		if (encoderGetPosition(RIGHT_ENCODER) != distRight) {
-			distRight = encoderGetPosition(RIGHT_ENCODER);
-			rprintf("Right: %d", distRight);
-			rprintfCRLF();
-		}
-	}
+void testEncoders()
+{
+    s32 distLeft = 0;
+    s32 distRight = 0;
+
+    while (1) {
+        if (encoderGetPosition(LEFT_ENCODER) != distLeft) {
+            distLeft = encoderGetPosition(LEFT_ENCODER);
+            rprintf("Left: %d", distLeft);
+            rprintfCRLF();
+        }
+        if (encoderGetPosition(RIGHT_ENCODER) != distRight) {
+            distRight = encoderGetPosition(RIGHT_ENCODER);
+            rprintf("Right: %d", distRight);
+            rprintfCRLF();
+        }
+    }
 }
 
 BOOL isInterrupt()
 {
-	return PORT_IS_OFF(INTERRUPTER_PORT_IN, INTERRUPTER_BIT);
+    return PORT_IS_OFF(INTERRUPTER_PORT_IN, INTERRUPTER_BIT);
 }
 
 void signalDistanceTraversed()
 {
-	if (!isInterrupt())
-	{
-		sbi(INTERRUPTER_DDR, INTERRUPTER_BIT); // Set to output
-		PORT_OFF(INTERRUPTER_PORT, INTERRUPTER_BIT);
-	}
+    if (!isInterrupt()) {
+        sbi(INTERRUPTER_DDR, INTERRUPTER_BIT); // Set to output
+        PORT_OFF(INTERRUPTER_PORT, INTERRUPTER_BIT);
+    }
 }
 
-void reset() {
-	cbi(INTERRUPTER_DDR, INTERRUPTER_BIT); // Set to input
-	cbi(INTERRUPTER_PORT, INTERRUPTER_BIT); // Disable pull-up
-	resetEncoderPositions();
+void reset()
+{
+    cbi(INTERRUPTER_DDR, INTERRUPTER_BIT); // Set to input
+    cbi(INTERRUPTER_PORT, INTERRUPTER_BIT); // Disable pull-up
+    resetEncoderPositions();
 }

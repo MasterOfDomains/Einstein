@@ -19,30 +19,29 @@ void clearMiskey(void); // For typing errors
 
 void LED_off(void)
 {
-	PORT_ON(LED_PORT, LED_BIT);
+    PORT_ON(LED_PORT, LED_BIT);
 }
 
 void LED_on(void)
 {
-	PORT_OFF(LED_PORT, LED_BIT);
+    PORT_OFF(LED_PORT, LED_BIT);
 }
 
 void debugLEDtoggle(void)
 {
-	FLIP_PORT(LED_PORT, LED_BIT);
+    FLIP_PORT(LED_PORT, LED_BIT);
 }
 
 void signalFatalError(errorCode error)
 {
-	while (1)
-	{
-		rprintf("Fatal Error: %d", error);
-		rprintfCRLF();
-		LED_on();
-		_delay_ms(200);
-		LED_off();
-		_delay_ms(800);
-	}
+    while (1) {
+        rprintf("Fatal Error: %d", error);
+        rprintfCRLF();
+        LED_on();
+        _delay_ms(200);
+        LED_off();
+        _delay_ms(800);
+    }
 }
 
 /*

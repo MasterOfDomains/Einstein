@@ -20,7 +20,7 @@
 ///		and keep track of the encoder's movements. The library is extendable
 ///		with the maximum number of encoders equal to the total number of
 ///		external interrupts available on the target AVR processor.
-///		
+///
 ///		\note Due to the wide range of external interrupt capability on
 ///		AVR processors, it is difficult for this library to automatically
 ///		adapt to different processors.  For this reason, much of the
@@ -36,7 +36,7 @@
 ///	100,128,200,250,256,500,etc.  By counting the number of pulses output on
 ///	one of the phases starting from time0, you can calculate the total
 ///	rotational distance the encoder has traveled.
-///	
+///
 /// Often, however, we want current position not just total distance traveled.
 /// For this it is necessary to know not only how far the encoder has traveled,
 ///	but also which direction it was going at each step of the way.  To do this
@@ -66,7 +66,7 @@
 ///  Phase B:    |   |   |   |   |   |   |   |   |   |   |   |
 ///              \---/   \---/   \---/   \---/   \---/   \---/
 ///  Time:    <--------------------------------------------------->
-///  Rotate FWD: >----------------------------------------------> 
+///  Rotate FWD: >---------------------------------------------->
 ///  Rotate REV: <----------------------------------------------<
 */
 ///	To keep track of the encoder position in software, we connect PhaseA to an
@@ -108,22 +108,21 @@ BOOL rightForward;
 // defines for processor compatibility
 // chose proper Interrupt Mask (IMSK)
 #ifdef EIMSK
-	#define IMSK	EIMSK	// for processors mega128, mega64
+#define IMSK	EIMSK	// for processors mega128, mega64
 #endif
 #ifdef GICR
-	#define IMSK	GICR	// for mega16,32,etc
+#define IMSK	GICR	// for mega16,32,etc
 #endif
 // default
 #ifndef IMSK
-	#define IMSK	GIMSK	// for other processors 90s8515, mega163, etc
+#define IMSK	GIMSK	// for other processors 90s8515, mega163, etc
 #endif
 
 
 //! Encoder state structure
 //   stores the position and other information from each encoder
-typedef struct struct_EncoderState
-{	
-	s32 position;		///< position
+typedef struct struct_EncoderState {
+    s32 position;		///< position
 } EncoderStateType;
 
 //BOOL leftForward = TRUE;
@@ -137,7 +136,7 @@ void initEncoders();
 //! encoderOff() disables hardware and stops encoder position updates
 void encoderOff(void);
 
-//! encoderGetPosition() reads the current position of the encoder 
+//! encoderGetPosition() reads the current position of the encoder
 s32 encoderGetPosition(u08 encoderNum);
 
 //! encoderSetPosition() sets the current position of the encoder
