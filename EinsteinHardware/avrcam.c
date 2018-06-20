@@ -35,89 +35,8 @@ void emptyBufferToScreen(void)
     rprintfCRLF();
 }
 
-struct blobArray getTestBlobs(void)
-{
-    struct blobArray blobs;
-#define MIN_BLOB_SIZE 30
-    struct point blob0Offset = {20, 50};
-    u08 blob0Size = MIN_BLOB_SIZE + 25;
-    struct blob blob0;
-    blob0.blobColor = RED;
-    blob0.cornerBR = (struct point) {
-        blob0Offset.x + blob0Size, blob0Offset.y + blob0Size
-    };
-    blob0.cornerUL = (struct point) {
-        blob0Offset.x, blob0Offset.y
-    };
-
-    struct point blob1Offset = {52, 82};
-    u08 blob1Size = MIN_BLOB_SIZE + 40;
-    struct blob blob1;
-    blob1.blobColor = GREEN;
-    blob1.cornerBR = (struct point) {
-        blob1Offset.x + blob1Size, blob1Offset.y + blob1Size
-    };
-    blob1.cornerUL = (struct point) {
-        blob1Offset.x, blob1Offset.y
-    };
-
-    struct point blob2Offset = {55, 85};
-    u08 blob2Size = MIN_BLOB_SIZE + 20;
-    struct blob blob2;
-    blob2.blobColor = RED;
-    blob2.cornerBR = (struct point) {
-        blob2Offset.x + blob2Size, blob2Offset.y + blob2Size
-    };
-    blob2.cornerUL = (struct point) {
-        blob2Offset.x, blob2Offset.y
-    };
-
-    struct point blob3Offset = {20, 160};
-    u08 blob3Size = MIN_BLOB_SIZE - 5;
-    struct blob blob3;
-    blob3.blobColor = ORANGE;
-    blob3.cornerBR = (struct point) {
-        blob3Offset.x + blob3Size, blob3Offset.y + blob3Size
-    };
-    blob3.cornerUL = (struct point) {
-        blob3Offset.x, blob3Offset.y
-    };
-
-    struct point blob4Offset = {80, 80};
-    u08 blob4Size = MIN_BLOB_SIZE + 5;
-    struct blob blob4;
-    blob4.blobColor = BLUE;
-    blob4.cornerBR = (struct point) {
-        blob4Offset.x + blob4Size, blob4Offset.y + blob4Size
-    };
-    blob4.cornerUL = (struct point) {
-        blob4Offset.x, blob4Offset.y
-    };
-
-    struct point blob5Offset = {100, 100};
-    u08 blob5Size = MIN_BLOB_SIZE + 5;
-    struct blob blob5;
-    blob5.blobColor = BLUE;
-    blob5.cornerBR = (struct point) {
-        blob5Offset.x + blob5Size, blob5Offset.y + blob5Size
-    };
-    blob5.cornerUL = (struct point) {
-        blob5Offset.x, blob5Offset.y
-    };
-
-    blobs.contents[0] = blob0;
-    blobs.contents[1] = blob1;
-    blobs.contents[2] = blob2;
-    blobs.contents[3] = blob3;
-    blobs.contents[4] = blob4;
-    blobs.contents[5] = blob5;
-    blobs.length = 6;
-    return blobs;
-}
-
 struct blobArray getBlobs(void)
 {
-#ifndef SIMULATOR
     struct blobArray blobs;
     blobs.length = 0;
 #ifdef UARTS_MULTIPLEXED
@@ -149,10 +68,6 @@ struct blobArray getBlobs(void)
         disableTracking();
     }
     return blobs;
-#else
-    struct blobArray blobs = getTestBlobs();
-    return blobs;
-#endif
 }
 
 void enableTracking(void)
@@ -190,7 +105,7 @@ void dumpFrame(void)
     uartSendByte(cameraUART, 'F');
     uartSendByte(cameraUART, '\r');
     if (getAck()) {
-        for (int row = 0; row < PICTURE_HEIGHT_DUMP; row++) {
+        for (int row = 0; row < PICTURE_HEIGHT; row++) {
             while (!uartReceiveByte(cameraUART, &data));
             if (data != ROW_START_CHAR) {
                 goto ARVcam_error;
@@ -244,7 +159,7 @@ u08 getPictureWidth(void)
 
 u08 getPictureHeight(void)
 {
-    return PICTURE_HEIGHT_BLOBS;
+    return BLOB_GRID_HEIGHT;
 }
 
 u08 getPictureCenter(orientation way)

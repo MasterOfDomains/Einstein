@@ -34,30 +34,23 @@ void wait(u16 miliseconds)
 
 int main(void)
 {
+#ifndef SIMULATOR
     _delay_ms(3000);
+#endif
     initRobot();
 
+#ifndef SIMULATOR
 #define PAUSE 1000
-
     moveArmToPos(HOME);
-    _delay_ms(PAUSE);
+#else
+#define PAUSE 0
+#endif
 
-    //#define HALF_SWING 15
-    //side lastHalfSwingSide = LEFT;
-    //for (u08 i = 0; i < HALF_SWING; i++) {
-    //rotateArm(lastHalfSwingSide);
-    //}
     while (1) {
-        //side newSide = oppositeSide(lastHalfSwingSide);
-        //for (u08 i = 0; i < HALF_SWING * 2; i++) {
-        //rotateArm(newSide);
-        //}
-        //lastHalfSwingSide = newSide;
-
         headLights(TRUE);
-        blob *bestBlob = getBestBlob(NULL);
+        blob *bestBlob = getBestBlob(((void *)0));
         headLights(FALSE);
-        if (bestBlob != NULL) {
+        if (bestBlob != ((void *)0)) {
             rprintfCRLF();
             rprintfProgStrM("BEST BLOB:");
             displayBlob(bestBlob);
@@ -165,6 +158,7 @@ void initRobot(void)
     rprintfCRLF();
 }
 
+#ifndef SIMULATOR
 static void dutyCycleLED(u08 dutyCycle, u08 pulseWidth, u16 *currentTime)
 {
     debugLEDoff();
@@ -178,9 +172,11 @@ static void dutyCycleLED(u08 dutyCycle, u08 pulseWidth, u16 *currentTime)
         (*currentTime)++;
     }
 }
+#endif
 
 void signalStart()
 {
+#ifndef SIMULATOR
     static const int NUMBER_OF_WINKS = 3;
     for (u08 wink = 0; wink < NUMBER_OF_WINKS; wink++) {
         u16 currentTime = 0;
@@ -193,6 +189,7 @@ void signalStart()
         _delay_ms(500);
     }
     debugLEDoff();
+#endif
 }
 
 void initPorts(void)

@@ -1,12 +1,13 @@
 #include "vision.h"
 
 #include <stddef.h>
+#include <stdlib.h>
 
 #define MIN_BLOB_SIZE 30
-#define MAX_BLOB_SIZE 50 // Counted 44 once
 
-blob *getBlobCluster(color *blobColor, struct blobArray *blobs, blob *returnBlob);
+BOOL getBlobCluster(color *blobColor, struct blobArray *blobs, blob **returnBlob);
 void sortBlobArray(struct blobArray *blobs);
+struct blobArray getTestBlobs(void);
 
 void initVision()
 {
@@ -15,36 +16,36 @@ void initVision()
 
 blob *getBestBlob(color *blobColor)
 {
-    blob *returnBlob = NULL;
+    blob *returnBlob = malloc(sizeof(struct blob));
+#ifndef SIMULATOR
     struct blobArray blobs = getBlobs();
+#else
+    struct blobArray blobs = getTestBlobs();
+#endif
     displayBlobArray(&blobs);
     u08 tallestHeight = 0;
     s08 indexBest = -1;
     for (u08 i = 0; i < blobs.length; i++) {
         u08 blobHeight = getBlobHeight(&blobs.contents[i]);
         if (blobHeight >= MIN_BLOB_SIZE && blobHeight > tallestHeight) {
-            if (blobColor == NULL || blobs.contents[i].blobColor == *blobColor) {
-                tallestHeight = blobHeight;
-                indexBest = i;
-            }
+            tallestHeight = blobHeight;
+            indexBest = i;
         }
     }
     if (indexBest != -1) {
-        *returnBlob = blobs.contents[indexBest];
+        returnBlob = &blobs.contents[indexBest];
     } else {
         if (blobs.length > 0) {
             sortBlobArray(&blobs);
-
-            // DEBUG
             rprintfCRLF();
             rprintfProgStrM("Sorted\n\r");
             displayBlobArray(&blobs);
             rprintfCRLF();
 
-            if (blobColor == NULL) {
-                *blobColor = blobs.contents[0].blobColor;
+            if (blobColor == ((void *)0)) {
+                blobColor = &blobs.contents[0].blobColor;
             }
-            returnBlob = getBlobCluster(blobColor, &blobs, returnBlob);
+            getBlobCluster(blobColor, &blobs, &returnBlob);
         }
 
     }
@@ -65,9 +66,9 @@ void sortBlobArray(struct blobArray *blobs)
     }
 }
 
-blob *getBlobCluster(color *blobColor, struct blobArray *sortedBlobArray, blob *returnBlob)
+BOOL getBlobCluster(color *blobColor, struct blobArray *sortedBlobArray, blob **returnBlob)
 {
-    blob *blobCluster = NULL;
+    BOOL success = TRUE;
     struct blobArray relevantBlobs; // Largest blob in sorted array may not be desired color
     relevantBlobs.length = 0;
     for (u08 i = 0; i < sortedBlobArray->length; i++) {
@@ -78,27 +79,26 @@ blob *getBlobCluster(color *blobColor, struct blobArray *sortedBlobArray, blob *
     rprintfCRLF();
     rprintfProgStrM("Relevant:\n\r");
     displayBlobArray(&relevantBlobs);
-    *blobCluster = relevantBlobs.contents[0]; // Begins as largest blob
+    *returnBlob = &relevantBlobs.contents[0]; // Begins as largest blob
     for (u08 i = 1; i < relevantBlobs.length; i++) { // Loop through the rest by size
-        blob blobClusterCandidate = *blobCluster; // Candidate now includes any added blobs
-        if (relevantBlobs.contents[i].cornerBR.x > blobCluster->cornerBR.x ||
-                relevantBlobs.contents[i].cornerBR.y > blobCluster->cornerBR.y) { // Stretch right or bottom
-            blobClusterCandidate.cornerBR = relevantBlobs.contents[i].cornerBR;
+        if (relevantBlobs.contents[i].cornerBR.x > (*returnBlob)->cornerBR.x) {
+            (*returnBlob)->cornerBR.x = relevantBlobs.contents[i].cornerBR.x;
         }
-        if (relevantBlobs.contents[i].cornerUL.x < blobCluster->cornerUL.x ||
-                relevantBlobs.contents[i].cornerUL.y < blobCluster->cornerUL.y) { // Stretch left or top
-            blobClusterCandidate.cornerUL = relevantBlobs.contents[i].cornerUL;
+        if (relevantBlobs.contents[i].cornerBR.y > (*returnBlob)->cornerBR.y) {
+            (*returnBlob)->cornerBR.y = relevantBlobs.contents[i].cornerBR.y;
         }
-        if (getBlobWidth(&blobClusterCandidate) <= MAX_BLOB_SIZE &&
-                getBlobHeight(&blobClusterCandidate) <= MAX_BLOB_SIZE) {
-            *blobCluster = blobClusterCandidate;
+        if (relevantBlobs.contents[i].cornerUL.x < (*returnBlob)->cornerUL.x) {
+            (*returnBlob)->cornerUL.x = relevantBlobs.contents[i].cornerUL.x;
+        }
+        if (relevantBlobs.contents[i].cornerUL.y < (*returnBlob)->cornerUL.y) {
+            (*returnBlob)->cornerUL.y = relevantBlobs.contents[i].cornerUL.y;
         }
     }
-    if (getBlobWidth(blobCluster) < MIN_BLOB_SIZE ||
-            getBlobHeight(blobCluster) < MIN_BLOB_SIZE) {
-        blobCluster = NULL;
+    if (getBlobWidth(*returnBlob) < MIN_BLOB_SIZE || getBlobHeight(*returnBlob) < MIN_BLOB_SIZE) {
+        returnBlob = NULL;
+        success = FALSE;
     }
-    return blobCluster;
+    return success;
 }
 
 u08 getTallestBlob(struct blobArray blobs, color blobColor)
@@ -207,4 +207,29 @@ void displayPoint(struct point *p)
 {
     rprintf("Point: X: %d, Y: %d\n\r", p->x, p->y);
     rprintfCRLF();
+}
+
+struct blob getTestBlob(color blobColor, u08 X, u08 Y, s08 sizer)
+{
+    struct blob testBlob;
+    testBlob.blobColor = blobColor;
+    testBlob.cornerUL = (struct point) {X, Y};
+    u08 blobSize = MIN_BLOB_SIZE + sizer;
+    testBlob.cornerBR = (struct point) {X + blobSize, Y + blobSize};
+    return testBlob;
+}
+
+struct blobArray getTestBlobs(void)
+{
+    struct blobArray blobs;
+    blobs.contents[0] = getTestBlob(RED, 20, 40, -5);
+    blobs.contents[1] = getTestBlob(GREEN, 80, 30, -10);
+    blobs.contents[2] = getTestBlob(BLUE, 100, 10, -15);
+    blobs.contents[3] = getTestBlob(ORANGE, 140, 40, -5);
+    blobs.contents[4] = getTestBlob(RED, 55, 45, -2);
+    blobs.contents[5] = getTestBlob(BLUE, 140, 100, -8);
+    blobs.contents[6] = getTestBlob(RED, 30, 100, -20);
+    blobs.contents[7] = getTestBlob(YELLOW, 20, 120, -15);
+    blobs.length = 8;
+    return blobs;
 }

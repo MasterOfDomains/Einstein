@@ -11,8 +11,8 @@ A block from 3ft (mid course) is 11 pixels wide
 #include "hwutils.h"
 
 #define PICTURE_WIDTH 176
-#define PICTURE_HEIGHT_BLOBS 144
-#define PICTURE_HEIGHT_DUMP PICTURE_HEIGHT_BLOBS / 2
+#define BLOB_GRID_HEIGHT 144
+#define PICTURE_HEIGHT BLOB_GRID_HEIGHT / 2
 
 #define MAX_TRACKED_BLOBS 8
 #define MAX_COLORS 8
