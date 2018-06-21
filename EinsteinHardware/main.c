@@ -10,6 +10,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "motors.h"
 #include "channels.h"
@@ -48,9 +49,10 @@ int main(void)
 
     while (1) {
         headLights(TRUE);
-        blob *bestBlob = getBestBlob(((void *)0));
+        color desiredColor = BLUE;
+        blob *bestBlob = getBestBlob(&desiredColor);
         headLights(FALSE);
-        if (bestBlob != ((void *)0)) {
+        if (bestBlob != (NULL)) {
             rprintfCRLF();
             rprintfProgStrM("BEST BLOB:");
             displayBlob(bestBlob);
@@ -60,7 +62,7 @@ int main(void)
             rprintfProgStrM("NO BEST BLOB:");
             rprintfCRLF();
         }
-
+        free(bestBlob);
         _delay_ms(5000);
     }
 

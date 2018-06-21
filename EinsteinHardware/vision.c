@@ -5,7 +5,8 @@
 
 #define MIN_BLOB_SIZE 30
 
-BOOL getBlobCluster(color *blobColor, struct blobArray *blobs, blob **returnBlob);
+// sortedBlobArray must be sorted from largest to smallest
+BOOL getBlobCluster(color *blobColor, struct blobArray *sortedBlobArray, blob **returnBlob);
 void sortBlobArray(struct blobArray *blobs);
 struct blobArray getTestBlobs(void);
 
@@ -19,10 +20,10 @@ blob *getBestBlob(color *blobColor)
     blob *returnBlob = malloc(sizeof(struct blob));
 #ifndef SIMULATOR
     struct blobArray blobs = getBlobs();
+    displayBlobArray(&blobs);
 #else
     struct blobArray blobs = getTestBlobs();
 #endif
-    displayBlobArray(&blobs);
     u08 tallestHeight = 0;
     s08 indexBest = -1;
     for (u08 i = 0; i < blobs.length; i++) {
@@ -37,17 +38,11 @@ blob *getBestBlob(color *blobColor)
     } else {
         if (blobs.length > 0) {
             sortBlobArray(&blobs);
-            rprintfCRLF();
-            rprintfProgStrM("Sorted\n\r");
-            displayBlobArray(&blobs);
-            rprintfCRLF();
-
-            if (blobColor == ((void *)0)) {
+            if (blobColor == NULL) {
                 blobColor = &blobs.contents[0].blobColor;
             }
             getBlobCluster(blobColor, &blobs, &returnBlob);
         }
-
     }
     return returnBlob;
 }
@@ -76,9 +71,6 @@ BOOL getBlobCluster(color *blobColor, struct blobArray *sortedBlobArray, blob **
             relevantBlobs.contents[relevantBlobs.length++] = sortedBlobArray->contents[i];
         }
     }
-    rprintfCRLF();
-    rprintfProgStrM("Relevant:\n\r");
-    displayBlobArray(&relevantBlobs);
     *returnBlob = &relevantBlobs.contents[0]; // Begins as largest blob
     for (u08 i = 1; i < relevantBlobs.length; i++) { // Loop through the rest by size
         if (relevantBlobs.contents[i].cornerBR.x > (*returnBlob)->cornerBR.x) {
@@ -183,11 +175,13 @@ struct point getBlobMiddle(blob *pBlob)
 
 void displayBlobArray(struct blobArray *blobs)
 {
+    rprintfCRLF();
     rprintf("Blob Array Length: %d\n\r", blobs->length);
     for (u08 blob = 0; blob < blobs->length; blob++) {
         rprintf("Blob %d:\n\r", blob);
         displayBlob(&blobs->contents[blob]);
     }
+    rprintfCRLF();
 }
 
 void displayBlob(blob *trackedBlob)

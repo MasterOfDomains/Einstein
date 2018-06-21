@@ -8,6 +8,7 @@ void initVision(void);
 
 void setMinBlobHeight(u16 height);
 
+// Caller must free returned pointer
 blob *getBestBlob(color *blobColor);
 
 u08 getTallestBlob(struct blobArray blobs, color blobColor);
