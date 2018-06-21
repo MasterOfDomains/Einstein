@@ -41,10 +41,7 @@ int main(void)
     initRobot();
 
 #ifndef SIMULATOR
-#define PAUSE 1000
     moveArmToPos(HOME);
-#else
-#define PAUSE 0
 #endif
 
     while (1) {
@@ -65,23 +62,6 @@ int main(void)
         free(bestBlob);
         _delay_ms(5000);
     }
-
-    headLights(TRUE);
-
-#define SPEED 100
-    move(FORWARD, SPEED, 32);
-    _delay_ms(500);
-    move(BACKWARD, SPEED, 32);
-    _delay_ms(500);
-#define TWIST_AMOUNT 32
-    twist(LEFT, SPEED, TWIST_AMOUNT);
-    _delay_ms(500);
-    twist(RIGHT, SPEED, TWIST_AMOUNT * 2);
-    _delay_ms(500);
-    twist(LEFT, SPEED, TWIST_AMOUNT);
-
-    testNewArmCode();
-
     return 0;
 }
 
@@ -100,14 +80,14 @@ void gripperDemo()
     rotateGripper(GRIPPER_LEVEL);
     grip(GRIPPER_OPEN);
     grip(0);
-    _delay_ms(PAUSE);
+    _delay_ms(1000);
 }
 
 void testNewArmCode()
 {
     while (1) {
         moveArmToPos(HOME);
-        _delay_ms(PAUSE);
+        _delay_ms(1000);
         moveArmToPos(CROUCH);
         gripperDemo();
 #define ROTATE_DISTANCE 30
@@ -120,7 +100,7 @@ void testNewArmCode()
         for (u08 i = 0; i < ROTATE_DISTANCE; i++) {
             rotateArm(LEFT);
         }
-        _delay_ms(PAUSE);
+        _delay_ms(1000);
     }
 }
 
