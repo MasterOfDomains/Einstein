@@ -18,10 +18,10 @@ A block from 3ft (mid course) is 11 pixels wide
 #define MAX_COLORS 8
 
 typedef enum {
-    RED = 0,
-    ORANGE = 1,
-    GREEN = 2,
     BLUE = 3,
+    RED = 0,
+    GREEN = 2,
+    ORANGE = 1,
     YELLOW = 4,
     WHITE = 5
 } color;
