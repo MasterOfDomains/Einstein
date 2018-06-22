@@ -23,7 +23,8 @@
 void initRobot(void);
 void initPorts(void);
 void signalStart();
-void testNewArmCode();
+void testNewArmCode(void);
+void testBlobTracking(void);
 void demo();
 
 void wait(u16 miliseconds)
@@ -40,29 +41,43 @@ int main(void)
 #endif
     initRobot();
 
+#ifdef HEADLIGHTS_ONLY
+    headLights(TRUE);
+#else
 #ifndef SIMULATOR
     moveArmToPos(HOME);
 #endif
 
+    testBlobTracking();
+#endif
+    return 0;
+}
+
+void testBlobTracking(void)
+{
     while (1) {
         headLights(TRUE);
-        color desiredColor = BLUE;
-        blob *bestBlob = getBestBlob(&desiredColor);
+        //blob *bestBlob = getBestBlob(NULL);
+        struct blobArray blobs = getBlobs();
         headLights(FALSE);
-        if (bestBlob != (NULL)) {
-            rprintfCRLF();
-            rprintfProgStrM("BEST BLOB:");
-            displayBlob(bestBlob);
-            rprintfCRLF();
-            rprintfCRLF();
-        } else {
-            rprintfProgStrM("NO BEST BLOB:");
-            rprintfCRLF();
-        }
-        free(bestBlob);
+        displayBlobArray(&blobs);
+
+        //if (bestBlob != (NULL)) {
+        //rprintfCRLF();
+        //rprintfProgStrM("BEST BLOB:");
+        //displayBlob(bestBlob);
+        //rprintfCRLF();
+        //struct point middle = getBlobMiddle(bestBlob);
+        //displayPoint(&middle);
+        //rprintf("Height: %d, Width: %d", getBlobHeight(bestBlob), getBlobWidth(bestBlob));
+        //rprintfCRLF();
+        //} else {
+        //rprintfProgStrM("NO BEST BLOB:");
+        //rprintfCRLF();
+        //}
+        //free(bestBlob);
         _delay_ms(5000);
     }
-    return 0;
 }
 
 void gripperDemo()
@@ -107,6 +122,7 @@ void testNewArmCode()
 void initRobot(void)
 {
     initPorts();
+#ifndef HEADLIGHTS_ONLY
     signalStart();
     armOff();
 
@@ -138,6 +154,7 @@ void initRobot(void)
 #endif
     rprintfProgStrM("Robot Initialized.");
     rprintfCRLF();
+#endif
 }
 
 #ifndef SIMULATOR

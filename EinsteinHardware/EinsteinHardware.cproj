@@ -97,7 +97,6 @@
       <Value>UARTS_MULTIPLEXED</Value>
       <Value>F_CPU_IN_CIRCUIT=14745600UL</Value>
       <Value>F_CPU_BREADBOARD=8000000UL</Value>
-      <Value>SIMULATOR</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
