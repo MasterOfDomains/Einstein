@@ -63,6 +63,8 @@ struct blobArray getBlobs(void)
             uartReceiveByte(cameraUART, &blobs.contents[currBlob].cornerBR.x);
             uartReceiveByte(cameraUART, &blobs.contents[currBlob].cornerBR.y);
         }
+    } else {
+        rprintfProgStrM("--Empty--\r\n");
     }
     if (!wasTracking) {
         disableTracking();
@@ -86,7 +88,32 @@ void enableTracking(void)
         }
     }
     isTracking = TRUE;
-    //rprintfProgStrM("Tracking\n\r");
+}
+
+
+void disableTracking(void)
+{
+#ifdef UARTS_MULTIPLEXED
+    selectUartChannel(CAMERA);
+#endif
+    if (isTracking) {
+        BOOL trackingDisabled = FALSE;
+        while (!trackingDisabled) {
+            uartSendByte(cameraUART, 'D');
+            uartSendByte(cameraUART, 'T');
+            uartSendByte(cameraUART, '\r');
+            _delay_ms(250);
+            uartFlushReceiveBuffer(cameraUART);
+            _delay_ms(50);
+            if (*inputBufferDataLength == 0) {
+                trackingDisabled = TRUE;
+            } else {
+                rprintf("Not Empty: %d\n\r", *inputBufferDataLength);
+                waitForButton();
+            }
+        }
+        isTracking = FALSE;
+    }
 }
 
 void dumpFrame(void)
@@ -124,31 +151,6 @@ void dumpFrame(void)
     } else {
 ARVcam_error:
         signalFatalError(AVRCAM_COMM_ERROR);
-    }
-}
-
-void disableTracking(void)
-{
-#ifdef UARTS_MULTIPLEXED
-    selectUartChannel(CAMERA);
-#endif
-    if (isTracking) {
-        BOOL trackingDisabled = FALSE;
-        while (!trackingDisabled) {
-            uartSendByte(cameraUART, 'D');
-            uartSendByte(cameraUART, 'T');
-            uartSendByte(cameraUART, '\r');
-            _delay_ms(250);
-            uartFlushReceiveBuffer(cameraUART);
-            _delay_ms(50);
-            if (*inputBufferDataLength == 0) {
-                trackingDisabled = TRUE;
-            } else {
-                rprintf("Not Empty: %d\n\r", *inputBufferDataLength);
-                waitForButton();
-            }
-        }
-        isTracking = FALSE;
     }
 }
 
