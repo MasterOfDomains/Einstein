@@ -74,45 +74,49 @@ struct blobArray getBlobs(void)
 
 void enableTracking(void)
 {
-    BOOL trackingEnabled = FALSE;
+    if (!isTracking) {
+        BOOL trackingEnabled = FALSE;
 #ifdef UARTS_MULTIPLEXED
-    selectUartChannel(CAMERA);
+        selectUartChannel(CAMERA);
 #endif
-    while (!trackingEnabled) {
-        uartSendByte(cameraUART, 'E');
-        uartSendByte(cameraUART, 'T');
-        uartSendByte(cameraUART, '\r');
-        trackingEnabled = getAck();
-        if (!trackingEnabled) {
-            _delay_us(12345);
+        while (!trackingEnabled) {
+            uartSendByte(cameraUART, 'E');
+            uartSendByte(cameraUART, 'T');
+            uartSendByte(cameraUART, '\r');
+            trackingEnabled = getAck();
+            if (!trackingEnabled) {
+                _delay_us(12345);
+            }
         }
+        isTracking = TRUE;
     }
-    isTracking = TRUE;
 }
 
 
 void disableTracking(void)
 {
-#ifdef UARTS_MULTIPLEXED
-    selectUartChannel(CAMERA);
-#endif
     if (isTracking) {
-        BOOL trackingDisabled = FALSE;
-        while (!trackingDisabled) {
-            uartSendByte(cameraUART, 'D');
-            uartSendByte(cameraUART, 'T');
-            uartSendByte(cameraUART, '\r');
-            _delay_ms(250);
-            uartFlushReceiveBuffer(cameraUART);
-            _delay_ms(50);
-            if (*inputBufferDataLength == 0) {
-                trackingDisabled = TRUE;
-            } else {
-                rprintf("Not Empty: %d\n\r", *inputBufferDataLength);
-                waitForButton();
+#ifdef UARTS_MULTIPLEXED
+        selectUartChannel(CAMERA);
+#endif
+        if (isTracking) {
+            BOOL trackingDisabled = FALSE;
+            while (!trackingDisabled) {
+                uartSendByte(cameraUART, 'D');
+                uartSendByte(cameraUART, 'T');
+                uartSendByte(cameraUART, '\r');
+                _delay_ms(250);
+                uartFlushReceiveBuffer(cameraUART);
+                _delay_ms(50);
+                if (*inputBufferDataLength == 0) {
+                    trackingDisabled = TRUE;
+                } else {
+                    rprintf("Not Empty: %d\n\r", *inputBufferDataLength);
+                    waitForButton();
+                }
             }
+            isTracking = FALSE;
         }
-        isTracking = FALSE;
     }
 }
 
