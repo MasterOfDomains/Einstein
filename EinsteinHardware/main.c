@@ -37,17 +37,16 @@ void wait(u16 miliseconds)
 int main(void)
 {
 #ifndef SIMULATOR
-    _delay_ms(3000);
+    _delay_ms(5000);
 #endif
     initRobot();
 
 #ifdef HEADLIGHTS_ONLY
     headLights(TRUE);
 #else
-#ifndef SIMULATOR
+#if !defined(SIMULATOR) && !defined(MAIN_BOARD_ONLY) && !defined(MAIN_BOARD_AND_HEAD)
     moveArmToPos(HOME);
 #endif
-
     testBlobTracking();
 #endif
     return 0;
@@ -55,27 +54,39 @@ int main(void)
 
 void testBlobTracking(void)
 {
-    while (1) {
-        headLights(TRUE);
-        //blob *bestBlob = getBestBlob(NULL);
-        struct blobArray blobs = getBlobs();
-        headLights(FALSE);
-        displayBlobArray(&blobs);
+    rprintfProgStrM("Testing Tracking...");
+    enableTracking();
+    headLights(TRUE);
 
-        //if (bestBlob != (NULL)) {
-        //rprintfCRLF();
-        //rprintfProgStrM("BEST BLOB:");
-        //displayBlob(bestBlob);
-        //rprintfCRLF();
-        //struct point middle = getBlobMiddle(bestBlob);
-        //displayPoint(&middle);
-        //rprintf("Height: %d, Width: %d", getBlobHeight(bestBlob), getBlobWidth(bestBlob));
-        //rprintfCRLF();
-        //} else {
-        //rprintfProgStrM("NO BEST BLOB:");
-        //rprintfCRLF();
-        //}
-        //free(bestBlob);
+    blob testBlob;
+    testBlob.blobColor = GREEN;
+    testBlob.cornerUL.x = 25;
+    testBlob.cornerUL.y = 50;
+    testBlob.cornerBR.x = 80;
+    testBlob.cornerBR.y = 100;
+    rprintfCRLF();
+    displayBlob(&testBlob);
+    struct point testPointMiddle = getBlobMiddle(&testBlob);
+    displayPoint(&testPointMiddle);
+    rprintf("Height: %d, Width: %d", getBlobHeight(&testBlob), getBlobWidth(&testBlob));
+    rprintfCRLF();
+
+    while (1) {
+        blob *bestBlob = getBestBlob(NULL);
+        if (bestBlob != (NULL)) {
+            rprintfCRLF();
+            rprintfProgStrM("BEST BLOB: ");
+            displayBlob(bestBlob);
+            rprintfCRLF();
+            struct point middle = getBlobMiddle(bestBlob);
+            displayPoint(&middle);
+            rprintf("Height: %d, Width: %d", getBlobHeight(bestBlob), getBlobWidth(bestBlob));
+            rprintfCRLF();
+        } else {
+            rprintfProgStrM("NO BEST BLOB:");
+            rprintfCRLF();
+        }
+        free(bestBlob);
         _delay_ms(5000);
     }
 }
@@ -125,31 +136,34 @@ void initRobot(void)
 #ifndef HEADLIGHTS_ONLY
     signalStart();
     armOff();
-
     uartInit();
-
     setRemoteComm(USB);
     rprintfCRLF();
-    rprintfProgStrM("Starting...");
-    rprintfCRLF();
 #ifndef SIMULATOR
+    rprintfProgStrM("Initializing ADC...");
+    rprintfCRLF();
     a2dInit();
     a2dSetPrescaler(ADC_PRESCALE_DIV32);
     a2dSetReference(ADC_REFERENCE_AVCC);
-
+#ifndef BREADBOARD
+    rprintfProgStrM("Initializing Main Board...");
+    rprintfCRLF();
     i2cInit();
-
-#ifndef MAIN_BOARD_ONLY
 #ifdef COMPASS
     initCompass();
 #endif
-#ifndef BREADBOARD
+#endif
+#if !defined(BREADBOARD) && !defined(MAIN_BOARD_ONLY)
+#ifndef MAIN_BOARD_AND_HEAD
+    rprintfProgStrM("Initializing External Components...");
+    rprintfCRLF();
     initMotors();
     initServo8t();
     initHead();
     initArm();
     armOn();
 #endif
+    initHead();
 #endif
 #endif
     rprintfProgStrM("Robot Initialized.");
