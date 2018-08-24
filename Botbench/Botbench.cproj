@@ -1,0 +1,593 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>7.0</ProjectVersion>
+    <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
+    <ProjectGuid>{d7cd22b1-0ea4-4b2c-9d2e-4d6fcc77dcc6}</ProjectGuid>
+    <avrdevice>ATmega644P</avrdevice>
+    <avrdeviceseries>none</avrdeviceseries>
+    <OutputType>Executable</OutputType>
+    <Language>C</Language>
+    <OutputFileName>$(MSBuildProjectName)</OutputFileName>
+    <OutputFileExtension>.elf</OutputFileExtension>
+    <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
+    <AssemblyName>Botbench</AssemblyName>
+    <Name>Botbench</Name>
+    <RootNamespace>Botbench</RootNamespace>
+    <ToolchainFlavour>Native</ToolchainFlavour>
+    <KeepTimersRunning>true</KeepTimersRunning>
+    <OverrideVtor>false</OverrideVtor>
+    <CacheFlash>true</CacheFlash>
+    <ProgFlashFromRam>true</ProgFlashFromRam>
+    <RamSnippetAddress />
+    <UncachedRange />
+    <preserveEEPROM>true</preserveEEPROM>
+    <OverrideVtorValue />
+    <BootSegment>2</BootSegment>
+    <eraseonlaunchrule>0</eraseonlaunchrule>
+    <AsfFrameworkConfig>
+      <framework-data xmlns="">
+  <options />
+  <configurations />
+  <files />
+  <documentation help="" />
+  <offline-documentation help="" />
+  <dependencies>
+    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.34.1" />
+  </dependencies>
+</framework-data>
+    </AsfFrameworkConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <ToolchainSettings>
+      <AvrGcc>
+  <avrgcc.common.Device>-mmcu=atmega644p -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.2.132\gcc\dev\atmega644p"</avrgcc.common.Device>
+  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+  <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+  <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+  <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+  <avrgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>NDEBUG</Value>
+    </ListValues>
+  </avrgcc.compiler.symbols.DefSymbols>
+  <avrgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.2.132\include</Value>
+    </ListValues>
+  </avrgcc.compiler.directories.IncludePaths>
+  <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
+  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+  <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+  <avrgcc.linker.libraries.Libraries>
+    <ListValues>
+      <Value>libm</Value>
+    </ListValues>
+  </avrgcc.linker.libraries.Libraries>
+  <avrgcc.assembler.general.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.2.132\include</Value>
+    </ListValues>
+  </avrgcc.assembler.general.IncludePaths>
+</AvrGcc>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <ToolchainSettings>
+      <AvrGcc>
+  <avrgcc.common.Device>-mmcu=atmega644p -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.2.132\gcc\dev\atmega644p"</avrgcc.common.Device>
+  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+  <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+  <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+  <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+  <avrgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>DEBUG</Value>
+    </ListValues>
+  </avrgcc.compiler.symbols.DefSymbols>
+  <avrgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.2.132\include</Value>
+    </ListValues>
+  </avrgcc.compiler.directories.IncludePaths>
+  <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
+  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+  <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
+  <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+  <avrgcc.linker.libraries.Libraries>
+    <ListValues>
+      <Value>libm</Value>
+    </ListValues>
+  </avrgcc.linker.libraries.Libraries>
+  <avrgcc.assembler.general.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.2.132\include</Value>
+    </ListValues>
+  </avrgcc.assembler.general.IncludePaths>
+  <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
+</AvrGcc>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="benedetelli-nxt2wifi-config.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="benedettelli-nxt2wifi-setup.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="benedettelli-nxt2wifi-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="benedettelli-nxt2wifi-test3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="benedettelli-nxt2wifi-test4.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="codatech-rfid-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="codatech-rfid-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="common.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-compass-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-compass-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-compass-test3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-dlight-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-flex-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-flex-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-gps-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-imu-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-imu-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-imu-test3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-nxtchuck-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-pressure-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-temp-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-thermalir-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-thermalir-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-wifi-config.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dexterind-wifi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="firgelli-linearact-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="firgelli-linearact-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="firgelli-linearact-test3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-accelerometer-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-accelerometer-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-angle-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-angle-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-barometer-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-barometer-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-colour-v2-configure.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-colour-v2-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-colour-v2-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-compass-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-compass-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-compass-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-eopd-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-eopd-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-force-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-force-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-gyro-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-gyro-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-irlink-rcx-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-irlink-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-irrecv-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-irseeker-v2-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-irseeker-v2-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-magfield-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-magfield-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-pir-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-exp1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-exp2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-exp3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-exp4.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-exp5.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-exp6a.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-exp6b.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-exp7.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-exp8.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-SMUX-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-protoboard-test3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-superpro-exp1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-superpro-exp2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-superpro-exp3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-superpro-exp4.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-superpro-exp5.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-superpro-exp6a.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-superpro-exp6b.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-superpro-exp7.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-superpro-exp8.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-superpro-exp9.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hitechnic-touchmux-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="holitdata-motormux-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="holitdata-motormux-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="humarobotics-wifiblock-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lego-energymeter-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lego-light-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lego-light-SMUX-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lego-light-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lego-light-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lego-sound-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lego-temp-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lego-touch-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lego-touch-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lego-ultrasound-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mainpage.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="math-matrix-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="microinfinity-cruizcore-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="microinfinity-cruizcore-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindensors-servo-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-accelerometer-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-accelerometer-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-angle-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-angle-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-ev3-grove-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-ev3-grove-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-ev3smux-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-hid-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-imu-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-imu-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-imu-test3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-irdist-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-irthermometer-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-ligthsensrarr-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-ligthsensrarr-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-ligthsensrarr-test3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-lineleader-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-lineleader-test3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-lineleader-test4.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-lineleader-test5.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-magicwand-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-motormux-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-motormux-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-numericpad-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-nxtcam-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-nxtcam-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-nxtcam.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-pfmate-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-powermeter-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-pressure-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-ps2ctrl-v4-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-ps2ctrl-v4-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-ps2ctrl-v4-test3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-rcxmotormux-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-rcxsensorsmux-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-sensormux-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-sensormux-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-sumoeyes-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-sumoeyes-test2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-touchmux-SMUX-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-touchmux-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mindsensors-touchpanel-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="philips-pcf8574-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="stats-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="timer-test1.c">
+      <SubType>compile</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="monkey01.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="monkey02.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="monkey03.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="monkey04.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="monkey05.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="monkey06.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="monkey07.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="sumoLF.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="sumoLL.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="sumoLR.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="sumonone.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="sumoSF.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="sumoSL.ric">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="sumoSR.ric">
+      <SubType>compile</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
+</Project>
