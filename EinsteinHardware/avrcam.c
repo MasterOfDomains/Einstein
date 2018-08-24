@@ -1,3 +1,5 @@
+#include "avrcam.h"
+
 #include <ctype.h>
 #include <math.h>
 #include <stdlib.h>
@@ -6,7 +8,6 @@
 #include "uart2.h"
 
 #include "../rprintf.h"
-#include "avrcam.h"
 #ifdef UARTS_MULTIPLEXED
 #include "channels.h"
 #endif
