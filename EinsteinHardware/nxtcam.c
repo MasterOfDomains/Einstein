@@ -38,6 +38,13 @@ struct blobArray getBlobs(void)
     struct blobArray blobs;
     blobs.length = 0;
 
+    BOOL wasTracking = FALSE;
+    if (isTracking) {
+        wasTracking = TRUE;
+    } else {
+        enableTracking();
+    }
+
     u08 numberOfObjectsReg = 0x42;
     u08 regValue = readCameraRegister(numberOfObjectsReg);
     rprintf("Number: %d", regValue);
@@ -55,28 +62,10 @@ struct blobArray getBlobs(void)
         }
     }
 
-    /*
-        rprintf("Number of Blobs: %d", blobs.length);
-        rprintfCRLF();
-        BOOL wasTracking = FALSE;
-        if (isTracking) {
-            //wasTracking = TRUE;
-        } else {
-            //enableTracking();
-        }
+    if (!wasTracking) {
+        disableTracking();
+    }
 
-        for (u08 currBlob = 0; currBlob < blobs.length; currBlob++) {
-            blobs.contents[currBlob].blobColor = readCameraRegister(objectColorReg[currBlob]);
-            blobs.contents[currBlob].cornerUL.x = readCameraRegister(objectUL_X_Reg[currBlob]);
-            blobs.contents[currBlob].cornerUL.y = readCameraRegister(objectUL_Y_Reg[currBlob]);
-            blobs.contents[currBlob].cornerUL.x = readCameraRegister(objectLR_X_Reg[currBlob]);
-            blobs.contents[currBlob].cornerUL.y = readCameraRegister(objectLR_Y_Reg[currBlob]);
-        }
-
-        if (!wasTracking) {
-            //disableTracking();
-        }
-    	*/
     return blobs;
 }
 
