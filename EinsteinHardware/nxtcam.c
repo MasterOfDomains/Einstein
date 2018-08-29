@@ -5,70 +5,96 @@
 #include <stdlib.h>
 #include <util/delay.h>
 
-#include "uart2.h"
 #include "../twi.h"
 #include "../rprintf.h"
 
 #define CAM_ADDRESS 0x02
 
+u08 objectColorReg[8] = {0x43, 0x48, 0x4D, 0x52, 0x57, 0x5C, 0x61, 0x66};
+u08 objectUL_X_Reg[8] = {0x44, 0x49, 0x4E, 0x53, 0x58, 0x5D, 0x62, 0x67};
+u08 objectUL_Y_Reg[8] = {0x45, 0x4A, 0x4F, 0x54, 0x59, 0x5E, 0x63, 0x68};
+u08 objectBR_X_Reg[8] = {0x46, 0x4B, 0x50, 0x55, 0x5A, 0x5F, 0x64, 0x69};
+u08 objectBR_Y_Reg[8] = {0x47, 0x4C, 0x51, 0x56, 0x5B, 0x60, 0x65, 0x6A};
+
 typedef enum {
     ENABLE_TRACKING = 'E',
     DISABLE_TRACKING = 'D',
-    PING = 'P'
+    PING = 'P',
+    OBJECT_TRACKING_MODE = 'B',
+    RESET = 'R'
 } commandType;
 
 BOOL isTracking = FALSE;
 
+BOOL getAck();
 BOOL pingCamera(void);
-void commandCamera(commandType command);
+BOOL commandCamera(commandType command);
+u08 readCameraRegister(u08 register);
 
 u16 *inputBufferDataLength;
 
 struct blobArray getBlobs(void)
 {
     struct blobArray blobs;
-    //blobs.length = 0;
-    //#ifdef UARTS_MULTIPLEXED
-    //selectUartChannel(CAMERA);
-    //#endif
-    //uartFlushReceiveBuffer(cameraUART);
-    //BOOL wasTracking = FALSE;
-    //if (isTracking) {
-    //wasTracking = TRUE;
-    //} else {
-    //enableTracking();
-    //}
-    //_delay_ms(50);
-    //if (!uartReceiveBufferIsEmpty(cameraUART)) {
-    //u08 syncByte = 0;
-    //while (syncByte != 0x0A) {
-    //uartReceiveByte(cameraUART, &syncByte);
-    //}
-    //uartReceiveByte(cameraUART, &blobs.length);
-    //for (u08 currBlob = 0; currBlob < blobs.length; currBlob++) {
-    //uartReceiveByte(cameraUART, &blobs.contents[currBlob].blobColor);
-    //uartReceiveByte(cameraUART, &blobs.contents[currBlob].cornerUL.x);
-    //uartReceiveByte(cameraUART, &blobs.contents[currBlob].cornerUL.y);
-    //uartReceiveByte(cameraUART, &blobs.contents[currBlob].cornerBR.x);
-    //uartReceiveByte(cameraUART, &blobs.contents[currBlob].cornerBR.y);
-    //}
-    //} else {
-    //rprintfProgStrM("--Empty--\r\n");
-    //}
-    //if (!wasTracking) {
-    //disableTracking();
-    //}
+    blobs.length = 0;
+
+    u08 numberOfObjectsReg = 0x42;
+    u08 regValue = readCameraRegister(numberOfObjectsReg);
+    rprintf("Number: %d", regValue);
+    rprintfCRLF();
+
+    if (regValue != 0x41) {
+        blobs.length = regValue;
+
+        for (u08 currBlob = 0; currBlob < blobs.length; currBlob++) {
+            blobs.contents[currBlob].blobColor = readCameraRegister(objectColorReg[currBlob]);
+            blobs.contents[currBlob].cornerUL.x = readCameraRegister(objectUL_X_Reg[currBlob]);
+            blobs.contents[currBlob].cornerUL.y = readCameraRegister(objectUL_Y_Reg[currBlob]);
+            blobs.contents[currBlob].cornerBR.x = readCameraRegister(objectBR_X_Reg[currBlob]);
+            blobs.contents[currBlob].cornerBR.y = readCameraRegister(objectBR_Y_Reg[currBlob]);
+        }
+    }
+
+    /*
+        rprintf("Number of Blobs: %d", blobs.length);
+        rprintfCRLF();
+        BOOL wasTracking = FALSE;
+        if (isTracking) {
+            //wasTracking = TRUE;
+        } else {
+            //enableTracking();
+        }
+
+        for (u08 currBlob = 0; currBlob < blobs.length; currBlob++) {
+            blobs.contents[currBlob].blobColor = readCameraRegister(objectColorReg[currBlob]);
+            blobs.contents[currBlob].cornerUL.x = readCameraRegister(objectUL_X_Reg[currBlob]);
+            blobs.contents[currBlob].cornerUL.y = readCameraRegister(objectUL_Y_Reg[currBlob]);
+            blobs.contents[currBlob].cornerUL.x = readCameraRegister(objectLR_X_Reg[currBlob]);
+            blobs.contents[currBlob].cornerUL.y = readCameraRegister(objectLR_Y_Reg[currBlob]);
+        }
+
+        if (!wasTracking) {
+            //disableTracking();
+        }
+    	*/
     return blobs;
 }
 
 void enableTracking(void)
 {
+    rprintfProgStrM("Enabling");
+    rprintfCRLF();
     if (!isTracking) {
-        commandCamera(ENABLE_TRACKING);
-        isTracking = TRUE;
+        isTracking = commandCamera(ENABLE_TRACKING);
     }
 }
 
+void resetCamera(void)
+{
+    rprintfProgStrM("Resetting");
+    rprintfCRLF();
+    commandCamera(RESET);
+}
 
 void disableTracking(void)
 {
@@ -127,24 +153,55 @@ void printColorName(color cName, BOOL crlf)
     }
 }
 
-void commandCamera(commandType command)
+BOOL commandCamera(commandType command)
 {
     u08 sendDataLength = 2;
     u08 sendData[sendDataLength];
     sendData[0] = 0X41; // Command Register
     sendData[1] = command;
     i2cMasterSend(CAM_ADDRESS, sendDataLength, sendData);
-    i2cWaitForComplete();
+    _delay_ms(100);
+    return getAck();
+}
+
+u08 readCameraRegister(u08 regAddress)
+{
+    u08 regValue;
+    i2cMasterSend(CAM_ADDRESS, 1, &regAddress);
+    i2cMasterReceive(CAM_ADDRESS, 1, &regValue);
+    return regValue;
 }
 
 BOOL pingCamera(void)
 {
     rprintfProgStrM("pingCamera");
     rprintfCRLF();
-    commandCamera(PING);
-    rprintfProgStrM("NXTCam pinged!");
-    rprintfCRLF();
-    return TRUE;
+    return commandCamera(PING);
+}
+
+BOOL getAck()
+{
+    BOOL Acked = FALSE;
+#define DATA_LENGTH 5
+    u08 data[DATA_LENGTH];
+    data[0] = 4;
+    data[1] = 4;
+    data[2] = 4;
+    data[3] = 4;
+    data[4] = 4;
+    i2cMasterReceive(CAM_ADDRESS, DATA_LENGTH, data);
+    if (data[1] == 'A' && data[2] == 'C' && data[3] == 'K' && data[4] == '\r') {
+        rprintfProgStrM("Ack");
+        rprintfCRLF();
+        Acked = TRUE;
+    } else if (data[1] == 'N' && data[2] == 'C' && data[3] == 'K' && data[4] == '\r') {
+        rprintfProgStrM("Neg Ack");
+        rprintfCRLF();
+    } else {
+        rprintf("No ack or nck: %d-%d-%d-%d-%d", data[0], data[1], data[2], data[3], data[4]);
+        rprintfCRLF();
+    }
+    return Acked;
 }
 
 void initCamera(u08 avrUart)
@@ -155,6 +212,7 @@ void initCamera(u08 avrUart)
     while (!pingCamera()) {
         _delay_ms(500);
     }
+
     rprintfProgStrM("Camera Initialized");
     rprintfCRLF();
 }

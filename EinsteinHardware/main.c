@@ -40,7 +40,12 @@ int main(void)
     _delay_ms(5000);
 #endif
     initRobot();
-
+    enableTracking();
+    while (1) {
+        struct blobArray blobs = getBlobs();
+        displayBlobArray(&blobs);
+        _delay_ms(1000);
+    }
 #ifdef HEADLIGHTS_ONLY
     headLights(TRUE);
 #else
