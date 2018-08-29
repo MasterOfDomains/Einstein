@@ -10,28 +10,47 @@
 
 #define CAM_ADDRESS 0x02
 
-u08 objectColorReg[8] = {0x43, 0x48, 0x4D, 0x52, 0x57, 0x5C, 0x61, 0x66};
-u08 objectUL_X_Reg[8] = {0x44, 0x49, 0x4E, 0x53, 0x58, 0x5D, 0x62, 0x67};
-u08 objectUL_Y_Reg[8] = {0x45, 0x4A, 0x4F, 0x54, 0x59, 0x5E, 0x63, 0x68};
-u08 objectBR_X_Reg[8] = {0x46, 0x4B, 0x50, 0x55, 0x5A, 0x5F, 0x64, 0x69};
-u08 objectBR_Y_Reg[8] = {0x47, 0x4C, 0x51, 0x56, 0x5B, 0x60, 0x65, 0x6A};
+const u08 objectColorReg[8] = {0x43, 0x48, 0x4D, 0x52, 0x57, 0x5C, 0x61, 0x66};
+const u08 objectUL_X_Reg[8] = {0x44, 0x49, 0x4E, 0x53, 0x58, 0x5D, 0x62, 0x67};
+const u08 objectUL_Y_Reg[8] = {0x45, 0x4A, 0x4F, 0x54, 0x59, 0x5E, 0x63, 0x68};
+const u08 objectBR_X_Reg[8] = {0x46, 0x4B, 0x50, 0x55, 0x5A, 0x5F, 0x64, 0x69};
+const u08 objectBR_Y_Reg[8] = {0x47, 0x4C, 0x51, 0x56, 0x5B, 0x60, 0x65, 0x6A};
 
 typedef enum {
     ENABLE_TRACKING = 'E',
     DISABLE_TRACKING = 'D',
+    LOCK_TRACKING = 'J',
+    UNLOCK_TRACKING = 'K',
     PING = 'P',
-    OBJECT_TRACKING_MODE = 'B',
     RESET = 'R'
 } commandType;
+
+typedef enum {
+    NONE,
+    MEDIUM,
+    LARGE,
+    EXTRA_LARGE
+} delayLength;
+
+typedef struct {
+    commandType type;
+    BOOL acked;
+    delayLength delay;
+} cameraCommand;
+
+cameraCommand enableTrackingCommand = {ENABLE_TRACKING, TRUE, LARGE};
+cameraCommand disableTrackingCommand = {DISABLE_TRACKING, TRUE, LARGE};
+cameraCommand locktrackingCommand = {LOCK_TRACKING, FALSE, MEDIUM};
+cameraCommand unlocktrackingCommand = {UNLOCK_TRACKING, FALSE, NONE};
+cameraCommand pingCommand = {PING, TRUE, EXTRA_LARGE};
+cameraCommand resetCommand = {RESET, TRUE, LARGE};
 
 BOOL isTracking = FALSE;
 
 BOOL getAck();
 BOOL pingCamera(void);
-BOOL commandCamera(commandType command);
+BOOL commandCamera(cameraCommand command);
 u08 readCameraRegister(u08 register);
-
-u16 *inputBufferDataLength;
 
 struct blobArray getBlobs(void)
 {
@@ -42,9 +61,12 @@ struct blobArray getBlobs(void)
     if (isTracking) {
         wasTracking = TRUE;
     } else {
+        rprintf("isTracking = %d, wasTracking = %d", isTracking, wasTracking);
+        rprintfCRLF();
         enableTracking();
     }
 
+    commandCamera(locktrackingCommand);
     u08 numberOfObjectsReg = 0x42;
     u08 regValue = readCameraRegister(numberOfObjectsReg);
     rprintf("Number: %d", regValue);
@@ -62,7 +84,11 @@ struct blobArray getBlobs(void)
         }
     }
 
+    commandCamera(unlocktrackingCommand);
+
     if (!wasTracking) {
+        rprintf("isTracking = %d, wasTracking = %d", isTracking, wasTracking);
+        rprintfCRLF();
         disableTracking();
     }
 
@@ -74,7 +100,7 @@ void enableTracking(void)
     rprintfProgStrM("Enabling");
     rprintfCRLF();
     if (!isTracking) {
-        isTracking = commandCamera(ENABLE_TRACKING);
+        isTracking = commandCamera(enableTrackingCommand);
     }
 }
 
@@ -82,13 +108,13 @@ void resetCamera(void)
 {
     rprintfProgStrM("Resetting");
     rprintfCRLF();
-    commandCamera(RESET);
+    commandCamera(resetCommand);
 }
 
 void disableTracking(void)
 {
     if (isTracking) {
-        commandCamera(DISABLE_TRACKING);
+        commandCamera(disableTrackingCommand);
         isTracking = FALSE;
     }
 }
@@ -142,15 +168,31 @@ void printColorName(color cName, BOOL crlf)
     }
 }
 
-BOOL commandCamera(commandType command)
+BOOL commandCamera(cameraCommand command)
 {
+    BOOL success = FALSE;
     u08 sendDataLength = 2;
     u08 sendData[sendDataLength];
     sendData[0] = 0X41; // Command Register
-    sendData[1] = command;
+    sendData[1] = command.type;
     i2cMasterSend(CAM_ADDRESS, sendDataLength, sendData);
-    _delay_ms(100);
-    return getAck();
+    switch (command.delay) {
+    case NONE:
+        break;
+    case MEDIUM:
+        _delay_ms(25);
+        break;
+    case LARGE:
+        _delay_ms(100);
+        break;
+    case EXTRA_LARGE:
+        _delay_ms(1000);
+        break;
+    }
+    if (command.acked) {
+        success = getAck();
+    }
+    return success;
 }
 
 u08 readCameraRegister(u08 regAddress)
@@ -165,7 +207,15 @@ BOOL pingCamera(void)
 {
     rprintfProgStrM("pingCamera");
     rprintfCRLF();
-    return commandCamera(PING);
+    return commandCamera(pingCommand);
+}
+
+u08 readByte()
+{
+    i2cReceiveByte(TRUE);
+    i2cWaitForComplete();
+    _delay_us(10);
+    return i2cGetReceivedByte();
 }
 
 BOOL getAck()
@@ -173,11 +223,6 @@ BOOL getAck()
     BOOL Acked = FALSE;
 #define DATA_LENGTH 5
     u08 data[DATA_LENGTH];
-    data[0] = 4;
-    data[1] = 4;
-    data[2] = 4;
-    data[3] = 4;
-    data[4] = 4;
     i2cMasterReceive(CAM_ADDRESS, DATA_LENGTH, data);
     if (data[1] == 'A' && data[2] == 'C' && data[3] == 'K' && data[4] == '\r') {
         rprintfProgStrM("Ack");
