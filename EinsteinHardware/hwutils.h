@@ -16,39 +16,36 @@
 #define PORT_IS_ON( port_letter, number )		( port_letter & (1<<number) )
 #define PORT_IS_OFF( port_letter, number )		!( port_letter & (1<<number) )
 
-struct point
-{
-	u08 x;
-	u08 y;
+struct point {
+    u08 x;
+    u08 y;
 };
 
-typedef enum
-{
-	UART_ERROR = 0,
-	INVALID_SERVO = 1,
-	SERVO8T_COMM_ERROR = 2,
-	AVRCAM_COMM_ERROR = 3,
-	INVALID_SPEED = 4,
-	OUT_OF_SENSOR_RANGE = 5,
-	I2C_COMM_ERROR = 6,
-	INVALID_ARM_POSITION = 7,
-	INVALID_SENSOR = 8
+typedef enum {
+    UART_ERROR = 0,
+    INVALID_SERVO = 1,
+    SERVO8T_COMM_ERROR = 2,
+    AVRCAM_COMM_ERROR = 3,
+    INVALID_SPEED = 4,
+    OUT_OF_SENSOR_RANGE = 5,
+    I2C_COMM_ERROR = 6,
+    INVALID_ARM_POSITION = 7,
+    INVALID_SENSOR = 8,
+    NXTCAM_PROTOCOL_ERROR = 9
 } errorCode;
 
-typedef enum
-{
-	IR_LEFT,
-	IR_FRONT,
-	IR_RIGHT,
-	IR_ARM,
-	SONAR_LEFT,
-	SONAR_RIGHT
+typedef enum {
+    IR_LEFT,
+    IR_FRONT,
+    IR_RIGHT,
+    IR_ARM,
+    SONAR_LEFT,
+    SONAR_RIGHT
 } distSensor;
 
-typedef enum
-{
-	IR,
-	SONAR
+typedef enum {
+    IR,
+    SONAR
 } distSensorType;
 
 // Retrieves a positive integer from UART terminal emulator

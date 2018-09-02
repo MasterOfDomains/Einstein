@@ -34,22 +34,26 @@ typedef enum {
 
 typedef struct {
     commandType type;
-    BOOL acked;
     delayLength delay;
 } cameraCommand;
 
-cameraCommand enableTrackingCommand = {ENABLE_TRACKING, TRUE, LARGE};
-cameraCommand disableTrackingCommand = {DISABLE_TRACKING, TRUE, LARGE};
-cameraCommand locktrackingCommand = {LOCK_TRACKING, FALSE, MEDIUM};
-cameraCommand unlocktrackingCommand = {UNLOCK_TRACKING, FALSE, NONE};
-cameraCommand pingCommand = {PING, TRUE, EXTRA_LARGE};
-cameraCommand resetCommand = {RESET, TRUE, LARGE};
+cameraCommand enableTrackingCommand = {ENABLE_TRACKING, LARGE};
+cameraCommand disableTrackingCommand = {DISABLE_TRACKING, LARGE};
+cameraCommand locktrackingCommand = {LOCK_TRACKING, MEDIUM};
+cameraCommand unlocktrackingCommand = {UNLOCK_TRACKING, NONE};
+cameraCommand pingCommand = {PING, EXTRA_LARGE};
+cameraCommand resetCommand = {RESET, LARGE};
 
 BOOL isTracking = FALSE;
+u08 commandSyncByte;
+BOOL commandSynced;
+#define COMMAND_COUNTER_BOTTOM 150
+#define COMMAND_COUNTER_TOP 250
 
-BOOL getAck();
-BOOL pingCamera(void);
-BOOL commandCamera(cameraCommand command);
+BOOL getAck(void);
+void pingCamera(void);
+void resetCamera(void);
+void commandCamera(cameraCommand command);
 u08 readCameraRegister(u08 register);
 
 struct blobArray getBlobs(void)
@@ -66,6 +70,8 @@ struct blobArray getBlobs(void)
         enableTracking();
     }
 
+    rprintfProgStrM("Locking Tracking");
+    rprintfCRLF();
     commandCamera(locktrackingCommand);
     u08 numberOfObjectsReg = 0x42;
     u08 regValue = readCameraRegister(numberOfObjectsReg);
@@ -84,6 +90,8 @@ struct blobArray getBlobs(void)
         }
     }
 
+    rprintfProgStrM("Unlocking Tracking");
+    rprintfCRLF();
     commandCamera(unlocktrackingCommand);
 
     if (!wasTracking) {
@@ -97,26 +105,23 @@ struct blobArray getBlobs(void)
 
 void enableTracking(void)
 {
-    rprintfProgStrM("Enabling");
+    rprintfProgStrM("Enabling Tracking");
     rprintfCRLF();
-    if (!isTracking) {
-        isTracking = commandCamera(enableTrackingCommand);
-    }
-}
-
-void resetCamera(void)
-{
-    rprintfProgStrM("Resetting");
-    rprintfCRLF();
-    commandCamera(resetCommand);
+    commandCamera(enableTrackingCommand);
 }
 
 void disableTracking(void)
 {
-    if (isTracking) {
-        commandCamera(disableTrackingCommand);
-        isTracking = FALSE;
-    }
+    rprintfProgStrM("Disabling Tracking");
+    rprintfCRLF();
+    commandCamera(disableTrackingCommand);
+}
+
+void resetCamera(void)
+{
+    rprintfProgStrM("Resetting NXTCam");
+    rprintfCRLF();
+    commandCamera(resetCommand);
 }
 
 u08 getPictureWidth(void)
@@ -168,31 +173,33 @@ void printColorName(color cName, BOOL crlf)
     }
 }
 
-BOOL commandCamera(cameraCommand command)
+void commandCamera(cameraCommand command)
 {
     BOOL success = FALSE;
-    u08 sendDataLength = 2;
-    u08 sendData[sendDataLength];
-    sendData[0] = 0X41; // Command Register
-    sendData[1] = command.type;
-    i2cMasterSend(CAM_ADDRESS, sendDataLength, sendData);
-    switch (command.delay) {
-    case NONE:
-        break;
-    case MEDIUM:
-        _delay_ms(25);
-        break;
-    case LARGE:
-        _delay_ms(100);
-        break;
-    case EXTRA_LARGE:
-        _delay_ms(1000);
-        break;
-    }
-    if (command.acked) {
+    while (!success) {
+        u08 sendDataLength = 2;
+        u08 sendData[sendDataLength];
+        sendData[0] = 0X41; // Command Register
+        sendData[1] = command.type;
+        i2cMasterSend(CAM_ADDRESS, sendDataLength, sendData);
+        switch (command.delay) {
+        case NONE:
+            break;
+        case MEDIUM:
+            _delay_ms(25);
+            break;
+        case LARGE:
+            _delay_ms(100);
+            break;
+        case EXTRA_LARGE:
+            _delay_ms(1000);
+            break;
+        }
         success = getAck();
+        if (!success) {
+            _delay_ms(500);
+        }
     }
-    return success;
 }
 
 u08 readCameraRegister(u08 regAddress)
@@ -203,11 +210,11 @@ u08 readCameraRegister(u08 regAddress)
     return regValue;
 }
 
-BOOL pingCamera(void)
+void pingCamera(void)
 {
-    rprintfProgStrM("pingCamera");
+    rprintfProgStrM("Pinging NXTCam");
     rprintfCRLF();
-    return commandCamera(pingCommand);
+    commandCamera(pingCommand);
 }
 
 u08 readByte()
@@ -218,19 +225,39 @@ u08 readByte()
     return i2cGetReceivedByte();
 }
 
+void incrementSyncByte()
+{
+    if (commandSyncByte == COMMAND_COUNTER_TOP) {
+        commandSyncByte = COMMAND_COUNTER_BOTTOM;
+    } else {
+        commandSyncByte++;
+    }
+}
+
 BOOL getAck()
 {
-    BOOL Acked = FALSE;
+    BOOL Acked = TRUE;
 #define DATA_LENGTH 5
     u08 data[DATA_LENGTH];
     i2cMasterReceive(CAM_ADDRESS, DATA_LENGTH, data);
+    if (!commandSynced) {
+        commandSyncByte = data[0];
+        commandSynced = TRUE;
+    } else {
+        incrementSyncByte();
+        if (commandSyncByte != data[0]) {
+            rprintf("ERROR - commandSync: %d, data: %d", commandSyncByte, data[0]);
+            rprintfCRLF();
+            //signalFatalError(NXTCAM_PROTOCOL_ERROR);
+        }
+    }
     if (data[1] == 'A' && data[2] == 'C' && data[3] == 'K' && data[4] == '\r') {
-        rprintfProgStrM("Ack");
+        rprintf("ACK!!! %d", data[0]);
         rprintfCRLF();
-        Acked = TRUE;
     } else if (data[1] == 'N' && data[2] == 'C' && data[3] == 'K' && data[4] == '\r') {
-        rprintfProgStrM("Neg Ack");
+        rprintf("NCK %d", data[0]);
         rprintfCRLF();
+        Acked = FALSE;
     } else {
         rprintf("No ack or nck: %d-%d-%d-%d-%d", data[0], data[1], data[2], data[3], data[4]);
         rprintfCRLF();
@@ -243,9 +270,10 @@ void initCamera(u08 avrUart)
     rprintfProgStrM("Initializing Camera");
     rprintfCRLF();
 
-    while (!pingCamera()) {
-        _delay_ms(500);
-    }
+    commandSynced = FALSE;
+    pingCamera();
+    resetCamera();
+    getBlobs();
 
     rprintfProgStrM("Camera Initialized");
     rprintfCRLF();
