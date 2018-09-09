@@ -25,6 +25,7 @@ void initPorts(void);
 void signalStart();
 void testNewArmCode(void);
 void testBlobTracking(void);
+void testSonar(void);
 void demo();
 
 void wait(u16 miliseconds)
@@ -40,21 +41,21 @@ int main(void)
     _delay_ms(5000);
 #endif
     initRobot();
-    enableTracking();
-    while (1) {
-        struct blobArray blobs = getBlobs();
-        displayBlobArray(&blobs);
-        _delay_ms(1000);
-    }
-#ifdef HEADLIGHTS_ONLY
-    headLights(TRUE);
-#else
+
 #if !defined(SIMULATOR) && !defined(MAIN_BOARD_ONLY) && !defined(MAIN_BOARD_AND_HEAD)
     moveArmToPos(HOME);
 #endif
-    testBlobTracking();
-#endif
     return 0;
+}
+
+void testSonar()
+{
+    while (TRUE) {
+        struct headSonarReadings readings = readHeadSonars();
+        rprintf("L=%d, R=%d", readings.left, readings.right);
+        rprintfCRLF();
+        _delay_ms(1000);
+    }
 }
 
 void testBlobTracking(void)
@@ -62,19 +63,6 @@ void testBlobTracking(void)
     rprintfProgStrM("Testing Tracking...");
     enableTracking();
     headLights(TRUE);
-
-    blob testBlob;
-    testBlob.blobColor = GREEN;
-    testBlob.cornerUL.x = 25;
-    testBlob.cornerUL.y = 50;
-    testBlob.cornerBR.x = 80;
-    testBlob.cornerBR.y = 100;
-    rprintfCRLF();
-    displayBlob(&testBlob);
-    struct point testPointMiddle = getBlobMiddle(&testBlob);
-    displayPoint(&testPointMiddle);
-    rprintf("Height: %d, Width: %d", getBlobHeight(&testBlob), getBlobWidth(&testBlob));
-    rprintfCRLF();
 
     while (1) {
         blob *bestBlob = getBestBlob(NULL);
