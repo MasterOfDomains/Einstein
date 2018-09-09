@@ -9,6 +9,8 @@
 #include "../rprintf.h"
 
 #define CAM_ADDRESS 0x02
+#define COMMAND_REGISTER 0X41
+
 
 const u08 objectColorReg[8] = {0x43, 0x48, 0x4D, 0x52, 0x57, 0x5C, 0x61, 0x66};
 const u08 objectUL_X_Reg[8] = {0x44, 0x49, 0x4E, 0x53, 0x58, 0x5D, 0x62, 0x67};
@@ -65,22 +67,14 @@ struct blobArray getBlobs(void)
     if (isTracking) {
         wasTracking = TRUE;
     } else {
-        rprintf("isTracking = %d, wasTracking = %d", isTracking, wasTracking);
-        rprintfCRLF();
         enableTracking();
     }
 
-    rprintfProgStrM("Locking Tracking");
-    rprintfCRLF();
     commandCamera(locktrackingCommand);
     u08 numberOfObjectsReg = 0x42;
     u08 regValue = readCameraRegister(numberOfObjectsReg);
-    rprintf("Number: %d", regValue);
-    rprintfCRLF();
-
-    if (regValue != 0x41) {
+    if (regValue != COMMAND_REGISTER) {
         blobs.length = regValue;
-
         for (u08 currBlob = 0; currBlob < blobs.length; currBlob++) {
             blobs.contents[currBlob].blobColor = readCameraRegister(objectColorReg[currBlob]);
             blobs.contents[currBlob].cornerUL.x = readCameraRegister(objectUL_X_Reg[currBlob]);
@@ -89,14 +83,8 @@ struct blobArray getBlobs(void)
             blobs.contents[currBlob].cornerBR.y = readCameraRegister(objectBR_Y_Reg[currBlob]);
         }
     }
-
-    rprintfProgStrM("Unlocking Tracking");
-    rprintfCRLF();
     commandCamera(unlocktrackingCommand);
-
     if (!wasTracking) {
-        rprintf("isTracking = %d, wasTracking = %d", isTracking, wasTracking);
-        rprintfCRLF();
         disableTracking();
     }
 
@@ -105,15 +93,11 @@ struct blobArray getBlobs(void)
 
 void enableTracking(void)
 {
-    rprintfProgStrM("Enabling Tracking");
-    rprintfCRLF();
     commandCamera(enableTrackingCommand);
 }
 
 void disableTracking(void)
 {
-    rprintfProgStrM("Disabling Tracking");
-    rprintfCRLF();
     commandCamera(disableTrackingCommand);
 }
 
@@ -179,7 +163,7 @@ void commandCamera(cameraCommand command)
     while (!success) {
         u08 sendDataLength = 2;
         u08 sendData[sendDataLength];
-        sendData[0] = 0X41; // Command Register
+        sendData[0] = COMMAND_REGISTER;
         sendData[1] = command.type;
         i2cMasterSend(CAM_ADDRESS, sendDataLength, sendData);
         switch (command.delay) {
@@ -248,7 +232,7 @@ BOOL getAck()
         if (commandSyncByte != data[0]) {
             rprintf("ERROR - commandSync: %d, data: %d", commandSyncByte, data[0]);
             rprintfCRLF();
-            //signalFatalError(NXTCAM_PROTOCOL_ERROR);
+            signalFatalError(NXTCAM_PROTOCOL_ERROR);
         }
     }
     if (data[1] == 'A' && data[2] == 'C' && data[3] == 'K' && data[4] == '\r') {
