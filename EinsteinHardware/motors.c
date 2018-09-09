@@ -8,7 +8,6 @@
 
 #ifdef EXTERNAL_MOTOR_CONTROL
 #include "../twi.h"
-//#include "../buffer.h"
 #else
 // Output Compare Registers
 #define OCR_LEFT OCR0A
