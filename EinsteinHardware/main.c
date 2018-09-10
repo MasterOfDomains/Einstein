@@ -23,9 +23,10 @@
 void initRobot(void);
 void initPorts(void);
 void signalStart();
-void testNewArmCode(void);
-void testBlobTracking(void);
-void testSonar(void);
+void testNewArmCode(BOOL forever);
+void testBlobTracking(BOOL forever);
+void testSonar(BOOL forever);
+void gripperDemo();
 void demo();
 
 void wait(u16 miliseconds)
@@ -45,43 +46,12 @@ int main(void)
 #if !defined(SIMULATOR) && !defined(MAIN_BOARD_ONLY) && !defined(MAIN_BOARD_AND_HEAD)
     moveArmToPos(HOME);
 #endif
+
+    gripperDemo();
+    testSonar(FALSE);
+    testBlobTracking(FALSE);
+
     return 0;
-}
-
-void testSonar()
-{
-    while (TRUE) {
-        struct headSonarReadings readings = readHeadSonars();
-        rprintf("L=%d, R=%d", readings.left, readings.right);
-        rprintfCRLF();
-        _delay_ms(1000);
-    }
-}
-
-void testBlobTracking(void)
-{
-    rprintfProgStrM("Testing Tracking...");
-    enableTracking();
-    headLights(TRUE);
-
-    while (1) {
-        blob *bestBlob = getBestBlob(NULL);
-        if (bestBlob != (NULL)) {
-            rprintfCRLF();
-            rprintfProgStrM("BEST BLOB: ");
-            displayBlob(bestBlob);
-            rprintfCRLF();
-            struct point middle = getBlobMiddle(bestBlob);
-            displayPoint(&middle);
-            rprintf("Height: %d, Width: %d", getBlobHeight(bestBlob), getBlobWidth(bestBlob));
-            rprintfCRLF();
-        } else {
-            rprintfProgStrM("NO BEST BLOB:");
-            rprintfCRLF();
-        }
-        free(bestBlob);
-        _delay_ms(5000);
-    }
 }
 
 void gripperDemo()
@@ -102,9 +72,45 @@ void gripperDemo()
     _delay_ms(1000);
 }
 
-void testNewArmCode()
+void testSonar(BOOL forever)
 {
-    while (1) {
+    {
+        struct headSonarReadings readings = readHeadSonars();
+        rprintf("L=%d, R=%d", readings.left, readings.right);
+        rprintfCRLF();
+        _delay_ms(1000);
+    } while (forever);
+}
+
+void testBlobTracking(BOOL forever)
+{
+    rprintfProgStrM("Testing Tracking...");
+    enableTracking();
+    headLights(TRUE);
+
+    {
+        blob *bestBlob = getBestBlob(NULL);
+        if (bestBlob != (NULL)) {
+            rprintfCRLF();
+            rprintfProgStrM("BEST BLOB: ");
+            displayBlob(bestBlob);
+            rprintfCRLF();
+            struct point middle = getBlobMiddle(bestBlob);
+            displayPoint(&middle);
+            rprintf("Height: %d, Width: %d", getBlobHeight(bestBlob), getBlobWidth(bestBlob));
+            rprintfCRLF();
+        } else {
+            rprintfProgStrM("NO BEST BLOB:");
+            rprintfCRLF();
+        }
+        free(bestBlob);
+        _delay_ms(5000);
+    } while (forever);
+}
+
+void testNewArmCode(BOOL forever)
+{
+    {
         moveArmToPos(HOME);
         _delay_ms(1000);
         moveArmToPos(CROUCH);
@@ -120,7 +126,7 @@ void testNewArmCode()
             rotateArm(LEFT);
         }
         _delay_ms(1000);
-    }
+    } while (forever);
 }
 
 void initRobot(void)
