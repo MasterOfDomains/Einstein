@@ -212,14 +212,14 @@ void initPorts(void)
 {
 
     // ANALOG PORTS
-    DDRA = 0b00000000;
+    DDRA = 0b00100000;
     //       ||||||||
     //       |||||||\___0: IR 1, Pin 40
     //       ||||||\____1:
     //       |||||\_____2:
     //       ||||\______3:
     //       |||\_______4:
-    //       ||\________5:
+    //       ||\________5: Sonar Enable, Pin 35
     //       |\_________6: Left Head Sonar, Pin 34
     //       \__________7: Right Head Sonar, Pin 33
 
@@ -234,7 +234,7 @@ void initPorts(void)
     //       |||\_______4:							/ Right Motor PWM (OC0B), OUTPUT, Pin 5
     //       ||\________5:							/ Left Motor BACKWARD, OUTPUT, Pin 6
     //       |\_________6: Headlights on			/ Right Motor FORWARD, OUTPUT, Pin 7
-    //       \__________7: Read head sonar enable	/ Right Motor BACKWARD, OUTPUT, Pin 8
+    //       \__________7:							/ Right Motor BACKWARD, OUTPUT, Pin 8
 
     DDRC = 0b11111011;
     //       ||||||||
