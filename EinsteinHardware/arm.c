@@ -326,7 +326,6 @@ void populateArmPositions()
     sit.elbow = SIT_ELBOW;
     sit.wrist = SIT_WRIST;
     armPositions.positions[armPositions.length++] = sit;
-    rprintfCRLF();
 }
 
 void initArm()
