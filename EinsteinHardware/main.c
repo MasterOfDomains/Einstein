@@ -27,7 +27,7 @@ void testNewArmCode(BOOL forever);
 void testBlobTracking(BOOL forever);
 void testSonar(BOOL forever);
 void gripperDemo(void);
-void chaseObject(void);
+void beRobot(void);
 
 void wait(u16 miliseconds)
 {
@@ -51,12 +51,34 @@ int main(void)
     testSonar(FALSE);
     testBlobTracking(FALSE);
 
-    chaseObject();
+    beRobot();
 
     return 0;
 }
 
-void chaseObject() {}
+void waitForUserToIndicateStopped()
+{
+    char stoppedConfirmation = getKeyTap(TRUE);
+    while (stoppedConfirmation != 'Y' && stoppedConfirmation != 'y') {
+        stoppedConfirmation = getKeyTap(TRUE);
+    }
+}
+
+void beRobot()
+{
+    while (TRUE) {
+        const u08 SPEED = 50;
+        const u08 DISTANCE = 32;
+        rprintfProgStrM("Moving Forward");
+        move(FORWARD, SPEED, DISTANCE);
+        rprintfProgStrM("Continue? (y/n)");
+        waitForUserToIndicateStopped();
+        rprintfProgStrM("Moving Backward");
+        move(BACKWARD, SPEED, DISTANCE);
+        rprintfProgStrM("Continue? (y/n)");
+        waitForUserToIndicateStopped();
+    }
+}
 
 void gripperDemo(void)
 {
