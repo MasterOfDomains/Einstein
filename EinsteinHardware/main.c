@@ -162,6 +162,7 @@ void initRobot(void)
     rprintfCRLF();
     initMotors();
     initServo8t();
+    //initHead();
     initHead();
     initArm();
     armOn();
