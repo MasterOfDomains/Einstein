@@ -33,7 +33,7 @@ void reset();
 
 void go(direction dir, u08 speed)
 {
-    rprintf("go speed=%d\n\r", speed);
+    rprintf("go speed=%d", speed); rprintfCRLF();
     setSpeed(LEFT, dir, speed);
     setSpeed(RIGHT, dir, speed);
 }
@@ -51,9 +51,7 @@ void spin(side spinSide, u08 speed)
 
 void move(direction dir, u08 speed, float distance, BOOL stop)
 {
-    rprintf("move distance=");
-    rprintfFloat(4, distance);
-    rprintfCRLF();
+    rprintf("move distance="); rprintfFloat(4, distance); rprintfCRLF();
     reset();
     float distLeft = 0;
     float distRight = 0;
@@ -172,29 +170,22 @@ void testMotors()
 void testMotorsAndEncoders()
 {
     while (1) {
-        rprintfProgStrM("Moving Forward");
-        rprintfCRLF();
+        rprintfProgStrM("Moving Forward"); rprintfCRLF();
         _delay_ms(2000);
         move(FORWARD, 127, 32, TRUE);
-        rprintfProgStrM("Forward Distance: ");
-        rprintfFloat(4, getDistanceTraveled());
-        rprintfCRLF();
+        rprintfProgStrM("Forward Distance: "); rprintfFloat(4, getDistanceTraveled()); rprintfCRLF();
         _delay_ms(2000);
-        rprintfProgStrM("Moving Backward");
-        rprintfCRLF();
+        rprintfProgStrM("Moving Backward"); rprintfCRLF();
         _delay_ms(2000);
         move(BACKWARD, 127, 32, TRUE);
-        rprintfProgStrM("Backward Distance: ");
-        rprintfFloat(4, getDistanceTraveled());
-        rprintfCRLF();
+        rprintfProgStrM("Backward Distance: "); rprintfFloat(4, getDistanceTraveled()); rprintfCRLF();
         _delay_ms(2000);
     }
 }
 
 void testMotorsHalt()
 {
-    rprintf("Halt");
-    rprintfCRLF();
+    rprintfProgStrM("Halt"); rprintfCRLF();
     halt();
     _delay_ms(5000);
 }
@@ -207,13 +198,11 @@ void testEncoders()
     while (1) {
         if (encoderGetPosition(LEFT_ENCODER) != distLeft) {
             distLeft = encoderGetPosition(LEFT_ENCODER);
-            rprintf("Left: %d", distLeft);
-            rprintfCRLF();
+            rprintf("Left: %d", distLeft); rprintfCRLF();
         }
         if (encoderGetPosition(RIGHT_ENCODER) != distRight) {
             distRight = encoderGetPosition(RIGHT_ENCODER);
-            rprintf("Right: %d", distRight);
-            rprintfCRLF();
+            rprintf("Right: %d", distRight); rprintfCRLF();
         }
     }
 }

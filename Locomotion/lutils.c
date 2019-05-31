@@ -35,8 +35,7 @@ void debugLEDtoggle(void)
 void signalFatalError(errorCode error)
 {
     while (1) {
-        rprintf("Fatal Error: %d", error);
-        rprintfCRLF();
+        rprintf("Fatal Error: %d", error); rprintfCRLF();
         LED_on();
         _delay_ms(200);
         LED_off();

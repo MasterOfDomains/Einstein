@@ -25,8 +25,7 @@ locomotionCommandName getName(void);
 struct commandStruct waitForCommand(void)
 {
     struct commandStruct returnVal;
-    rprintf("waiting...");
-    rprintfCRLF();
+    rprintf("waiting..."); rprintfCRLF();
     while (!newReceiveFlag);
     newReceiveFlag = FALSE;
     locomotionCommandName name = getName();
@@ -87,9 +86,7 @@ locomotionCommandName getName(void)
     char1 = localBuffer[0];
     char2 = localBuffer[1];
 
-    rprintfChar(char1);
-    rprintfChar(char2);
-    rprintfCRLF();
+    rprintfChar(char1); rprintfChar(char2); rprintfCRLF();
 
     if (char1 == 'G' && char2 == 'O') {
         returnVal = GO;

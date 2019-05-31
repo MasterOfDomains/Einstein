@@ -22,14 +22,10 @@ int main (void)
     //testMotors();
     while (1) {
         struct commandStruct command = waitForCommand();
-        rprintf("Dir = %d", command.commandDir);
-        rprintfCRLF();
-        rprintf("Side = %d", command.commandSide);
-        rprintfCRLF();
-        rprintf("Amount = %d", command.distance);
-        rprintfCRLF();
-        rprintf("Speed = %d", command.speed);
-        rprintfCRLF();
+        rprintf("Dir = %d", command.commandDir); rprintfCRLF();
+        rprintf("Side = %d", command.commandSide); rprintfCRLF();
+        rprintfProgStrM("Amount = "); rprintfFloat(4, command.distance); rprintfCRLF();
+        rprintf("Speed = %d", command.speed); rprintfCRLF();
 
         switch (command.name) {
         case HARD_STOP:
@@ -62,8 +58,7 @@ void init(void)
     uartInit();
     uartSetBaudRate(115200);
     rprintfInit(uartSendByte);
-    rprintfProgStrM("Starting...");
-    rprintfCRLF();
+    rprintfProgStrM("Starting..."); rprintfCRLF();
     initMotors();
     initEncoders();
     initInterface();
