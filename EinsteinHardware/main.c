@@ -180,14 +180,11 @@ void initRobot(void)
 #endif
 #if !defined(BREADBOARD) && !defined(MAIN_BOARD_ONLY)
 #ifndef MAIN_BOARD_AND_HEAD
-    rprintfProgStrM("Initializing External Components...");
-    rprintfCRLF();
+    rprintfProgStrM("Initializing External Components..."); rprintfCRLF();
     initMotors();
     initServo8t();
-    //initHead();
-    initHead();
     initArm();
-    armOn();
+    armOff();
 #endif
     initHead();
 #endif
