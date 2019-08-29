@@ -34,6 +34,19 @@ void reset();
 void go(direction dir, u08 speed)
 {
     rprintf("go speed=%d", speed); rprintfCRLF();
+    if (dir == FORWARD) {
+        rprintfProgStrM("  /\\"); rprintfCRLF();
+        rprintfProgStrM(" /  \\"); rprintfCRLF();
+        rprintfProgStrM("/    \\"); rprintfCRLF();
+        rprintfProgStrM("  ||"); rprintfCRLF();
+        rprintfProgStrM("  ||"); rprintfCRLF();
+    } else if (dir == BACKWARD) {
+        rprintfProgStrM("  ||"); rprintfCRLF();
+        rprintfProgStrM("  ||"); rprintfCRLF();
+        rprintfProgStrM("\\    /"); rprintfCRLF();
+        rprintfProgStrM(" \\  /"); rprintfCRLF();
+        rprintfProgStrM("  \\/"); rprintfCRLF();
+    }
     setSpeed(LEFT, dir, speed);
     setSpeed(RIGHT, dir, speed);
 }
@@ -51,6 +64,7 @@ void spin(side spinSide, u08 speed)
 
 void move(direction dir, u08 speed, float distance, BOOL stop)
 {
+    rprintfCRLF();
     rprintf("move distance="); rprintfFloat(4, distance); rprintfCRLF();
     reset();
     float distLeft = 0;
@@ -155,31 +169,44 @@ void initMotors(void)
 
 void testMotors()
 {
+#define MOVE_TIME 3000
+#define START_DELAY 500
+#define SPEED 175
+
     while (1) {
-        rprintfProgStrM("Moving Forward");
-        _delay_ms(2000);
-        rprintfCRLF();
-        go(FORWARD, 175);
-        rprintfProgStrM("Moving Backward");
-        _delay_ms(2000);
-        rprintfCRLF();
-        go(BACKWARD, 175);
+        rprintfProgStrM("Moving Forward"); rprintfCRLF();
+        _delay_ms(START_DELAY);
+        go(FORWARD, SPEED);
+        _delay_ms(MOVE_TIME);
+        halt();
+        rprintfProgStrM("Moving Backward"); rprintfCRLF();
+        _delay_ms(START_DELAY);
+        go(BACKWARD, SPEED);
+        _delay_ms(MOVE_TIME);
+        halt();
     }
 }
 
 void testMotorsAndEncoders()
 {
+#define START_DELAY 500
+#define SPEED 175
+#define DISTANCE 32
+#define PAUSE 5000
+
     while (1) {
         rprintfProgStrM("Moving Forward"); rprintfCRLF();
-        _delay_ms(2000);
-        move(FORWARD, 127, 32, TRUE);
+        _delay_ms(START_DELAY);
+        move(FORWARD, SPEED, DISTANCE, TRUE);
+        _delay_ms(PAUSE);
         rprintfProgStrM("Forward Distance: "); rprintfFloat(4, getDistanceTraveled()); rprintfCRLF();
-        _delay_ms(2000);
+        _delay_ms(START_DELAY);
         rprintfProgStrM("Moving Backward"); rprintfCRLF();
-        _delay_ms(2000);
-        move(BACKWARD, 127, 32, TRUE);
+        _delay_ms(START_DELAY);
+        move(BACKWARD, SPEED, DISTANCE, TRUE);
+        _delay_ms(PAUSE);
         rprintfProgStrM("Backward Distance: "); rprintfFloat(4, getDistanceTraveled()); rprintfCRLF();
-        _delay_ms(2000);
+        _delay_ms(START_DELAY);
     }
 }
 
