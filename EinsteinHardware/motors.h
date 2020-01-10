@@ -26,5 +26,6 @@ void twist(side spinSide, u08 speed, u32 amount);
 
 void testMotors(void);
 void testMotorsAndEncoders(void);
+BOOL distanceReached(void);
 
 #endif
