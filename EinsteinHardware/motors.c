@@ -33,6 +33,7 @@
 
 BOOL distanceReached()
 {
+    //rprintf("PORT_IS_OFF: %d\r\n", PORT_IS_OFF(INTERRUPTER_PORT_IN, INTERRUPTER_BIT));
     return(PORT_IS_OFF(INTERRUPTER_PORT_IN, INTERRUPTER_BIT));
 }
 
