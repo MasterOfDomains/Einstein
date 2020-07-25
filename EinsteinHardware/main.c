@@ -19,6 +19,7 @@
 #include "servo8t.h"
 #include "compass.h"
 #include "head.h"
+#include "dynamixel.h"
 
 void initRobot(void);
 void initPorts(void);

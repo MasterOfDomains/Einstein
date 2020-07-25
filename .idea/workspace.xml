@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3ebe65fa-e4c3-40d3-acc9-c458c1e19275" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/EinsteinHardware/EinsteinHardware.cproj" beforeDir="false" afterPath="$PROJECT_DIR$/EinsteinHardware/EinsteinHardware.cproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EinsteinHardware/arm.c" beforeDir="false" afterPath="$PROJECT_DIR$/EinsteinHardware/arm.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EinsteinHardware/arm.h" beforeDir="false" afterPath="$PROJECT_DIR$/EinsteinHardware/arm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EinsteinHardware/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/EinsteinHardware/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EinsteinHardware/servo8t.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EinsteinHardware/servo8t.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EinsteinHardware/uart2.c" beforeDir="false" afterPath="$PROJECT_DIR$/EinsteinHardware/uart2.c" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1edgP8lgCCMhv1vK1xL4I36Hf2l" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3ebe65fa-e4c3-40d3-acc9-c458c1e19275" name="Default Changelist" comment="" />
+      <created>1594656856647</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1594656856647</updated>
+    </task>
+    <servers />
+  </component>
+</project>
